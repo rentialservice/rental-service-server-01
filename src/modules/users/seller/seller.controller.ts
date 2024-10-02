@@ -20,7 +20,7 @@ import {
 } from '../../../base/response';
 import { SellerService } from './seller.service';
 
-@Controller("seller")
+@Controller("sellers")
 export class SellerController {
   constructor(private readonly service: SellerService) { }
 
