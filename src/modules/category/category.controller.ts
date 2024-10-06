@@ -33,7 +33,7 @@ export class CategoryController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let { result, count } = await this.categoryService.getAll(page, pageSize, filterType);
+            const [result, count]: any = await this.categoryService.getAll(page, pageSize, filterType);
             successPaginatedResponse(response, result, count, page, pageSize);
         } catch (error: any) {
             errorResponse(response, error);

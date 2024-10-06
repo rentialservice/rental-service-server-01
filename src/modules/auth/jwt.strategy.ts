@@ -33,7 +33,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(req: Request) {
     let jwt = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
     let user = await this.jwtSvc.decode(jwt);
-    user = user?.user?.user;
+    user = user?.user;
     if (!user) {
       throw new UnauthorizedException('JwtStrategy unauthorized');
     }
