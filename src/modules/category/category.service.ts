@@ -7,46 +7,45 @@ import { Category } from './entities/category.entity';
 @Injectable()
 export class CategoryService {
     constructor(
-        @InjectRepository(Category) private readonly firmRepository: Repository<Category>,
+        @InjectRepository(Category) private readonly categoryRepository: Repository<Category>,
     ) { }
 
-    async create(firmData: Partial<Category>): Promise<any> {
-        const firm = this.firmRepository.create(firmData);
-        return await this.firmRepository.save(firm);
+    async create(createObject: Partial<Category>): Promise<any> {
+        const result = this.categoryRepository.create(createObject);
+        return await this.categoryRepository.save(result);
     }
 
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
-        const [result, count]: any = await this.firmRepository.findAndCount({
+        return await this.categoryRepository.findAndCount({
             where: { deleteFlag: false },
             skip: (page - 1) * pageSize,
             take: pageSize,
         });
-        return { result, count };
     }
 
     async getById(id: string, filterType?: string): Promise<any> {
-        const firm = await this.firmRepository.findOne({ where: { id, deleteFlag: false } });
-        if (!firm) {
-            throw new NotFoundException(`Firm with ID ${id} not found`);
+        const result = await this.categoryRepository.findOne({ where: { id, deleteFlag: false } });
+        if (!result) {
+            throw new NotFoundException(`Category with ID ${id} not found`);
         }
-        return firm;
+        return result;
     }
 
-    async update(id: string, updateData: Partial<Category>, filterType?: string): Promise<any> {
-        return await this.firmRepository.update(id, updateData);
+    async update(id: string, updateObejct: Partial<Category>, filterType?: string): Promise<any> {
+        return await this.categoryRepository.update(id, updateObejct);
     }
 
     async updateActionById(id: string, action: string, filterType?: string) {
-        return await this.firmRepository.update(
+        return await this.categoryRepository.update(
             id,
             getUpdateObjectByAction(action),
         );
     }
 
     async delete(id: string, filterType?: string): Promise<any> {
-        const result = await this.firmRepository.delete(id);
+        const result = await this.categoryRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`Firm with ID ${id} not found`);
+            throw new NotFoundException(`Category with ID ${id} not found`);
         }
         return result;
     }

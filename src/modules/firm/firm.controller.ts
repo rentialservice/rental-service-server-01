@@ -15,9 +15,9 @@ export class FirmController {
     async create(
         @Req() request: Request,
         @Res() response: Response,
-        @Body() firmData: Partial<Firm>): Promise<void> {
+        @Body() createObject: Partial<Firm>): Promise<void> {
         try {
-            let result = await this.firmService.create(firmData);
+            let result = await this.firmService.create(createObject);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -33,7 +33,7 @@ export class FirmController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let { result, count } = await this.firmService.getAll(page, pageSize, filterType);
+            const [result, count]: any = await this.firmService.getAll(page, pageSize, filterType);
             successPaginatedResponse(response, result, count, page, pageSize);
         } catch (error: any) {
             errorResponse(response, error);
@@ -60,11 +60,11 @@ export class FirmController {
         @Req() request: Request,
         @Res() response: Response,
         @Param(RoutesConstants.ID) id: string,
-        @Body() updateData: Partial<Firm>,
+        @Body() updateObject: Partial<Firm>,
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.firmService.update(id, updateData, filterType);
+            let result = await this.firmService.update(id, updateObject, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
