@@ -33,6 +33,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(req: Request) {
     let jwt = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
     let user = await this.jwtSvc.decode(jwt);
+    user = user?.user?.user;
     if (!user) {
       throw new UnauthorizedException('JwtStrategy unauthorized');
     }
@@ -45,10 +46,13 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       userData = await this.sellerRepository.findOne({
         where: { email: user.email, deleteFlag: false },
       });
-    } else if (user?.type === "admin") {
+    } else {
       userData = await this.adminRepository.findOne({
         where: { email: user.email, deleteFlag: false },
       });
+    }
+    if (!userData) {
+      throw new UnauthorizedException('Unauthorized user ...!');
     }
 
     return userData;

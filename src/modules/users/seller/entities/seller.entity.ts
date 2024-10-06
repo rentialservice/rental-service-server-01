@@ -10,9 +10,9 @@ import { ROLES } from '../../../../enums/role.enum';
 import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
 import { Firm } from '../../../firm/entities/firm.entity';
 
-@Entity()
+@Entity("seller")
 export class Seller extends BaseEntity {
-  @Column()
+  @Column({ default: '' })
   fullName: string;
 
   @Column({ default: '' })
@@ -24,7 +24,7 @@ export class Seller extends BaseEntity {
   @Column({ default: '' })
   password: string;
 
-  @Column()
+  @Column({ default: '' })
   email: string;
 
   @OneToOne(() => Firm)

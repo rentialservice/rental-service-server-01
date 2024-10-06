@@ -16,7 +16,7 @@ import { RoutesConstants } from '../../../constants/routes.constant';
 import { errorResponse, successPaginatedResponse, successResponse } from '../../../base/response';
 import { JwtAuthGuard } from '../../auth/jwt.auth.guard';
 
-@Controller("admins")
+@Controller("admin")
 export class AdminController {
   constructor(private readonly service: AdminService) { }
 
