@@ -10,18 +10,17 @@ export class FirmService {
         @InjectRepository(Firm) private readonly firmRepository: Repository<Firm>,
     ) { }
 
-    async create(firmData: Partial<Firm>): Promise<any> {
-        const firm = this.firmRepository.create(firmData);
-        return await this.firmRepository.save(firm);
+    async create(createObject: Partial<Firm>): Promise<any> {
+        const result = this.firmRepository.create(createObject);
+        return await this.firmRepository.save(result);
     }
 
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
-        const [result, count]: any = await this.firmRepository.findAndCount({
+        return await this.firmRepository.findAndCount({
             where: { deleteFlag: false },
             skip: (page - 1) * pageSize,
             take: pageSize,
         });
-        return { result, count };
     }
 
     async getById(id: string, filterType?: string): Promise<any> {
@@ -32,8 +31,8 @@ export class FirmService {
         return firm;
     }
 
-    async update(id: string, updateData: Partial<Firm>, filterType?: string): Promise<any> {
-        return await this.firmRepository.update(id, updateData);
+    async update(id: string, updateObject: Partial<Firm>, filterType?: string): Promise<any> {
+        return await this.firmRepository.update(id, updateObject);
     }
 
     async updateActionById(id: string, action: string, filterType?: string) {

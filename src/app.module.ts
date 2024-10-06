@@ -15,6 +15,7 @@ import { SellerModule } from './modules/users/seller/seller.module';
 import { AdminModule } from './modules/users/admin/admin.module';
 import { S3Module } from './modules/supporting-modules/s3/s3.module';
 import { CategoryModule } from './modules/category/category.module';
+import { CustomFieldsModule } from './modules/custom-fields/custom-fields.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CategoryModule } from './modules/category/category.module';
     FirmModule,
     DynamicModule,
     CategoryModule,
+    CustomFieldsModule,
     
   ],
   controllers: [AppController],
