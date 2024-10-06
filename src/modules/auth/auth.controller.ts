@@ -41,6 +41,31 @@ export class AuthController {
     }
   }
 
+  @Post(RoutesConstants.SEND_OTP_ADMIN)
+  async sendOtpAdmin(
+    @Res() response: Response,
+    @Body() sendOtpDto: any,
+  ): Promise<void> {
+    try {
+      let result = await this.authService.sendOtpAdmin(sendOtpDto);
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Post(RoutesConstants.VERIFY_OTP_ADMIN)
+  async verifyOtpAdmin(
+    @Res() response: Response,
+    @Body() verifyOtpDto: VerifyOtpDto,
+  ): Promise<void> {
+    try {
+      successResponse(response, await this.authService.verifyOtpAdmin(verifyOtpDto));
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
   @Post(RoutesConstants.LOGIN)
   async login(
     @Res() response: Response,
@@ -53,6 +78,18 @@ export class AuthController {
     }
   }
 
+  @Post(RoutesConstants.LOGIN_ADMIN)
+  async loginAdmin(
+    @Res() response: Response,
+    @Body() loginDto: LoginDto,
+  ): Promise<void> {
+    try {
+      successResponse(response, await this.authService.loginAdmin(loginDto));
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
   @Post(RoutesConstants.SSO_LOGIN)
   async ssoLogin(
     @Res() response: Response,
@@ -60,6 +97,18 @@ export class AuthController {
   ): Promise<void> {
     try {
       successResponse(response, await this.authService.ssoLogin(ssoLoginDto));
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Post(RoutesConstants.SSO_LOGIN_ADMIN)
+  async ssoLoginAdmin(
+    @Res() response: Response,
+    @Body() ssoLoginDto: any,
+  ): Promise<void> {
+    try {
+      successResponse(response, await this.authService.ssoLoginAdmin(ssoLoginDto));
     } catch (error: any) {
       errorResponse(response, error);
     }

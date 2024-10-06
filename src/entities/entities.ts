@@ -8,6 +8,7 @@ import { Notification } from "../modules/supporting-modules/notification/entitie
 import { Seller } from "../modules/users/seller/entities/seller.entity";
 import { User } from "../modules/user/entities/user.entity";
 import { Admin } from "../modules/users/admin/entities/admin.entity";
+import { Category } from "../modules/category/entities/category.entity";
 
 export let Entities = [
     Admin,
@@ -20,4 +21,5 @@ export let Entities = [
     Firm,
     DynamicData,
     DynamicSchema,
+    Category
 ] 

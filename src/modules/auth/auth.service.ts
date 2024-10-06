@@ -48,27 +48,22 @@ export class AuthService {
     return accessToken;
   }
   #createJwtAccessToken(user: any) {
-    let accessToken = this.jwtSvc.sign(
-      user,
+    return this.jwtSvc.sign(
+      { user },
       {
         secret: this.configSvc.get<string>('JWT_SECRET'),
         expiresIn: `${this.configSvc.get<number>('JWT_ACCESS_TOKEN_EXPIRY_TIME')}d`,
       },
     );
-    this.jwtSvc.decode;
-    return accessToken;
   }
   #createJwtRefreshToken(user: any) {
-
-    let refreshToken = this.jwtSvc.sign(
-      user,
+    return this.jwtSvc.sign(
+      { user },
       {
         secret: this.configSvc.get<string>('JWT_SECRET'),
         expiresIn: `${this.configSvc.get<number>('JWT_REFRESH_TOKEN_EXPIRY_TIME')}d`,
       },
     );
-    this.jwtSvc.decode;
-    return refreshToken;
   }
 
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -81,35 +76,30 @@ export class AuthService {
     }
 
     if (authType === "email") {
-      let existingUser: any;
+      let userDetails: any;
       if (!validateEmail(sendOtpDto.email)) {
         throw new Error("Invalid Email Id");
       }
 
       if (type === "buyer") {
-        existingUser = await this.buyerRepository.findOne({
+        userDetails = await this.buyerRepository.findOne({
           where: {
             email: sendOtpDto.email,
             deleteFlag: false,
           },
         });
       } else if (type === "seller") {
-        existingUser = await this.sellerRepository.findOne({
+        userDetails = await this.sellerRepository.findOne({
           where: {
             email: sendOtpDto.email,
             deleteFlag: false,
           },
         });
-      } else if (type === "admin") {
-        existingUser = await this.adminRepository.findOne({
-          where: {
-            email: sendOtpDto.email,
-            deleteFlag: false,
-          },
-        });
+      } else {
+        throw new Error('Invalid user type...!');
       }
 
-      if (existingUser) {
+      if (userDetails) {
         throw new Error('User with this email already exist, please login...!');
       } else {
         let otp = otpGenerator();
@@ -127,34 +117,29 @@ export class AuthService {
         }
       }
     } else {
-      let existingUser: any;
+      let userDetails: any;
       if (!validatePhoneNumber(sendOtpDto.phone)) {
         throw new Error("Invalid Phone Number");
       }
       if (type === "buyer") {
-        existingUser = await this.buyerRepository.findOne({
+        userDetails = await this.buyerRepository.findOne({
           where: {
             phone: sendOtpDto.phone,
             deleteFlag: false,
           },
         });
       } else if (type === "seller") {
-        existingUser = await this.sellerRepository.findOne({
+        userDetails = await this.sellerRepository.findOne({
           where: {
             phone: sendOtpDto.phone,
             deleteFlag: false,
           },
         });
-      } else if (type === "admin") {
-        existingUser = await this.adminRepository.findOne({
-          where: {
-            phone: sendOtpDto.phone,
-            deleteFlag: false,
-          },
-        });
+      } else {
+        throw new Error('Invalid user type...!');
       }
 
-      if (existingUser) {
+      if (userDetails) {
         throw new Error('User with this phone number already exist, please login...!');
       } else {
         let otp = otpGenerator();
@@ -176,24 +161,105 @@ export class AuthService {
 
   async verifyOtp(verifyOtpDto: VerifyOtpDto): Promise<any> {
     let verify = await this.jwtSvc.decode(verifyOtpDto.otpToken);
+    let type = verify?.type;
     if (!verify) throw new Error('OTP is expired...!');
     let otpIsValid = await bcrypt.compare(verifyOtpDto.otp, verify.hashedOtp);
     if (!otpIsValid) throw new Error('OTP is not valid...!');
     let user: any = {
-      email: verify?.email
+      email: verify?.email || "",
+      phone: verify?.phone || "",
     };
     let userDetails: any;
-    if (verify?.type === "buyer") {
+    if (type === "buyer") {
       userDetails = await this.buyerRepository.save(user);
-    } else if (verify?.type === "seller") {
+    } else if (type === "seller") {
       userDetails = await this.sellerRepository.save(user);
-    } else if (verify?.type === "admin") {
-      userDetails = await this.adminRepository.save(user);
     } else {
       throw new Error('Invalid user type...!');
     }
-    let accessToken = this.#createJwtAccessToken(userDetails);
-    let refreshToken = this.#createJwtRefreshToken(userDetails);
+    let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
+    let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
+    delete userDetails.password;
+    delete userDetails.activeFlag;
+    delete userDetails.deleteFlag;
+    return { ...userDetails, accessToken, refreshToken, isNewUser: true };
+  }
+
+  async sendOtpAdmin(sendOtpDto: any): Promise<any> {
+    let authType = sendOtpDto?.authType;
+    if (authType === "email") {
+      if (!validateEmail(sendOtpDto.email)) {
+        throw new Error("Invalid Email Id");
+      }
+
+      let userDetails = await this.adminRepository.findOne({
+        where: {
+          email: sendOtpDto.email,
+          deleteFlag: false,
+        },
+      });
+
+      if (userDetails) {
+        throw new Error('User with this email already exist, please login...!');
+      } else {
+        let otp = otpGenerator();
+        await this.mailService.sendOTP({ email: sendOtpDto.email, otp });
+        let hashedOtp = await bcrypt.hash(otp, 8);
+        if (process.env.OTP_PHASE === "testing") {
+          return {
+            otp,
+            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+          };
+        } else {
+          return {
+            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+          };
+        }
+      }
+    } else {
+      if (!validatePhoneNumber(sendOtpDto.phone)) {
+        throw new Error("Invalid Phone Number");
+      }
+
+      let userDetails = await this.adminRepository.findOne({
+        where: {
+          phone: sendOtpDto.phone,
+          deleteFlag: false,
+        },
+      });
+
+      if (userDetails) {
+        throw new Error('User with this phone number already exist, please login...!');
+      } else {
+        let otp = otpGenerator();
+        // await this.mailService.sendOTP({ email: sendOtpDto.email, otp }); // TODO instead of this add phone service
+        let hashedOtp = await bcrypt.hash(otp, 8);
+        if (process.env.OTP_PHASE === "testing") {
+          return {
+            otp,
+            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+          };
+        } else {
+          return {
+            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+          };
+        }
+      }
+    }
+  }
+
+  async verifyOtpAdmin(verifyOtpDto: VerifyOtpDto): Promise<any> {
+    let verify = await this.jwtSvc.decode(verifyOtpDto.otpToken);
+    if (!verify) throw new Error('OTP is expired...!');
+    let otpIsValid = await bcrypt.compare(verifyOtpDto.otp, verify.hashedOtp);
+    if (!otpIsValid) throw new Error('OTP is not valid...!');
+    let user: any = {
+      email: verify?.email || "",
+      phone: verify?.phone || "",
+    };
+    let userDetails = await this.adminRepository.save(user);
+    let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
+    let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
     delete userDetails.password;
     delete userDetails.activeFlag;
     delete userDetails.deleteFlag;
@@ -202,8 +268,9 @@ export class AuthService {
 
   async login(loginDto: LoginDto): Promise<any> {
     let userDetails: any;
+    let type = loginDto?.type;
     let usernameOrEmail: string = loginDto.user;
-    if (loginDto?.type === "buyer") {
+    if (type === "buyer") {
       userDetails = await this.buyerRepository
         .createQueryBuilder('userDetails')
         .where('userDetails.username = :usernameOrEmail', { usernameOrEmail })
@@ -211,7 +278,7 @@ export class AuthService {
         .andWhere('userDetails.deleteFlag = :deleteFlag', { deleteFlag: false })
         .andWhere('userDetails.ssoLogin = :ssoLogin', { ssoLogin: false })
         .getOne();
-    } else if (loginDto?.type === "seller") {
+    } else if (type === "seller") {
       userDetails = await this.sellerRepository
         .createQueryBuilder('userDetails')
         .where('userDetails.username = :usernameOrEmail', { usernameOrEmail })
@@ -219,21 +286,36 @@ export class AuthService {
         .andWhere('userDetails.deleteFlag = :deleteFlag', { deleteFlag: false })
         .andWhere('userDetails.ssoLogin = :ssoLogin', { ssoLogin: false })
         .getOne();
-    } else if (loginDto?.type === "admin") {
-      userDetails = await this.adminRepository
-        .createQueryBuilder('userDetails')
-        .where('userDetails.username = :usernameOrEmail', { usernameOrEmail })
-        .orWhere('userDetails.email = :usernameOrEmail', { usernameOrEmail })
-        .andWhere('userDetails.deleteFlag = :deleteFlag', { deleteFlag: false })
-        .andWhere('userDetails.ssoLogin = :ssoLogin', { ssoLogin: false })
-        .getOne();
+    } else {
+      throw new Error('Invalid user type...!');
     }
 
     if (!userDetails) throw new Error('Incorrect username/email');
     let match = await bcrypt.compare(loginDto.password, userDetails.password);
     if (!match) throw new Error('Incorrect password');
-    let accessToken = this.#createJwtAccessToken(userDetails);
-    let refreshToken = this.#createJwtRefreshToken(userDetails);
+    let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
+    let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
+    delete userDetails.password;
+    delete userDetails.activeFlag;
+    delete userDetails.deleteFlag;
+    return { ...userDetails, accessToken, refreshToken, isNewUser: false };
+  }
+
+  async loginAdmin(loginDto: LoginDto): Promise<any> {
+    let usernameOrEmail: string = loginDto.user;
+    let userDetails = await this.adminRepository
+      .createQueryBuilder('userDetails')
+      .where('userDetails.username = :usernameOrEmail', { usernameOrEmail })
+      .orWhere('userDetails.email = :usernameOrEmail', { usernameOrEmail })
+      .andWhere('userDetails.deleteFlag = :deleteFlag', { deleteFlag: false })
+      .andWhere('userDetails.ssoLogin = :ssoLogin', { ssoLogin: false })
+      .getOne();
+
+    if (!userDetails) throw new Error('Incorrect username/email');
+    let match = await bcrypt.compare(loginDto.password, userDetails.password);
+    if (!match) throw new Error('Incorrect password');
+    let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
+    let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
     delete userDetails.password;
     delete userDetails.activeFlag;
     delete userDetails.deleteFlag;
@@ -246,16 +328,16 @@ export class AuthService {
       throw new Error("Invalid type");
     }
     if (type === "buyer") {
-      let existingUser = await this.buyerRepository.findOne({
+      let userDetails = await this.buyerRepository.findOne({
         where: { email: ssoLoginDto.email, deleteFlag: false, ssoLogin: true },
       });
-      if (existingUser) {
-        let accessToken = this.#createJwtAccessToken({ ...existingUser, type });
-        let refreshToken = this.#createJwtRefreshToken({ ...existingUser, type });
-        delete existingUser.password;
-        delete existingUser.activeFlag;
-        delete existingUser.deleteFlag;
-        return { ...existingUser, accessToken, refreshToken, isNewUser: false };
+      if (userDetails) {
+        let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
+        let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
+        delete userDetails.password;
+        delete userDetails.activeFlag;
+        delete userDetails.deleteFlag;
+        return { ...userDetails, accessToken, refreshToken, isNewUser: false };
       } else {
         let username = extractUsername(ssoLoginDto.email);
         let userWithUsername = await this.buyerRepository.findOne({
@@ -280,16 +362,16 @@ export class AuthService {
         return { ...userDetails, accessToken, refreshToken, isNewUser: true };
       }
     } else if (type === "seller") {
-      let existingUser = await this.sellerRepository.findOne({
+      let userDetails = await this.sellerRepository.findOne({
         where: { email: ssoLoginDto.email, deleteFlag: false, ssoLogin: true },
       });
-      if (existingUser) {
-        let accessToken = this.#createJwtAccessToken({ ...existingUser, type });
-        let refreshToken = this.#createJwtRefreshToken({ ...existingUser, type });
-        delete existingUser.password;
-        delete existingUser.activeFlag;
-        delete existingUser.deleteFlag;
-        return { ...existingUser, accessToken, refreshToken, isNewUser: false };
+      if (userDetails) {
+        let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
+        let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
+        delete userDetails.password;
+        delete userDetails.activeFlag;
+        delete userDetails.deleteFlag;
+        return { ...userDetails, accessToken, refreshToken, isNewUser: false };
       } else {
         let username = extractUsername(ssoLoginDto.email);
         let userWithUsername = await this.sellerRepository.findOne({
@@ -313,42 +395,46 @@ export class AuthService {
         delete userDetails.deleteFlag;
         return { ...userDetails, accessToken, refreshToken, isNewUser: true };
       }
-    } else if (type === "admin") {
-      let existingUser = await this.adminRepository.findOne({
-        where: { email: ssoLoginDto.email, deleteFlag: false, ssoLogin: true },
-      });
-      if (existingUser) {
-        let accessToken = this.#createJwtAccessToken({ ...existingUser, type });
-        let refreshToken = this.#createJwtRefreshToken({ ...existingUser, type });
-        delete existingUser.password;
-        delete existingUser.activeFlag;
-        delete existingUser.deleteFlag;
-        return { ...existingUser, accessToken, refreshToken, isNewUser: false };
-      } else {
-        let username = extractUsername(ssoLoginDto.email);
-        let userWithUsername = await this.adminRepository.findOne({
-          where: { username, deleteFlag: false },
-        });
-        username = userWithUsername
-          ? `${username}${sixDigitGenerator()}`
-          : username;
-        let user: any = {
-          email: ssoLoginDto.email,
-          fullName: ssoLoginDto.fullName,
-          username,
-          avatar: ssoLoginDto.picture,
-          ssoLogin: true,
-        };
-        let userDetails = await this.adminRepository.save(user);
-        let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
-        let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
-        delete userDetails.password;
-        delete userDetails.activeFlag;
-        delete userDetails.deleteFlag;
-        return { ...userDetails, accessToken, refreshToken, isNewUser: true };
-      }
+    } else {
+      throw new Error('Invalid user type...!');
     }
 
+  }
+
+  async ssoLoginAdmin(ssoLoginDto: any): Promise<any> {
+    let userDetails = await this.adminRepository.findOne({
+      where: { email: ssoLoginDto.email, deleteFlag: false, ssoLogin: true },
+    });
+    if (userDetails) {
+      let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
+      let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
+      delete userDetails.password;
+      delete userDetails.activeFlag;
+      delete userDetails.deleteFlag;
+      return { ...userDetails, accessToken, refreshToken, isNewUser: false };
+    } else {
+      let username = extractUsername(ssoLoginDto.email);
+      let userWithUsername = await this.adminRepository.findOne({
+        where: { username, deleteFlag: false },
+      });
+      username = userWithUsername
+        ? `${username}${sixDigitGenerator()}`
+        : username;
+      let user: any = {
+        email: ssoLoginDto.email,
+        fullName: ssoLoginDto.fullName,
+        username,
+        avatar: ssoLoginDto.picture,
+        ssoLogin: true,
+      };
+      let userDetails = await this.adminRepository.save(user);
+      let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
+      let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
+      delete userDetails.password;
+      delete userDetails.activeFlag;
+      delete userDetails.deleteFlag;
+      return { ...userDetails, accessToken, refreshToken, isNewUser: true };
+    }
   }
 
   async newAccessToken(newAccessTokenDto: NewAccessTokenDto): Promise<any> {
@@ -367,14 +453,14 @@ export class AuthService {
   async sendOtpForgotPassword(
     forgotPasswordVerifyEmailDto: ForgotPasswordVerifyEmailDto,
   ): Promise<any> {
-    let existingUser = await this.userRepository.findOne({
+    let userDetails = await this.userRepository.findOne({
       where: {
         email: forgotPasswordVerifyEmailDto.email,
         deleteFlag: false,
         ssoLogin: false,
       },
     });
-    if (!existingUser)
+    if (!userDetails)
       throw new Error('Invalid User/Email or User may be deleted...!');
     let otp = otpGenerator();
     await this.mailService.sendOTP({
