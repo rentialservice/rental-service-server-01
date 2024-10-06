@@ -14,6 +14,7 @@ import { BuyerModule } from './modules/users/buyer/buyer.module';
 import { SellerModule } from './modules/users/seller/seller.module';
 import { AdminModule } from './modules/users/admin/admin.module';
 import { S3Module } from './modules/supporting-modules/s3/s3.module';
+import { CategoryModule } from './modules/category/category.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { S3Module } from './modules/supporting-modules/s3/s3.module';
     NotificationModule,
     FirmModule,
     DynamicModule,
+    CategoryModule,
     
   ],
   controllers: [AppController],

@@ -5,7 +5,7 @@ export function extractUsername(email: string) {
 
 export function extractTaggedUsers(tweetContent: string) {
   const regex = /@(\w+)/g;
-  return (tweetContent.match(regex) || []).map((match) => match.slice(1));
+  return (tweetContent.match(regex) || []).map((match: any) => match.slice(1));
 }
 
 export function validateEmail(email: string) {
