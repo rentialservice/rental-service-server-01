@@ -10,6 +10,7 @@ import { User } from "../modules/user/entities/user.entity";
 import { Admin } from "../modules/users/admin/entities/admin.entity";
 import { Category } from "../modules/category/entities/category.entity";
 import { CustomFields } from "src/modules/custom-fields/entities/custom-fields.entity";
+import { Schema } from "src/modules/Schema/entities/schema.entity";
 
 export let Entities = [
     Admin,
@@ -24,4 +25,5 @@ export let Entities = [
     DynamicSchema,
     Category,
     CustomFields,
+    Schema,
 ] 
