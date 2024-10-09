@@ -16,6 +16,7 @@ import { AdminModule } from './modules/users/admin/admin.module';
 import { S3Module } from './modules/supporting-modules/s3/s3.module';
 import { CategoryModule } from './modules/category/category.module';
 import { CustomFieldsModule } from './modules/custom-fields/custom-fields.module';
+import { SchemaModule } from './modules/Schema/schema.module';
 
 @Module({
   imports: [
@@ -33,7 +34,7 @@ import { CustomFieldsModule } from './modules/custom-fields/custom-fields.module
     DynamicModule,
     CategoryModule,
     CustomFieldsModule,
-    
+    SchemaModule
   ],
   controllers: [AppController],
   providers: [AppService],
