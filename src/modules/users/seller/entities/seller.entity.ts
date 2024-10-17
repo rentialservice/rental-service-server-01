@@ -31,6 +31,9 @@ export class Seller extends BaseEntity {
   @JoinColumn({ name: 'firmId' })
   firm: Firm;
 
+  @Column('boolean', { default: false })
+  isOwner: boolean;
+
   @Column({ type: 'enum', enum: ROLES, default: ROLES.USER })
   role: ROLES;
 

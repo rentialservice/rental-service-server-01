@@ -10,7 +10,6 @@ import { Firm } from '../../../firm/entities/firm.entity';
 import { ROLES } from '../../../../enums/role.enum';
 import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
 
-
 @Entity("admin")
 export class Admin extends BaseEntity {
   @Column({ default: '' })
@@ -25,12 +24,11 @@ export class Admin extends BaseEntity {
   @Column({ default: '' })
   password: string;
 
+  @Column('boolean', { default: false })
+  isSuperAdmin: boolean;
+
   @Column({ default: '' })
   email: string;
-
-  @OneToOne(() => Firm)
-  @JoinColumn({ name: 'firmId' })
-  firm: Firm;
 
   @Column({ type: 'enum', enum: ROLES, default: ROLES.ADMIN })
   role: ROLES;
