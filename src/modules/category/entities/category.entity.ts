@@ -1,7 +1,7 @@
 import { Entity, Column } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 
-@Entity()
+@Entity('category')
 export class Category extends BaseEntity {
   @Column()
   categoryName: string;

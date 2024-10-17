@@ -1,17 +1,20 @@
 import { Entity, Column } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 
-@Entity()
-export class Firm  extends BaseEntity{
+@Entity('firm')
+export class Firm extends BaseEntity {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ default: '' })
   address: string;
 
-  @Column()
+  @Column({ default: '' })
   phone: string;
 
-  @Column()
+  @Column({ default: '' })
   email: string;
+
+  @Column({ default: '' })
+  description: string;
 }
