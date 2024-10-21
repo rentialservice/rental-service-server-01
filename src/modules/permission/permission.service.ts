@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { getUpdateObjectByAction } from '../../common/action-update';
 import { Permission } from './entities/permission.entity';
+import { buildFilterCriteriaQuery } from '../../common/utils';
 
 @Injectable()
 export class PermissionService {
@@ -48,5 +49,12 @@ export class PermissionService {
             throw new NotFoundException(`Permission with ID ${id} not found`);
         }
         return result;
+    }
+
+    async filter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
+        return await this.permissionRepository.find({
+            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+            relations: [...fields]
+        });
     }
 }
