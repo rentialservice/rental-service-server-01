@@ -1,7 +1,7 @@
 import { Entity, Column } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 
-@Entity()
+@Entity('custom_fields')
 export class CustomFields extends BaseEntity {
   @Column()
   fieldName: string;

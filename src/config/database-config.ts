@@ -1,6 +1,6 @@
 import { DataSourceOptions } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
-import { Entities } from '../entities/entities';
+import { entities } from '../list/entities/entities';
 ConfigModule.forRoot();
 const { NODE_ENV, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, DB_TYPE } =
   process.env;
@@ -28,7 +28,7 @@ export const databaseConfig: DataSourceOptions =
     password,
     database,
     url,
-    entities: Entities,
+    entities,
     // ssl: {
     //   rejectUnauthorized: false,
     // },
@@ -41,7 +41,7 @@ export const databaseConfig: DataSourceOptions =
     password,
     database,
     url,
-    entities: Entities,
+    entities,
     ssl: {
       rejectUnauthorized: false,
     },
