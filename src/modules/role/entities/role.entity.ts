@@ -4,14 +4,12 @@ import { Permission } from '../../permission/entities/permission.entity';
 
 @Entity('role')
 export class Role extends BaseEntity {
-  @Column()
+  @Column({ unique: true })
   name: string;
 
   @Column({ default: '' })
   description: string;
 
-  @OneToMany(() => Permission, (permission) => permission.id)
-  @JoinColumn({ name: "permissionId" })
-  permissionIds: Permission[];
-
+  @OneToMany(() => Permission, (permission) => permission.role)
+  permissions: Permission[];
 }

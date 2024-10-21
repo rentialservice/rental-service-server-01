@@ -3,15 +3,26 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
 import { getUpdateObjectByAction } from '../../common/action-update';
+import { PermissionService } from '../permission/permission.service';
 
 @Injectable()
 export class RoleService {
     constructor(
         @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
+        private readonly permissionService: PermissionService
     ) { }
 
-    async create(createObject: Partial<Role>): Promise<any> {
-        const result = this.roleRepository.create(createObject);
+    async create(createObject: any): Promise<any> {
+        if (!createObject.permissionIds) {
+            throw new Error("At least one permission is required to create any role")
+        }
+        let permissions = await this.permissionService.filter({ id: createObject.permissionIds })
+        let finalCreateObject = {
+            name: createObject?.name,
+            description: createObject?.description,
+            permissions
+        }
+        const result = this.roleRepository.create(finalCreateObject);
         return await this.roleRepository.save(result);
     }
 
@@ -24,7 +35,7 @@ export class RoleService {
     }
 
     async getById(id: string, filterType?: string): Promise<any> {
-        const role = await this.roleRepository.findOne({ where: { id, deleteFlag: false } });
+        const role = await this.roleRepository.findOne({ where: { id, deleteFlag: false }, relations: ["permissions"] });
         if (!role) {
             throw new NotFoundException(`Role with ID ${id} not found`);
         }

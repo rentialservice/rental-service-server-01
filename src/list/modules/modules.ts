@@ -4,7 +4,9 @@ import { CustomFieldsModule } from "../../modules/custom-fields/custom-fields.mo
 import { DynamicModule } from "../../modules/dynamic/dynamic.module";
 import { FirmModule } from "../../modules/firm/firm.module";
 import { ModuleModule } from "../../modules/module/module.module";
+import { PermissionModule } from "../../modules/permission/permission.module";
 import { ProductModule } from "../../modules/product/product.module";
+import { RoleModule } from "../../modules/role/role.module";
 import { MailModule } from "../../modules/supporting-modules/mail/mail.module";
 import { NotificationModule } from "../../modules/supporting-modules/notification/notification.module";
 import { S3Module } from "../../modules/supporting-modules/s3/s3.module";
@@ -28,4 +30,7 @@ export const modules = [
     CustomFieldsModule,
     ModuleModule,
     ProductModule,
+    PermissionModule,
+    RoleModule,
+    
 ]
