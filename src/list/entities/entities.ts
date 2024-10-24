@@ -14,6 +14,7 @@ import { Role } from "../../modules/role/entities/role.entity";
 import { Permission } from "../../modules/permission/entities/permission.entity";
 import { Module_Table } from "../../modules/module/entities/module.entity";
 import { Product } from "../../modules/product/entities/product.entity";
+import { CustomFieldsData } from "../../modules/custom-fields/entities/custom-fields-data.entity";
 
 export const entities = [
     Admin,
@@ -28,6 +29,7 @@ export const entities = [
     DynamicSchema,
     Category,
     CustomFields,
+    CustomFieldsData,
     Role,
     Permission,
     Module_Table,
