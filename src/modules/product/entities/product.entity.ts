@@ -1,14 +1,11 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
-
-interface CustomFieldsData {
-  customFieldId: string,
-  value: string
-}
+import { CustomFieldsData } from '../../custom-fields/entities/custom-fields-data.entity';
+import { ProductStatus } from '../../../enums/status.enum';
 
 @Entity('product')
 export class Product extends BaseEntity {
-  @Column()
+  @Column({ unique: true })
   productName: string;
 
   @Column('decimal')
@@ -26,13 +23,17 @@ export class Product extends BaseEntity {
   @Column('simple-array')
   keywords: string[];
 
-  @Column()
-  productStatus: string;
+  @Column({
+    type: 'enum',
+    enum: ProductStatus,
+    default: ProductStatus.Draft,
+  })
+  productStatus: ProductStatus;
 
   @Column()
   productCode: string;
 
-  @Column('json')
+  @OneToMany(() => CustomFieldsData, (customFieldsData) => customFieldsData.product, { cascade: true })
   customFieldsData: CustomFieldsData[];
 }
 
