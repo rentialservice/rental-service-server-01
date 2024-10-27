@@ -8,19 +8,19 @@ export class Product extends BaseEntity {
   @Column({ unique: true })
   productName: string;
 
-  @Column('decimal')
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   price: number;
 
-  @Column('decimal')
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   salesPrice: number;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', default: '' })
   description: string;
 
-  @Column('int')
+  @Column({ type: 'int', default: 0 })
   stock: number;
 
-  @Column('simple-array')
+  @Column({ type: 'simple-array', default: [] })
   keywords: string[];
 
   @Column({
@@ -30,7 +30,7 @@ export class Product extends BaseEntity {
   })
   productStatus: ProductStatus;
 
-  @Column()
+  @Column({ type: 'text', default: '' })
   productCode: string;
 
   @OneToMany(() => CustomFieldsData, (customFieldsData) => customFieldsData.product, { cascade: true })

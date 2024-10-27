@@ -20,6 +20,7 @@ import { extractUsername, validateEmail, validatePhoneNumber } from '../../commo
 import { Buyer } from '../users/buyer/entities/buyer.entity';
 import { Seller } from '../users/seller/entities/seller.entity';
 import { Admin } from '../users/admin/entities/admin.entity';
+import { FirmService } from '../firm/firm.service';
 
 @Injectable()
 export class AuthService {
@@ -27,6 +28,7 @@ export class AuthService {
     private jwtSvc: JwtService,
     private mailService: MailService,
     private configSvc: ConfigService,
+    private firmService: FirmService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
     @InjectRepository(Buyer)
@@ -173,6 +175,8 @@ export class AuthService {
     if (type === "buyer") {
       userDetails = await this.buyerRepository.save(user);
     } else if (type === "seller") {
+      let firm = await this.firmService.create({ name: "Firm ABC" });
+      user.firm = firm;
       userDetails = await this.sellerRepository.save(user);
     } else {
       throw new Error('Invalid user type...!');
@@ -380,12 +384,14 @@ export class AuthService {
         username = userWithUsername
           ? `${username}${sixDigitGenerator()}`
           : username;
+        let firm = await this.firmService.create({ name: "Firm ABC" });
         let user: any = {
           email: ssoLoginDto.email,
           fullName: ssoLoginDto.fullName,
           username,
           avatar: ssoLoginDto.picture,
           ssoLogin: true,
+          firm,
         };
         let userDetails = await this.sellerRepository.save(user);
         let accessToken = this.#createJwtAccessToken({ ...userDetails, type });

@@ -66,7 +66,8 @@ export const errorResponse = (
   error?: any,
   code?: number,
 ) => {
-  console.log({error})
+  console.log({ error })
+  code = code ? code : error.status;
   response.status(code || ErrorConstants.INTERNAL_SERVER_ERROR).json({
     status: false,
     message: error.message || ErrorConstants.INTERNAL_SERVER_ERROR_MESSAGE,

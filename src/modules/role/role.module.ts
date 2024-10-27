@@ -9,5 +9,6 @@ import { PermissionModule } from '../permission/permission.module';
   imports: [TypeOrmModule.forFeature([Role]), PermissionModule],
   providers: [RoleService],
   controllers: [RoleController],
+  exports: [RoleService],
 })
 export class RoleModule { }

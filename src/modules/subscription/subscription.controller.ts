@@ -1,23 +1,23 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Req, Res, Query } from '@nestjs/common';
-import { RoleService } from './role.service';
-import { Role } from './entities/role.entity';
+import { SubscriptionService } from './subscription.service';
+import { Subscription } from './entities/subscription.entity';
 import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { Request, Response } from 'express';
 import { RoutesConstants } from '../../constants/routes.constant';
 import { errorResponse, successPaginatedResponse, successResponse } from '../../base/response';
 
 @UseGuards(JwtAuthGuard)
-@Controller('role')
-export class RoleController {
-    constructor(private readonly roleService: RoleService) { }
+@Controller('firm')
+export class SubscriptionController {
+    constructor(private readonly firmService: SubscriptionService) { }
 
     @Post()
     async create(
         @Req() request: Request,
         @Res() response: Response,
-        @Body() createObject: Partial<Role>): Promise<void> {
+        @Body() createObject: Partial<Subscription>): Promise<void> {
         try {
-            let result = await this.roleService.create(createObject);
+            let result = await this.firmService.create(createObject);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -33,7 +33,7 @@ export class RoleController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            const [result, count]: any = await this.roleService.getAll(page, pageSize, filterType);
+            const [result, count]: any = await this.firmService.getAll(page, pageSize, filterType);
             successPaginatedResponse(response, result, count, page, pageSize);
         } catch (error: any) {
             errorResponse(response, error);
@@ -48,7 +48,7 @@ export class RoleController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.roleService.getById(id, filterType);
+            let result = await this.firmService.getById(id, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -60,11 +60,11 @@ export class RoleController {
         @Req() request: Request,
         @Res() response: Response,
         @Param(RoutesConstants.ID) id: string,
-        @Body() updateObject: Partial<Role>,
+        @Body() updateObject: Partial<Subscription>,
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.roleService.update(id, updateObject, filterType);
+            let result = await this.firmService.update(id, updateObject, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -80,7 +80,7 @@ export class RoleController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.roleService.updateActionById(id, action, filterType);
+            let result = await this.firmService.updateActionById(id, action, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -95,22 +95,7 @@ export class RoleController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.roleService.delete(id, filterType);
-            successResponse(response, result);
-        } catch (error: any) {
-            errorResponse(response, error);
-        }
-    }
-
-    @Post("/filter")
-    async filter(
-        @Req() request: Request,
-        @Res() response: Response,
-        @Body() filterCriteria: any,
-        @Query(RoutesConstants.FILTERTYPE) filterType: string,
-    ): Promise<void> {
-        try {
-            const result: any = await this.roleService.filter(filterCriteria, [], filterType);
+            let result = await this.firmService.delete(id, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
