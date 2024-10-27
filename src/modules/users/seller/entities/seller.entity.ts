@@ -4,11 +4,12 @@ import {
   Column,
   OneToMany,
   OneToOne,
-  JoinColumn
+  JoinColumn,
+  ManyToOne
 } from 'typeorm';
-import { ROLES } from '../../../../enums/role.enum';
 import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
 import { Firm } from '../../../firm/entities/firm.entity';
+import { Role } from '../../../role/entities/role.entity';
 
 @Entity("seller")
 export class Seller extends BaseEntity {
@@ -34,8 +35,9 @@ export class Seller extends BaseEntity {
   @Column('boolean', { default: false })
   isOwner: boolean;
 
-  @Column({ type: 'enum', enum: ROLES, default: ROLES.USER })
-  role: ROLES;
+  @OneToOne(() => Role)
+  @JoinColumn({ name: "roleId" }) 
+  role: Role;
 
   @Column({
     default:

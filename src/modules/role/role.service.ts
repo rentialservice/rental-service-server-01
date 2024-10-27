@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
 import { getUpdateObjectByAction } from '../../common/action-update';
 import { PermissionService } from '../permission/permission.service';
+import { buildFilterCriteriaQuery } from '../../common/utils';
 
 @Injectable()
 export class RoleService {
@@ -14,9 +15,12 @@ export class RoleService {
 
     async create(createObject: any): Promise<any> {
         if (!createObject?.permissions?.length) {
-            throw new Error("At least one permission is required to create any role")
+            throw new NotAcceptableException("At least one permission is required to create any role")
         }
-        createObject.permissions = await this.permissionService.filter({ id: createObject.permissions })
+        createObject.permissions = await this.permissionService.filter({ name: createObject.permissions })
+        if(!createObject?.permissions?.length){
+            throw new NotFoundException("Given permission is not exist")
+        }
         const result = this.roleRepository.create(createObject);
         return await this.roleRepository.save(result);
     }
@@ -57,5 +61,12 @@ export class RoleService {
             throw new NotFoundException(`Role with ID ${id} not found`);
         }
         return result;
+    }
+
+    async filter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
+        return await this.roleRepository.find({
+            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+            relations: [...fields]
+        });
     }
 }

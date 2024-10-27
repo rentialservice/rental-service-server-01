@@ -7,6 +7,7 @@ import { ModuleModule } from "../../modules/module/module.module";
 import { PermissionModule } from "../../modules/permission/permission.module";
 import { ProductModule } from "../../modules/product/product.module";
 import { RoleModule } from "../../modules/role/role.module";
+import { SubscriptionModule } from "../../modules/subscription/subscription.module";
 import { MailModule } from "../../modules/supporting-modules/mail/mail.module";
 import { NotificationModule } from "../../modules/supporting-modules/notification/notification.module";
 import { S3Module } from "../../modules/supporting-modules/s3/s3.module";
@@ -32,5 +33,5 @@ export const modules = [
     ProductModule,
     PermissionModule,
     RoleModule,
-    
+    SubscriptionModule,
 ]

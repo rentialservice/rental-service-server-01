@@ -15,6 +15,7 @@ import { Permission } from "../../modules/permission/entities/permission.entity"
 import { Module_Table } from "../../modules/module/entities/module.entity";
 import { Product } from "../../modules/product/entities/product.entity";
 import { CustomFieldsData } from "../../modules/custom-fields/entities/custom-fields-data.entity";
+import { Subscription } from "../../modules/subscription/entities/subscription.entity";
 
 export const entities = [
     Admin,
@@ -34,4 +35,5 @@ export const entities = [
     Permission,
     Module_Table,
     Product,
+    Subscription,
 ] 
