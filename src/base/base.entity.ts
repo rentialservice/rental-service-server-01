@@ -1,4 +1,4 @@
-import { Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 
 export class BaseEntity {
   @PrimaryGeneratedColumn("uuid")
@@ -10,9 +10,17 @@ export class BaseEntity {
   @Column('boolean', { default: false })
   deleteFlag: boolean;
 
-  @Column({ default: new Date() })
+  @CreateDateColumn()
   createdAt: Date;
 
-  @Column({ default: new Date() })
+  @UpdateDateColumn()
   modifiedAt: Date;
 }
+
+// similar to above (only for reference)
+
+// @Column({ type: 'timestamp', default: () => 'CURRENT_TIMESTAMP' })
+// createdAt: Date;
+
+// @Column({ type: 'timestamp', onUpdate: 'CURRENT_TIMESTAMP' })
+// updatedAt: Date;

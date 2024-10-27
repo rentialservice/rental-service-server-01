@@ -2,6 +2,7 @@ import {
   HttpException,
   HttpStatus,
   Injectable,
+  NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,6 +12,7 @@ import { Admin } from './entities/admin.entity';
 import { NotificationService } from '../../supporting-modules/notification/notification.service';
 import { getUpdateObjectByAction } from '../../../common/action-update';
 import { SelectConstants } from '../../../constants/select.constant';
+import { RoleService } from '../../role/role.service';
 
 
 @Injectable()
@@ -18,6 +20,7 @@ export class AdminService {
   constructor(
     @InjectRepository(Admin) private readonly repository: Repository<Admin>,
     private readonly notificationService: NotificationService,
+    private readonly roleService: RoleService,
   ) { }
 
   async sendPushNotification(
@@ -44,27 +47,37 @@ export class AdminService {
   async getAll(page: number = 1, pageSize: number = 10): Promise<any> {
     return await this.repository.findAndCount({
       where: { deleteFlag: false },
+      relations: ["role"],
       skip: (page - 1) * pageSize,
       take: pageSize,
-      select: SelectConstants.USER_SELECT,
+      select: SelectConstants.ADMIN_SELECT,
     });
   }
 
   async getById(id: string, selfId: string) {
     return await this.repository.findOne({
       where: { id },
-      select: SelectConstants.USER_SELECT,
+      relations: ["role"],
+      select: SelectConstants.ADMIN_SELECT,
     });
   }
 
   async getByUsername(username: string, selfId: string) {
     return await this.repository.findOne({
       where: { username },
-      select: SelectConstants.USER_SELECT,
+      relations: ["role"],
+      select: SelectConstants.ADMIN_SELECT,
     });
   }
 
   async updateById(id: string, user: any) {
+    if (user?.role) {
+      let [role] = await this.roleService.filter({ name: user?.role })
+      if (!role) {
+        throw new NotFoundException("Given Role is not exist")
+      }
+      user.role = role
+    }
     let result = await this.repository.update(id, user);
     if (result) {
       this.sendPushNotification(

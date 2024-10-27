@@ -3,12 +3,13 @@ import {
   Column,
   OneToMany,
   OneToOne,
-  JoinColumn
+  JoinColumn,
+  ManyToOne
 } from 'typeorm';
 import { BaseEntity } from '../../../../base/base.entity';
 import { Firm } from '../../../firm/entities/firm.entity';
-import { ROLES } from '../../../../enums/role.enum';
 import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
+import { Role } from '../../../role/entities/role.entity';
 
 @Entity("admin")
 export class Admin extends BaseEntity {
@@ -30,8 +31,9 @@ export class Admin extends BaseEntity {
   @Column({ default: '' })
   email: string;
 
-  @Column({ type: 'enum', enum: ROLES, default: ROLES.ADMIN })
-  role: ROLES;
+  @OneToOne(() => Role)
+  @JoinColumn({ name: "roleId" }) 
+  role: Role;
 
   @Column({
     default:

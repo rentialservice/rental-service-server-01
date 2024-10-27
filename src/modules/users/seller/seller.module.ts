@@ -4,11 +4,13 @@ import { NotificationModule } from '../../supporting-modules/notification/notifi
 import { Seller } from './entities/seller.entity';
 import { SellerController } from './seller.controller';
 import { SellerService } from './seller.service';
+import { RoleModule } from '../../role/role.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Seller]),
-    NotificationModule
+    NotificationModule,
+    RoleModule
   ],
   controllers: [SellerController],
   providers: [SellerService],
