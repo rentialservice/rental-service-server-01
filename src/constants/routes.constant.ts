@@ -5,7 +5,8 @@ export const RoutesConstants = {
   PAGESIZE: 'pageSize',
   ID: 'id',
   USERNAME: 'username',
-  ACTION: 'action',
+  ACTION: '/action',
+  UPDATE_ACTION: '/:id/action/:action',
   FILTERTYPE: 'filterType',
 
   // Auth Module
@@ -22,7 +23,7 @@ export const RoutesConstants = {
   FORGOT_PASSWORD_SEND_OTP: 'forgot-password/send-otp',
   FORGOT_PASSWORD: 'forgot-password',
   CHANGE_PASSWORD: 'change-password',
-  
+
   GET_USER_DETAILS: 'get-user-details',
   GET_USER_BY_USERNAME: 'get-user-by-username',
   GET_ALL_USER: 'get-all-user',

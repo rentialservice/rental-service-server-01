@@ -11,6 +11,5 @@ export class Permission extends BaseEntity {
   description: string;
 
   @ManyToOne(() => Role, (role) => role.permissions)
-  @JoinColumn({ name: "roleId" }) 
   role: Role;
 }

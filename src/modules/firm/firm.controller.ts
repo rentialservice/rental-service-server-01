@@ -80,6 +80,7 @@ export class FirmController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
+            console.log({ id, action, filterType })
             let result = await this.firmService.updateActionById(id, action, filterType);
             successResponse(response, result);
         } catch (error: any) {
@@ -96,6 +97,21 @@ export class FirmController {
     ): Promise<void> {
         try {
             let result = await this.firmService.delete(id, filterType);
+            successResponse(response, result);
+        } catch (error: any) {
+            errorResponse(response, error);
+        }
+    }
+
+    @Post("/filter")
+    async filter(
+        @Req() request: Request,
+        @Res() response: Response,
+        @Body() filterCriteria: any,
+        @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    ): Promise<void> {
+        try {
+            const result: any = await this.firmService.filter(filterCriteria, [], filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);

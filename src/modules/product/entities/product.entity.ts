@@ -1,7 +1,8 @@
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { CustomFieldsData } from '../../custom-fields/entities/custom-fields-data.entity';
 import { ProductStatus } from '../../../enums/status.enum';
+import { Category } from '../../category/entities/category.entity';
 
 @Entity('product')
 export class Product extends BaseEntity {
@@ -35,5 +36,8 @@ export class Product extends BaseEntity {
 
   @OneToMany(() => CustomFieldsData, (customFieldsData) => customFieldsData.product, { cascade: true })
   customFieldsData: CustomFieldsData[];
+
+  @ManyToOne(() => Category, (category) => category.product)
+  category: Category;
 }
 

@@ -3,8 +3,6 @@ import {
   Entity,
   Column,
   OneToMany,
-  OneToOne,
-  JoinColumn,
   ManyToOne
 } from 'typeorm';
 import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
@@ -28,15 +26,13 @@ export class Seller extends BaseEntity {
   @Column({ default: '' })
   email: string;
 
-  @OneToOne(() => Firm)
-  @JoinColumn({ name: 'firmId' })
+  @ManyToOne(() => Firm)
   firm: Firm;
 
   @Column('boolean', { default: false })
   isOwner: boolean;
 
-  @OneToOne(() => Role)
-  @JoinColumn({ name: "roleId" }) 
+  @ManyToOne(() => Role)
   role: Role;
 
   @Column({

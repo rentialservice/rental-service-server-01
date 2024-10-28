@@ -3,9 +3,7 @@ import {
   Entity,
   Column,
   OneToMany,
-  JoinColumn,
   ManyToOne,
-  OneToOne
 } from 'typeorm';
 import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
 import { Firm } from '../../../firm/entities/firm.entity';
@@ -29,11 +27,9 @@ export class Buyer extends BaseEntity {
   email: string;
 
   @ManyToOne(() => Firm)
-  @JoinColumn({ name: 'firmId' })
   firm: Firm;
 
-  @OneToOne(() => Role)
-  @JoinColumn({ name: "roleId" }) 
+  @ManyToOne(() => Role)
   role: Role;
 
   @Column({

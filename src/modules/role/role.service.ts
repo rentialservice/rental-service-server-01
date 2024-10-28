@@ -18,7 +18,7 @@ export class RoleService {
             throw new NotAcceptableException("At least one permission is required to create any role")
         }
         createObject.permissions = await this.permissionService.filter({ name: createObject.permissions })
-        if(!createObject?.permissions?.length){
+        if (!createObject?.permissions?.length) {
             throw new NotFoundException("Given permission is not exist")
         }
         const result = this.roleRepository.create(createObject);
@@ -28,13 +28,17 @@ export class RoleService {
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
         return await this.roleRepository.findAndCount({
             where: { deleteFlag: false },
+            relations: ["permissions"],
             skip: (page - 1) * pageSize,
             take: pageSize,
         });
     }
 
     async getById(id: string, filterType?: string): Promise<any> {
-        const role = await this.roleRepository.findOne({ where: { id, deleteFlag: false }, relations: ["permissions"] });
+        const role = await this.roleRepository.findOne({
+            where: { id, deleteFlag: false },
+            relations: ["permissions"]
+        });
         if (!role) {
             throw new NotFoundException(`Role with ID ${id} not found`);
         }
