@@ -5,12 +5,14 @@ import { Firm } from './entities/firm.entity';
 import { getUpdateObjectByAction } from '../../common/action-update';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { SubscriptionService } from '../subscription/subscription.service';
+import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class FirmService {
     constructor(
         @InjectRepository(Firm) private readonly firmRepository: Repository<Firm>,
-        private readonly subscriptionService: SubscriptionService
+        private readonly subscriptionService: SubscriptionService,
+        private readonly categoryService: CategoryService
     ) { }
 
     async create(createObject: Partial<Firm>): Promise<any> {
@@ -21,7 +23,7 @@ export class FirmService {
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
         return await this.firmRepository.findAndCount({
             where: { deleteFlag: false },
-            relations: ["subscription"],
+            relations: ["subscription", "categories"],
             skip: (page - 1) * pageSize,
             take: pageSize,
         });
@@ -30,7 +32,7 @@ export class FirmService {
     async getById(id: string, filterType?: string): Promise<any> {
         const firm = await this.firmRepository.findOne({
             where: { id, deleteFlag: false },
-            relations: ["subscription"],
+            relations: ["subscription", "categories"],
         });
         if (!firm) {
             throw new NotFoundException(`Firm with ID ${id} not found`);
@@ -46,7 +48,20 @@ export class FirmService {
             }
             updateObject.subscription = subscription;
         }
-        return await this.firmRepository.update(id, updateObject);
+        if (updateObject?.categories?.length) {
+            let categories = await this.categoryService.filter({ id: updateObject.categories })
+            if (!categories?.length) {
+                throw new NotFoundException(`Categories with id ${updateObject.categories} not found`)
+            }
+            const firm = await this.firmRepository.findOne({ where: { id }, relations: ['categories'] });
+            if (!firm) {
+                throw new NotFoundException(`Firm with id ${id} not found`);
+            }
+            firm.categories = categories;
+            return await this.firmRepository.save(firm);
+        } else {
+            return await this.firmRepository.update(id, updateObject);
+        }
     }
 
     async updateActionById(id: string, action: string, filterType?: string) {
