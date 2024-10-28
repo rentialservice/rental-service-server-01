@@ -4,13 +4,11 @@ import { Repository } from 'typeorm';
 import { Subscription } from './entities/subscription.entity';
 import { getUpdateObjectByAction } from '../../common/action-update';
 import { buildFilterCriteriaQuery } from '../../common/utils';
-import { FirmService } from '../firm/firm.service';
 
 @Injectable()
 export class SubscriptionService {
     constructor(
         @InjectRepository(Subscription) private readonly subscriptionRepository: Repository<Subscription>,
-        private readonly firmService: FirmService,
     ) { }
 
     async create(createObject: Partial<Subscription>): Promise<any> {
@@ -21,7 +19,6 @@ export class SubscriptionService {
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
         return await this.subscriptionRepository.findAndCount({
             where: { deleteFlag: false },
-            relations: ["firm"],
             skip: (page - 1) * pageSize,
             take: pageSize,
         });
@@ -30,7 +27,6 @@ export class SubscriptionService {
     async getById(id: string, filterType?: string): Promise<any> {
         const subscription = await this.subscriptionRepository.findOne({
             where: { id, deleteFlag: false },
-            relations: ["firm"],
         });
         if (!subscription) {
             throw new NotFoundException(`Subscription with ID ${id} not found`);

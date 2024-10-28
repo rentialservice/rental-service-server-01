@@ -1,10 +1,10 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Req, Res, Query } from '@nestjs/common';
-import { SubscriptionService } from '../subscription.service';
-import { Subscription } from './subscription.entity';
-import { JwtAuthGuard } from '../../auth/jwt.auth.guard';
+import { SubscriptionService } from './subscription.service';
+import { Subscription } from './entities/subscription.entity';
+import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { Request, Response } from 'express';
-import { RoutesConstants } from '../../../constants/routes.constant';
-import { errorResponse, successPaginatedResponse, successResponse } from '../../../base/response';
+import { RoutesConstants } from '../../constants/routes.constant';
+import { errorResponse, successPaginatedResponse, successResponse } from '../../base/response';
 
 @UseGuards(JwtAuthGuard)
 @Controller('subscription')
