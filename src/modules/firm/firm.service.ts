@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Firm } from './entities/firm.entity';
 import { getUpdateObjectByAction } from '../../common/action-update';
+import { buildFilterCriteriaQuery } from '../../common/utils';
 
 @Injectable()
 export class FirmService {
@@ -18,13 +19,17 @@ export class FirmService {
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
         return await this.firmRepository.findAndCount({
             where: { deleteFlag: false },
+            relations: ["subscription"],
             skip: (page - 1) * pageSize,
             take: pageSize,
         });
     }
 
     async getById(id: string, filterType?: string): Promise<any> {
-        const firm = await this.firmRepository.findOne({ where: { id, deleteFlag: false } });
+        const firm = await this.firmRepository.findOne({
+            where: { id, deleteFlag: false },
+            relations: ["subscription"],
+        });
         if (!firm) {
             throw new NotFoundException(`Firm with ID ${id} not found`);
         }
@@ -48,5 +53,12 @@ export class FirmService {
             throw new NotFoundException(`Firm with ID ${id} not found`);
         }
         return result;
+    }
+
+    async filter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
+        return await this.firmRepository.find({
+            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+            relations: [...fields]
+        });
     }
 }

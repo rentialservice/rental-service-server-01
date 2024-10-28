@@ -1,5 +1,7 @@
-import { Entity, Column } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
+import { Subscription } from '../../subscription/entities/subscription.entity';
+import { Seller } from '../../users/seller/entities/seller.entity';
 
 @Entity('firm')
 export class Firm extends BaseEntity {
@@ -17,4 +19,7 @@ export class Firm extends BaseEntity {
 
   @Column({ default: '' })
   description: string;
+
+  @ManyToOne(() => Subscription)
+  subscription: Subscription;
 }
