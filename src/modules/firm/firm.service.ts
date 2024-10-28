@@ -4,11 +4,13 @@ import { Repository } from 'typeorm';
 import { Firm } from './entities/firm.entity';
 import { getUpdateObjectByAction } from '../../common/action-update';
 import { buildFilterCriteriaQuery } from '../../common/utils';
+import { SubscriptionService } from '../subscription/subscription.service';
 
 @Injectable()
 export class FirmService {
     constructor(
         @InjectRepository(Firm) private readonly firmRepository: Repository<Firm>,
+        private readonly subscriptionService: SubscriptionService
     ) { }
 
     async create(createObject: Partial<Firm>): Promise<any> {
@@ -37,6 +39,13 @@ export class FirmService {
     }
 
     async update(id: string, updateObject: Partial<Firm>, filterType?: string): Promise<any> {
+        if (updateObject?.subscription) {
+            let [subscription] = await this.subscriptionService.filter({ name: updateObject.subscription })
+            if (!subscription) {
+                throw new NotFoundException(`Subscription with name ${updateObject.subscription} not found`)
+            }
+            updateObject.subscription = subscription;
+        }
         return await this.firmRepository.update(id, updateObject);
     }
 

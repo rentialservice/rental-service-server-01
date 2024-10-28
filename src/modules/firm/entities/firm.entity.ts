@@ -1,8 +1,6 @@
-import { Entity, Column, OneToMany, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Subscription } from '../../subscription/entities/subscription.entity';
-import { Seller } from '../../users/seller/entities/seller.entity';
-
 @Entity('firm')
 export class Firm extends BaseEntity {
   @Column()
