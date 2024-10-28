@@ -5,6 +5,7 @@ import { Product } from './entities/product.entity';
 import { getUpdateObjectByAction } from '../../common/action-update';
 import { CustomFieldsData } from '../custom-fields/entities/custom-fields-data.entity';
 import { CustomFields } from '../custom-fields/entities/custom-fields.entity';
+import { CategoryService } from '../category/category.service';
 
 @Injectable()
 export class ProductService {
@@ -12,34 +13,24 @@ export class ProductService {
         @InjectRepository(Product) private readonly productRepository: Repository<Product>,
         @InjectRepository(CustomFields) private readonly customFieldsRepository: Repository<CustomFields>,
         @InjectRepository(CustomFieldsData) private readonly customFieldsDataRepository: Repository<CustomFieldsData>,
+        private readonly categoryService: CategoryService,
         private readonly dataSource: DataSource
     ) { }
 
     async create(createObject: any): Promise<any> {
         const queryRunner = this.dataSource.createQueryRunner();
         await queryRunner.startTransaction();
-
         try {
-            if (createObject?.customFieldsData?.length) {
-                createObject.customFieldsData = await Promise.all(
-                    createObject.customFieldsData.map(async (fieldData: any) => {
-                        const customField = await this.customFieldsRepository.findOne({
-                            where: { id: fieldData.customField }
-                        });
-                        if (!customField) {
-                            throw new Error(`Custom field with id ${fieldData.customField} not found`);
-                        }
-                        const customFieldsData = this.customFieldsDataRepository.create({
-                            customField,
-                            value: fieldData.value,
-                        });
-                        return customFieldsData;
-                    })
-                );
+            let [category] = await this.categoryService.filter({
+                id: createObject.category
+            });
+            if (!category) {
+                throw new NotFoundException(`Category with id ${createObject.category} not found`);
             }
+            createObject.category = category;
+            createObject.customFieldsData = await this.customFieldsValidationAndCreation(createObject);
             const product = this.productRepository.create(createObject);
             const savedProduct = await queryRunner.manager.save(product);
-
             await queryRunner.commitTransaction();
             return savedProduct;
         } catch (error) {
@@ -50,19 +41,40 @@ export class ProductService {
         }
     }
 
-
+    private async customFieldsValidationAndCreation(createObject: any) {
+        if (createObject?.customFieldsData?.length) {
+            return await Promise.all(
+                createObject.customFieldsData.map(async (fieldData: any) => {
+                    let customField = await this.customFieldsRepository.findOne({
+                        where: { id: fieldData.customField }
+                    });
+                    if (!customField) {
+                        throw new NotFoundException(`Custom field with id ${fieldData.customField} not found`);
+                    }
+                    let customFieldsData = this.customFieldsDataRepository.create({
+                        customField,
+                        value: fieldData.value,
+                    });
+                    return customFieldsData;
+                })
+            );
+        }
+    }
 
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
         return await this.productRepository.findAndCount({
             where: { deleteFlag: false },
-            relations: ["customFieldsData.customField"],
+            relations: ["customFieldsData.customField", "category"],
             skip: (page - 1) * pageSize,
             take: pageSize,
         });
     }
 
     async getById(id: string, filterType?: string): Promise<any> {
-        const product = await this.productRepository.findOne({ where: { id, deleteFlag: false } });
+        const product = await this.productRepository.findOne({
+            where: { id, deleteFlag: false },
+            relations: ["customFieldsData.customField", "category"],
+        });
         if (!product) {
             throw new NotFoundException(`Product with ID ${id} not found`);
         }

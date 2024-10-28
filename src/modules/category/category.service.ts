@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { getUpdateObjectByAction } from '../../common/action-update';
 import { Category } from './entities/category.entity';
+import { buildFilterCriteriaQuery } from '../../common/utils';
 
 @Injectable()
 export class CategoryService {
@@ -48,5 +49,12 @@ export class CategoryService {
             throw new NotFoundException(`Category with ID ${id} not found`);
         }
         return result;
+    }
+
+    async filter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
+        return await this.categoryRepository.find({
+            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+            relations: [...fields]
+        });
     }
 }
