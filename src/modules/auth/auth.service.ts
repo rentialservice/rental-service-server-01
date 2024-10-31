@@ -83,110 +83,151 @@ export class AuthService {
         throw new Error("Invalid Email Id");
       }
 
-      if (type === "buyer") {
-        userDetails = await this.buyerRepository.findOne({
-          where: {
-            email: sendOtpDto.email,
-            deleteFlag: false,
-          },
-        });
-      } else if (type === "seller") {
-        userDetails = await this.sellerRepository.findOne({
-          where: {
-            email: sendOtpDto.email,
-            deleteFlag: false,
-          },
-        });
-      } else {
-        throw new Error('Invalid user type...!');
-      }
+      // if (type === "buyer") {
+      //   userDetails = await this.buyerRepository.findOne({
+      //     where: {
+      //       email: sendOtpDto.email,
+      //       deleteFlag: false,
+      //     },
+      //   });
+      // } else if (type === "seller") {
+      //   userDetails = await this.sellerRepository.findOne({
+      //     where: {
+      //       email: sendOtpDto.email,
+      //       deleteFlag: false,
+      //     },
+      //   });
+      // } else {
+      //   throw new Error('Invalid user type...!');
+      // }
 
-      if (userDetails) {
-        throw new Error('User with this email already exist, please login...!');
+      // if (userDetails) {
+      //   throw new Error('User with this email already exist, please login...!');
+      // } else {
+      let otp = otpGenerator();
+      await this.mailService.sendOTP({ email: sendOtpDto.email, otp });
+      let hashedOtp = await bcrypt.hash(otp, 8);
+      if (process.env.OTP_PHASE === "testing") {
+        return {
+          otp,
+          otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+        };
       } else {
-        let otp = otpGenerator();
-        await this.mailService.sendOTP({ email: sendOtpDto.email, otp });
-        let hashedOtp = await bcrypt.hash(otp, 8);
-        if (process.env.OTP_PHASE === "testing") {
-          return {
-            otp,
-            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
-          };
-        } else {
-          return {
-            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
-          };
-        }
+        return {
+          otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+        };
       }
+      // }
     } else {
       let userDetails: any;
       if (!validatePhoneNumber(sendOtpDto.phone)) {
         throw new Error("Invalid Phone Number");
       }
-      if (type === "buyer") {
-        userDetails = await this.buyerRepository.findOne({
-          where: {
-            phone: sendOtpDto.phone,
-            deleteFlag: false,
-          },
-        });
-      } else if (type === "seller") {
-        userDetails = await this.sellerRepository.findOne({
-          where: {
-            phone: sendOtpDto.phone,
-            deleteFlag: false,
-          },
-        });
-      } else {
-        throw new Error('Invalid user type...!');
-      }
+      // if (type === "buyer") {
+      //   userDetails = await this.buyerRepository.findOne({
+      //     where: {
+      //       phone: sendOtpDto.phone,
+      //       deleteFlag: false,
+      //     },
+      //   });
+      // } else if (type === "seller") {
+      //   userDetails = await this.sellerRepository.findOne({
+      //     where: {
+      //       phone: sendOtpDto.phone,
+      //       deleteFlag: false,
+      //     },
+      //   });
+      // } else {
+      //   throw new Error('Invalid user type...!');
+      // }
 
-      if (userDetails) {
-        throw new Error('User with this phone number already exist, please login...!');
+      // if (userDetails) {
+      //   throw new Error('User with this phone number already exist, please login...!');
+      // } else {
+      let otp = otpGenerator();
+      // await this.mailService.sendOTP({ email: sendOtpDto.email, otp }); // TODO instead of this add phone service
+      let hashedOtp = await bcrypt.hash(otp, 8);
+      if (process.env.OTP_PHASE === "testing") {
+        return {
+          otp,
+          otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+        };
       } else {
-        let otp = otpGenerator();
-        // await this.mailService.sendOTP({ email: sendOtpDto.email, otp }); // TODO instead of this add phone service
-        let hashedOtp = await bcrypt.hash(otp, 8);
-        if (process.env.OTP_PHASE === "testing") {
-          return {
-            otp,
-            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
-          };
-        } else {
-          return {
-            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
-          };
-        }
+        return {
+          otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+        };
       }
+      // }
     }
   }
 
   async verifyOtp(verifyOtpDto: VerifyOtpDto): Promise<any> {
     let verify = await this.jwtSvc.decode(verifyOtpDto.otpToken);
     let type = verify?.type;
+    let authType = verify?.authType;
     if (!verify) throw new Error('OTP is expired...!');
     let otpIsValid = await bcrypt.compare(verifyOtpDto.otp, verify.hashedOtp);
     if (!otpIsValid) throw new Error('OTP is not valid...!');
-    let user: any = {
-      email: verify?.email || "",
-      phone: verify?.phone || "",
-    };
+
     let userDetails: any;
     if (type === "buyer") {
-      userDetails = await this.buyerRepository.save(user);
+      if (authType === "email") {
+        userDetails = await this.buyerRepository.findOne({
+          where: { email: verify?.email, deleteFlag: false },
+          relations: ["firm"]
+        });
+      } else if (authType === "phone") {
+        userDetails = await this.buyerRepository.findOne({
+          where: { phone: verify?.phone, deleteFlag: false },
+          relations: ["firm"]
+        });
+      } else {
+        throw new Error('Invalid auth type...!');
+      }
     } else if (type === "seller") {
-      let firm = await this.firmService.create({ name: "Firm ABC" });
-      user.firm = firm;
-      userDetails = await this.sellerRepository.save(user);
-    } else {
-      throw new Error('Invalid user type...!');
+      if (authType === "email") {
+        userDetails = await this.sellerRepository.findOne({
+          where: { email: verify?.email, deleteFlag: false },
+          relations: ["firm"]
+        });
+      } else if (authType === "phone") {
+        userDetails = await this.sellerRepository.findOne({
+          where: { phone: verify?.phone, deleteFlag: false },
+          relations: ["firm"]
+        });
+      } else {
+        throw new Error('Invalid auth type...!');
+      }
     }
-    let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
-    let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
-    delete userDetails.password;
-    delete userDetails.activeFlag;
-    delete userDetails.deleteFlag;
-    return { ...userDetails, accessToken, refreshToken, isNewUser: true };
+    if (userDetails) {
+      let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
+      let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
+      delete userDetails.password;
+      delete userDetails.activeFlag;
+      delete userDetails.deleteFlag;
+      return { ...userDetails, accessToken, refreshToken, isNewUser: false };
+    } else {
+      let user: any = {
+        email: verify?.email || "",
+        phone: verify?.phone || "",
+      };
+      if (type === "buyer") {
+        userDetails = await this.buyerRepository.save(user);
+      } else if (type === "seller") {
+        let firm = await this.firmService.create({ name: "Firm ABC" });
+        user.firm = firm;
+        userDetails = await this.sellerRepository.save(user);
+      } else {
+        throw new Error('Invalid user type...!');
+      }
+      let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
+      let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
+      delete userDetails.password;
+      delete userDetails.activeFlag;
+      delete userDetails.deleteFlag;
+      return { ...userDetails, accessToken, refreshToken, isNewUser: true };
+    }
+
   }
 
   async sendOtpAdmin(sendOtpDto: any): Promise<any> {
@@ -196,59 +237,59 @@ export class AuthService {
         throw new Error("Invalid Email Id");
       }
 
-      let userDetails = await this.adminRepository.findOne({
-        where: {
-          email: sendOtpDto.email,
-          deleteFlag: false,
-        },
-      });
+      // let userDetails = await this.adminRepository.findOne({
+      //   where: {
+      //     email: sendOtpDto.email,
+      //     deleteFlag: false,
+      //   },
+      // });
 
-      if (userDetails) {
-        throw new Error('User with this email already exist, please login...!');
+      // if (userDetails) {
+      //   throw new Error('User with this email already exist, please login...!');
+      // } else {
+      let otp = otpGenerator();
+      await this.mailService.sendOTP({ email: sendOtpDto.email, otp });
+      let hashedOtp = await bcrypt.hash(otp, 8);
+      if (process.env.OTP_PHASE === "testing") {
+        return {
+          otp,
+          otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+        };
       } else {
-        let otp = otpGenerator();
-        await this.mailService.sendOTP({ email: sendOtpDto.email, otp });
-        let hashedOtp = await bcrypt.hash(otp, 8);
-        if (process.env.OTP_PHASE === "testing") {
-          return {
-            otp,
-            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
-          };
-        } else {
-          return {
-            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
-          };
-        }
+        return {
+          otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+        };
       }
+      // }
     } else {
       if (!validatePhoneNumber(sendOtpDto.phone)) {
         throw new Error("Invalid Phone Number");
       }
 
-      let userDetails = await this.adminRepository.findOne({
-        where: {
-          phone: sendOtpDto.phone,
-          deleteFlag: false,
-        },
-      });
+      // let userDetails = await this.adminRepository.findOne({
+      //   where: {
+      //     phone: sendOtpDto.phone,
+      //     deleteFlag: false,
+      //   },
+      // });
 
-      if (userDetails) {
-        throw new Error('User with this phone number already exist, please login...!');
+      // if (userDetails) {
+      //   throw new Error('User with this phone number already exist, please login...!');
+      // } else {
+      let otp = otpGenerator();
+      // await this.mailService.sendOTP({ email: sendOtpDto.email, otp }); // TODO instead of this add phone service
+      let hashedOtp = await bcrypt.hash(otp, 8);
+      if (process.env.OTP_PHASE === "testing") {
+        return {
+          otp,
+          otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+        };
       } else {
-        let otp = otpGenerator();
-        // await this.mailService.sendOTP({ email: sendOtpDto.email, otp }); // TODO instead of this add phone service
-        let hashedOtp = await bcrypt.hash(otp, 8);
-        if (process.env.OTP_PHASE === "testing") {
-          return {
-            otp,
-            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
-          };
-        } else {
-          return {
-            otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
-          };
-        }
+        return {
+          otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
+        };
       }
+      // }
     }
   }
 
@@ -257,17 +298,42 @@ export class AuthService {
     if (!verify) throw new Error('OTP is expired...!');
     let otpIsValid = await bcrypt.compare(verifyOtpDto.otp, verify.hashedOtp);
     if (!otpIsValid) throw new Error('OTP is not valid...!');
-    let user: any = {
-      email: verify?.email || "",
-      phone: verify?.phone || "",
-    };
-    let userDetails = await this.adminRepository.save(user);
-    let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
-    let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
-    delete userDetails.password;
-    delete userDetails.activeFlag;
-    delete userDetails.deleteFlag;
-    return { ...userDetails, accessToken, refreshToken, isNewUser: true };
+    let authType = verify?.authType;
+    let userDetails: any;
+
+    if (authType === "email") {
+      userDetails = await this.adminRepository.findOne({
+        where: { email: verify?.email, deleteFlag: false },
+      });
+    } else if (authType === "phone") {
+      userDetails = await this.adminRepository.findOne({
+        where: { phone: verify?.phone, deleteFlag: false },
+      });
+    } else {
+      throw new Error('Invalid auth type...!');
+    }
+
+    if (userDetails) {
+      let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
+      let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
+      delete userDetails.password;
+      delete userDetails.activeFlag;
+      delete userDetails.deleteFlag;
+      return { ...userDetails, accessToken, refreshToken, isNewUser: false };
+    } else {
+
+      let user: any = {
+        email: verify?.email || "",
+        phone: verify?.phone || "",
+      };
+      userDetails = await this.adminRepository.save(user);
+      let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
+      let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
+      delete userDetails.password;
+      delete userDetails.activeFlag;
+      delete userDetails.deleteFlag;
+      return { ...userDetails, accessToken, refreshToken, isNewUser: true };
+    }
   }
 
   async login(loginDto: LoginDto): Promise<any> {
