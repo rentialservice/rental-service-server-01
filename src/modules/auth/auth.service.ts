@@ -3,7 +3,6 @@ import { MailService } from '../supporting-modules/mail/mail.service';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
 import {
   VerifyOtpDto,
@@ -29,8 +28,6 @@ export class AuthService {
     private mailService: MailService,
     private configSvc: ConfigService,
     private firmService: FirmService,
-    @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
     @InjectRepository(Buyer)
     private readonly buyerRepository: Repository<Buyer>,
     @InjectRepository(Seller)
@@ -399,7 +396,8 @@ export class AuthService {
     }
     if (type === "buyer") {
       let userDetails = await this.buyerRepository.findOne({
-        where: { email: ssoLoginDto.email, deleteFlag: false, ssoLogin: true },
+        where: { email: ssoLoginDto.email, deleteFlag: false },
+        relations: ["firm"]
       });
       if (userDetails) {
         let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
@@ -433,7 +431,8 @@ export class AuthService {
       }
     } else if (type === "seller") {
       let userDetails = await this.sellerRepository.findOne({
-        where: { email: ssoLoginDto.email, deleteFlag: false, ssoLogin: true },
+        where: { email: ssoLoginDto.email, deleteFlag: false },
+        relations: ["firm"]
       });
       if (userDetails) {
         let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
@@ -525,7 +524,7 @@ export class AuthService {
   async sendOtpForgotPassword(
     forgotPasswordVerifyEmailDto: ForgotPasswordVerifyEmailDto,
   ): Promise<any> {
-    let userDetails = await this.userRepository.findOne({
+    let userDetails = await this.buyerRepository.findOne({
       where: {
         email: forgotPasswordVerifyEmailDto.email,
         deleteFlag: false,
@@ -557,13 +556,13 @@ export class AuthService {
       verify.hashedOtp,
     );
     if (!otpIsValid) throw new Error('OTP is not valid...!');
-    let userDetails = await this.userRepository.findOne({
+    let userDetails = await this.buyerRepository.findOne({
       where: { email: verify.email, deleteFlag: false },
     });
     if (!userDetails)
       throw new Error('Invalid User or User may be deleted...!');
     let password = await bcrypt.hash(forgotPasswordDto.password, 8);
-    await this.userRepository.update(userDetails.id, { password });
+    await this.buyerRepository.update(userDetails.id, { password });
     let accessToken = this.#createJwtAccessToken(userDetails);
     let refreshToken = this.#createJwtRefreshToken(userDetails);
     delete userDetails.password;

@@ -3,10 +3,11 @@ import { BaseEntity } from '../../../base/base.entity';
 import { CustomFieldsData } from '../../custom-fields/entities/custom-fields-data.entity';
 import { ProductStatus } from '../../../enums/status.enum';
 import { Category } from '../../category/entities/category.entity';
+import { Firm } from '../../firm/entities/firm.entity';
 
 @Entity('product')
 export class Product extends BaseEntity {
-  @Column({ unique: true })
+  @Column()
   productName: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
@@ -15,7 +16,7 @@ export class Product extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   salesPrice: number;
 
-  @Column({ type: 'text', default: '' })
+  @Column({ default: '' })
   description: string;
 
   @Column({ type: 'int', default: 0 })
@@ -31,7 +32,7 @@ export class Product extends BaseEntity {
   })
   productStatus: ProductStatus;
 
-  @Column({ type: 'text', default: '' })
+  @Column({ unique: true, default: '' })
   productCode: string;
 
   @OneToMany(() => CustomFieldsData, (customFieldsData) => customFieldsData.product, { cascade: true })
@@ -39,5 +40,8 @@ export class Product extends BaseEntity {
 
   @ManyToOne(() => Category, (category) => category.product)
   category: Category;
+
+  @ManyToOne(() => Firm, (firm) => firm.product)
+  firm: Firm;
 }
 
