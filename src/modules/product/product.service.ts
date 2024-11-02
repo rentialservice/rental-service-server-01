@@ -6,6 +6,7 @@ import { getUpdateObjectByAction } from '../../common/action-update';
 import { CustomFieldsData } from '../custom-fields/entities/custom-fields-data.entity';
 import { CustomFields } from '../custom-fields/entities/custom-fields.entity';
 import { CategoryService } from '../category/category.service';
+import { FirmService } from '../firm/firm.service';
 
 @Injectable()
 export class ProductService {
@@ -14,6 +15,7 @@ export class ProductService {
         @InjectRepository(CustomFields) private readonly customFieldsRepository: Repository<CustomFields>,
         @InjectRepository(CustomFieldsData) private readonly customFieldsDataRepository: Repository<CustomFieldsData>,
         private readonly categoryService: CategoryService,
+        private readonly firmService: FirmService,
         private readonly dataSource: DataSource
     ) { }
 
@@ -28,6 +30,13 @@ export class ProductService {
                 throw new NotFoundException(`Category with id ${createObject.category} not found`);
             }
             createObject.category = category;
+            let [firm] = await this.firmService.filter({
+                id: createObject.firm
+            });
+            if (!firm) {
+                throw new NotFoundException(`Firm with id ${createObject.firm} not found`);
+            }
+            createObject.firm = firm;
             createObject.customFieldsData = await this.customFieldsValidationAndCreation(createObject);
             const product = this.productRepository.create(createObject);
             const savedProduct = await queryRunner.manager.save(product);

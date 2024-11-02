@@ -5,7 +5,6 @@ import { ExtractJwt, Strategy } from 'passport-jwt';
 import { Request } from 'express';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Buyer } from '../users/buyer/entities/buyer.entity';
 import { Admin } from '../users/admin/entities/admin.entity';
@@ -16,7 +15,6 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private configSvc: ConfigService,
     private jwtSvc: JwtService,
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
     @InjectRepository(Buyer) private readonly buyerRepository: Repository<Buyer>,
     @InjectRepository(Admin) private readonly adminRepository: Repository<Admin>,
     @InjectRepository(Seller) private readonly sellerRepository: Repository<Seller>,

@@ -6,7 +6,6 @@ import { Firm } from "../../modules/firm/entities/firm.entity";
 import { NotificationToken } from "../../modules/supporting-modules/notification/entities/notification-token.entity";
 import { Notification } from "../../modules/supporting-modules/notification/entities/notification.entity";
 import { Seller } from "../../modules/users/seller/entities/seller.entity";
-import { User } from "../../modules/user/entities/user.entity";
 import { Admin } from "../../modules/users/admin/entities/admin.entity";
 import { Category } from "../../modules/category/entities/category.entity";
 import { CustomFields } from "src/modules/custom-fields/entities/custom-fields.entity";
@@ -16,12 +15,12 @@ import { Module_Table } from "../../modules/module/entities/module.entity";
 import { Product } from "../../modules/product/entities/product.entity";
 import { CustomFieldsData } from "../../modules/custom-fields/entities/custom-fields-data.entity";
 import { Subscription } from "../../modules/subscription/entities/subscription.entity";
+import { Rental } from "../../modules/rental/entities/rental.entity";
 
 export const entities = [
     Admin,
     Buyer,
     Seller,
-    User,
     Blacklist,
     Notification,
     NotificationToken,
@@ -36,4 +35,5 @@ export const entities = [
     Module_Table,
     Product,
     Subscription,
+    Rental,
 ] 

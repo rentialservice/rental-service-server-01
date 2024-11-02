@@ -4,14 +4,14 @@ import {
   ManyToOne,
   OneToMany,
 } from 'typeorm';
-import { User } from '../../../user/entities/user.entity';
 import { Notification } from './notification.entity';
 import { BaseEntity } from '../../../../base/base.entity';
+import { Buyer } from '../../../users/buyer/entities/buyer.entity';
 
 @Entity()
 export class NotificationToken extends BaseEntity {
-  @ManyToOne(() => User, (user) => user.notificationTokens)
-  user: User;
+  @ManyToOne(() => Buyer, (user) => user.notificationTokens)
+  user: Buyer;
 
   @Column()
   device_type: string;

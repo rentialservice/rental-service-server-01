@@ -1,13 +1,13 @@
-// import { Module } from '@nestjs/common';
-// import { TypeOrmModule } from '@nestjs/typeorm';
-// import { ModuleService } from './rental.service';
-// import { ModuleController } from './rental.controller';
-// import { Module_Table } from './entities/rental.entity';
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { RentalService } from './rental.service';
+import { RentalController } from './rental.controller';
+import { Rental } from './entities/rental.entity';
 
-// @Module({
-//   imports: [TypeOrmModule.forFeature([Module_Table])],
-//   providers: [ModuleService],
-//   controllers: [ModuleController],
-//   exports: [ModuleService],
-// })
-// export class ModuleModule { }
+@Module({
+    imports: [TypeOrmModule.forFeature([Rental])],
+    providers: [RentalService],
+    controllers: [RentalController],
+    exports: [RentalService],
+})
+export class RentalModule { }
