@@ -1,60 +1,60 @@
-// import { Injectable, NotFoundException } from '@nestjs/common';
-// import { InjectRepository } from '@nestjs/typeorm';
-// import { Repository } from 'typeorm';
-// import { Module_Table } from './entities/rental.entity';
-// import { getUpdateObjectByAction } from '../../common/action-update';
-// import { buildFilterCriteriaQuery } from '../../common/utils';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Rental } from './entities/rental.entity';
+import { getUpdateObjectByAction } from '../../common/action-update';
+import { buildFilterCriteriaQuery } from '../../common/utils';
 
-// @Injectable()
-// export class ModuleService {
-//     constructor(
-//         @InjectRepository(Module_Table) private readonly moduleRepository: Repository<Module_Table>,
-//     ) { }
+@Injectable()
+export class RentalService {
+    constructor(
+        @InjectRepository(Rental) private readonly rentalRepository: Repository<Rental>,
+    ) { }
 
-//     async create(createObject: Partial<Module_Table>): Promise<any> {
-//         const result = this.moduleRepository.create(createObject);
-//         return await this.moduleRepository.save(result);
-//     }
+    async create(createObject: Partial<Rental>): Promise<any> {
+        const result = this.rentalRepository.create(createObject);
+        return await this.rentalRepository.save(result);
+    }
 
-//     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
-//         return await this.moduleRepository.findAndCount({
-//             where: { deleteFlag: false },
-//             skip: (page - 1) * pageSize,
-//             take: pageSize,
-//         });
-//     }
+    async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
+        return await this.rentalRepository.findAndCount({
+            where: { deleteFlag: false },
+            skip: (page - 1) * pageSize,
+            take: pageSize,
+        });
+    }
 
-//     async getById(id: string, filterType?: string): Promise<any> {
-//         const module = await this.moduleRepository.findOne({ where: { id, deleteFlag: false } });
-//         if (!module) {
-//             throw new NotFoundException(`Module with ID ${id} not found`);
-//         }
-//         return module;
-//     }
+    async getById(id: string, filterType?: string): Promise<any> {
+        const rental = await this.rentalRepository.findOne({ where: { id, deleteFlag: false } });
+        if (!rental) {
+            throw new NotFoundException(`Rental with ID ${id} not found`);
+        }
+        return rental;
+    }
 
-//     async update(id: string, updateObject: Partial<Module_Table>, filterType?: string): Promise<any> {
-//         return await this.moduleRepository.update(id, updateObject);
-//     }
+    async update(id: string, updateObject: Partial<Rental>, filterType?: string): Promise<any> {
+        return await this.rentalRepository.update(id, updateObject);
+    }
 
-//     async updateActionById(id: string, action: string, filterType?: string) {
-//         return await this.moduleRepository.update(
-//             id,
-//             getUpdateObjectByAction(action),
-//         );
-//     }
+    async updateActionById(id: string, action: string, filterType?: string) {
+        return await this.rentalRepository.update(
+            id,
+            getUpdateObjectByAction(action),
+        );
+    }
 
-//     async delete(id: string, filterType?: string): Promise<any> {
-//         const result = await this.moduleRepository.delete(id);
-//         if (result.affected === 0) {
-//             throw new NotFoundException(`Module with ID ${id} not found`);
-//         }
-//         return result;
-//     }
+    async delete(id: string, filterType?: string): Promise<any> {
+        const result = await this.rentalRepository.delete(id);
+        if (result.affected === 0) {
+            throw new NotFoundException(`Rental with ID ${id} not found`);
+        }
+        return result;
+    }
 
-//     async filter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-//         return await this.moduleRepository.find({
-//             where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-//             relations: [...fields]
-//         });
-//     }
-// }
+    async filter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
+        return await this.rentalRepository.find({
+            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+            relations: [...fields]
+        });
+    }
+}

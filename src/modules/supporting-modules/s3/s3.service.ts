@@ -7,12 +7,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { v4 as uuidv4 } from 'uuid';
 import { Repository } from 'typeorm';
-import { User } from '../../user/entities/user.entity';
+import { Buyer } from '../../users/buyer/entities/buyer.entity';
 
 @Injectable()
 export class S3Service {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(Buyer) private readonly buyerRepository: Repository<Buyer>,
   ) {}
   bucketName = process.env.S3_BUCKET_NAME;
   s3 = new S3Client({
@@ -37,7 +37,7 @@ export class S3Service {
     await this.s3.send(command);
     let fileURL = `https://s3.${process.env.S3_REGION}.amazonaws.com/${process.env.S3_BUCKET_NAME}/${folderPath}${uniqueFilename}`;
     if (id) {
-      await this.userRepository.update(id, { avatar: fileURL });
+      await this.buyerRepository.update(id, { avatar: fileURL });
     }
     return { fileURL, message: 'Profile image uploaded successfuly' };
   }
@@ -50,7 +50,7 @@ export class S3Service {
     });
     await this.s3.send(command);
     if (id) {
-      await this.userRepository.update(id, {
+      await this.buyerRepository.update(id, {
         avatar:
           'https://res.cloudinary.com/twitter-clone-media/image/upload/v1597737557/user_wt3nrc.png',
       });
@@ -72,7 +72,7 @@ export class S3Service {
     await this.s3.send(command);
     let fileURL = `https://s3.${process.env.S3_REGION}.amazonaws.com/${process.env.S3_BUCKET_NAME}/${folderPath}${uniqueFilename}`;
     if (id) {
-      await this.userRepository.update(id, { cover: fileURL });
+      await this.buyerRepository.update(id, { cover: fileURL });
     }
     return { fileURL, message: 'Cover image uploaded successfuly' };
   }
@@ -85,7 +85,7 @@ export class S3Service {
     });
     await this.s3.send(command);
     if (id) {
-      await this.userRepository.update(id, {
+      await this.buyerRepository.update(id, {
         cover:
           'https://images.unsplash.com/photo-1462332420958-a05d1e002413?q=80&w=2107&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
       });
