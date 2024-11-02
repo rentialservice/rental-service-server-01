@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   Post,
@@ -162,6 +163,21 @@ export class SellerController {
         (request.user as any).id,
         changePasswordDto,
       );
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Delete(RoutesConstants.PARAM_ID)
+  async delete(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Param(RoutesConstants.ID) id: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+  ): Promise<void> {
+    try {
+      let result = await this.service.delete(id, filterType);
       successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);
