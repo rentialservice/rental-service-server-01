@@ -11,6 +11,7 @@ import { NotificationService } from '../../supporting-modules/notification/notif
 import { Buyer } from './entities/buyer.entity';
 import { SelectConstants } from '../../../constants/select.constant';
 import { RoleService } from '../../role/role.service';
+import { buildFilterCriteriaQuery } from '../../../common/utils';
 
 @Injectable()
 export class BuyerService {
@@ -148,6 +149,13 @@ export class BuyerService {
       );
     }
     return true;
+  }
+
+  async filter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
+    return await this.repository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields]
+    });
   }
 
 }

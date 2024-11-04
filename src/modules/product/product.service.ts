@@ -6,6 +6,7 @@ import { CustomFieldsData } from '../custom-fields/entities/custom-fields-data.e
 import { CustomFields } from '../custom-fields/entities/custom-fields.entity';
 import { CategoryService } from '../category/category.service';
 import { FirmService } from '../firm/firm.service';
+import { buildFilterCriteriaQuery } from '../../common/utils';
 
 @Injectable()
 export class ProductService {
@@ -18,35 +19,54 @@ export class ProductService {
         private readonly dataSource: DataSource
     ) { }
 
-    async create(createObject: any): Promise<any> {
-        const queryRunner = this.dataSource.createQueryRunner();
-        await queryRunner.startTransaction();
-        try {
+    // private readonly dataSource: DataSource
+    // const queryRunner = this.dataSource.createQueryRunner();
+    // await queryRunner.startTransaction();
+    // try {
+    //     const product = this.productRepository.create(createObject);
+    //     const savedProduct = await queryRunner.manager.save(product);
+    //     await queryRunner.commitTransaction();
+    //     return savedProduct;
+    // } catch (error) {
+    //     await queryRunner.rollbackTransaction();
+    //     throw new Error(`Failed to create product: ${error.message}`);
+    // } finally {
+    //     await queryRunner.release();
+    // }
+
+    async create(createObject: Partial<Product>): Promise<any> {
+        if (!createObject?.category && !createObject?.firm) {
+            throw new Error("Category and Buyer is required")
+        }
+        if (!createObject?.category) {
+            throw new Error("Category is required")
+        }
+        if (!createObject?.firm) {
+            throw new Error("Firm is required")
+        }
+        if (createObject?.category) {
             let [category] = await this.categoryService.filter({
                 id: createObject.category
             });
             if (!category) {
                 throw new NotFoundException(`Category with id ${createObject.category} not found`);
+            } else {
+                createObject.category = category;
             }
-            createObject.category = category;
+        }
+        if (createObject?.firm) {
             let [firm] = await this.firmService.filter({
                 id: createObject.firm
             });
             if (!firm) {
                 throw new NotFoundException(`Firm with id ${createObject.firm} not found`);
+            } else {
+                createObject.firm = firm;
             }
-            createObject.firm = firm;
-            createObject.customFieldsData = await this.customFieldsValidationAndCreation(createObject);
-            const product = this.productRepository.create(createObject);
-            const savedProduct = await queryRunner.manager.save(product);
-            await queryRunner.commitTransaction();
-            return savedProduct;
-        } catch (error) {
-            await queryRunner.rollbackTransaction();
-            throw new Error(`Failed to create product: ${error.message}`);
-        } finally {
-            await queryRunner.release();
         }
+        createObject.customFieldsData = await this.customFieldsValidationAndCreation(createObject) || [];
+        const result = this.productRepository.create(createObject);
+        return await this.productRepository.save(result);
     }
 
     private async customFieldsValidationAndCreation(createObject: any) {
@@ -72,7 +92,7 @@ export class ProductService {
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
         return await this.productRepository.findAndCount({
             where: { deleteFlag: false },
-            relations: ["customFieldsData.customField", "category"],
+            relations: ["customFieldsData.customField", "category", "firm"],
             skip: (page - 1) * pageSize,
             take: pageSize,
         });
@@ -81,7 +101,7 @@ export class ProductService {
     async getById(id: string, filterType?: string): Promise<any> {
         const product = await this.productRepository.findOne({
             where: { id, deleteFlag: false },
-            relations: ["customFieldsData.customField", "category"],
+            relations: ["customFieldsData.customField", "category", "firm"],
         });
         if (!product) {
             throw new NotFoundException(`Product with ID ${id} not found`);
@@ -99,5 +119,12 @@ export class ProductService {
             throw new NotFoundException(`Product with ID ${id} not found`);
         }
         return result;
+    }
+
+    async filter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
+        return await this.productRepository.find({
+            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+            relations: [...fields]
+        });
     }
 }

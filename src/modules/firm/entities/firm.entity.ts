@@ -3,6 +3,7 @@ import { BaseEntity } from '../../../base/base.entity';
 import { Subscription } from '../../subscription/entities/subscription.entity';
 import { Category } from '../../category/entities/category.entity';
 import { Product } from '../../product/entities/product.entity';
+import { CustomFields } from '../../custom-fields/entities/custom-fields.entity';
 @Entity('firm')
 export class Firm extends BaseEntity {
   @Column()
@@ -29,4 +30,7 @@ export class Firm extends BaseEntity {
 
   @OneToMany(() => Product, (product) => product.category)
   product: Product[];
+
+  @OneToMany(() => CustomFields, (customField) => customField.firm)
+  customFields: CustomFields[];
 }
