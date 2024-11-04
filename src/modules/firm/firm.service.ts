@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Firm } from './entities/firm.entity';
-import { getUpdateObjectByAction } from '../../common/action-update';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { SubscriptionService } from '../subscription/subscription.service';
 import { CategoryService } from '../category/category.service';
@@ -62,13 +61,6 @@ export class FirmService {
         } else {
             return await this.firmRepository.update(id, updateObject);
         }
-    }
-
-    async updateActionById(id: string, action: string, filterType?: string) {
-        return await this.firmRepository.update(
-            id,
-            getUpdateObjectByAction(action),
-        );
     }
 
     async delete(id: string, filterType?: string): Promise<any> {

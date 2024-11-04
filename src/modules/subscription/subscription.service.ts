@@ -2,7 +2,6 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Subscription } from './entities/subscription.entity';
-import { getUpdateObjectByAction } from '../../common/action-update';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 
 @Injectable()
@@ -36,13 +35,6 @@ export class SubscriptionService {
 
     async update(id: string, updateObject: Partial<Subscription>, filterType?: string): Promise<any> {
         return await this.subscriptionRepository.update(id, updateObject);
-    }
-
-    async updateActionById(id: string, action: string, filterType?: string) {
-        return await this.subscriptionRepository.update(
-            id,
-            getUpdateObjectByAction(action),
-        );
     }
 
     async delete(id: string, filterType?: string): Promise<any> {

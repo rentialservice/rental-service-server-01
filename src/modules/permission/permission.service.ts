@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { getUpdateObjectByAction } from '../../common/action-update';
 import { Permission } from './entities/permission.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 
@@ -34,13 +33,6 @@ export class PermissionService {
 
     async update(id: string, updateObject: Partial<Permission>, filterType?: string): Promise<any> {
         return await this.permissionRepository.update(id, updateObject);
-    }
-
-    async updateActionById(id: string, action: string, filterType?: string) {
-        return await this.permissionRepository.update(
-            id,
-            getUpdateObjectByAction(action),
-        );
     }
 
     async delete(id: string, filterType?: string): Promise<any> {

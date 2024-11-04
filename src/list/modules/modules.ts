@@ -3,6 +3,7 @@ import { CategoryModule } from "../../modules/category/category.module";
 import { CustomFieldsModule } from "../../modules/custom-fields/custom-fields.module";
 import { DynamicModule } from "../../modules/dynamic/dynamic.module";
 import { FirmModule } from "../../modules/firm/firm.module";
+import { InstallmentModule } from "../../modules/installment/installment.module";
 import { ModuleModule } from "../../modules/module/module.module";
 import { PermissionModule } from "../../modules/permission/permission.module";
 import { ProductModule } from "../../modules/product/product.module";
@@ -33,5 +34,6 @@ export const modules = [
     PermissionModule,
     RoleModule,
     SubscriptionModule,
-    RentalModule
-]
+    RentalModule,
+    InstallmentModule,
+];

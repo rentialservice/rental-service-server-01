@@ -70,24 +70,7 @@ export class FirmController {
             errorResponse(response, error);
         }
     }
-
-    @Put(RoutesConstants.ACTION)
-    async updateActionById(
-        @Req() request: Request,
-        @Res() response: Response,
-        @Query(RoutesConstants.ID) id: string,
-        @Query(RoutesConstants.ACTION) action: string,
-        @Query(RoutesConstants.FILTERTYPE) filterType: string,
-    ): Promise<void> {
-        try {
-            console.log({ id, action, filterType })
-            let result = await this.firmService.updateActionById(id, action, filterType);
-            successResponse(response, result);
-        } catch (error: any) {
-            errorResponse(response, error);
-        }
-    }
-
+    
     @Delete(RoutesConstants.PARAM_ID)
     async delete(
         @Req() request: Request,

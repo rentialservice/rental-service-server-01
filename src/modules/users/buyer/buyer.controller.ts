@@ -95,25 +95,6 @@ export class BuyerController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Put(RoutesConstants.ACTION)
-  async updateActionById(
-    @Req() request: Request,
-    @Res() response: Response,
-    @Query(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.ACTION) action: string,
-  ): Promise<void> {
-    try {
-      let result = await this.service.updateActionById(
-        id || (request.user as any).id,
-        action,
-      );
-      successResponse(response, result);
-    } catch (error: any) {
-      errorResponse(response, error);
-    }
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Post(RoutesConstants.SET_PASSWORD)
   async setPassword(
     @Req() request: Request,
