@@ -1,23 +1,23 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Req, Res, Query } from '@nestjs/common';
-import { RoleService } from './role.service';
-import { Role } from './entities/role.entity';
 import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { Request, Response } from 'express';
 import { RoutesConstants } from '../../constants/routes.constant';
 import { errorResponse, successPaginatedResponse, successResponse } from '../../base/response';
+import { InstallmentService } from './installment.service';
+import { Installment } from './entities/installment.entity';
 
 @UseGuards(JwtAuthGuard)
-@Controller('role')
-export class RoleController {
-    constructor(private readonly roleService: RoleService) { }
+@Controller('installment')
+export class InstallmentController {
+    constructor(private readonly installmentService: InstallmentService) { }
 
     @Post()
     async create(
         @Req() request: Request,
         @Res() response: Response,
-        @Body() createObject: Partial<Role>): Promise<void> {
+        @Body() createObject: Partial<Installment>): Promise<void> {
         try {
-            let result = await this.roleService.create(createObject);
+            let result = await this.installmentService.create(createObject);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -33,7 +33,7 @@ export class RoleController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            const [result, count]: any = await this.roleService.getAll(page, pageSize, filterType);
+            const [result, count]: any = await this.installmentService.getAll(page, pageSize, filterType);
             successPaginatedResponse(response, result, count, page, pageSize);
         } catch (error: any) {
             errorResponse(response, error);
@@ -48,7 +48,7 @@ export class RoleController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.roleService.getById(id, filterType);
+            let result = await this.installmentService.getById(id, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -60,11 +60,11 @@ export class RoleController {
         @Req() request: Request,
         @Res() response: Response,
         @Param(RoutesConstants.ID) id: string,
-        @Body() updateObject: Partial<Role>,
+        @Body() updateObject: Partial<Installment>,
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.roleService.update(id, updateObject, filterType);
+            let result = await this.installmentService.update(id, updateObject, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -79,7 +79,7 @@ export class RoleController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.roleService.delete(id, filterType);
+            let result = await this.installmentService.delete(id, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -94,7 +94,7 @@ export class RoleController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            const result: any = await this.roleService.filter(filterCriteria, [], filterType);
+            const result: any = await this.installmentService.filter(filterCriteria, [], filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);

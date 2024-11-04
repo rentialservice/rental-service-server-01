@@ -1,7 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { getUpdateObjectByAction } from '../../common/action-update';
 import { CustomFields } from './entities/custom-fields.entity';
 import { ModuleService } from '../module/module.service';
 
@@ -43,13 +42,6 @@ export class CustomFieldsService {
             updateObject.modules = await this.moduleService.filter({ id: updateObject.modules })
         }
         return await this.customFieldsRepository.update(id, updateObject);
-    }
-
-    async updateActionById(id: string, action: string, filterType?: string) {
-        return await this.customFieldsRepository.update(
-            id,
-            getUpdateObjectByAction(action),
-        );
     }
 
     async delete(id: string, filterType?: string): Promise<any> {

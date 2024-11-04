@@ -16,6 +16,7 @@ import { Product } from "../../modules/product/entities/product.entity";
 import { CustomFieldsData } from "../../modules/custom-fields/entities/custom-fields-data.entity";
 import { Subscription } from "../../modules/subscription/entities/subscription.entity";
 import { Rental } from "../../modules/rental/entities/rental.entity";
+import { Installment } from "../../modules/installment/entities/installment.entity";
 
 export const entities = [
     Admin,
@@ -36,4 +37,5 @@ export const entities = [
     Product,
     Subscription,
     Rental,
-] 
+    Installment,
+];
