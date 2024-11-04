@@ -2,7 +2,6 @@ import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/c
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
-import { getUpdateObjectByAction } from '../../common/action-update';
 import { PermissionService } from '../permission/permission.service';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 
@@ -50,13 +49,6 @@ export class RoleService {
             updateObject.permissions = await this.permissionService.filter({ id: updateObject.permissions })
         }
         return await this.roleRepository.update(id, updateObject);
-    }
-
-    async updateActionById(id: string, action: string, filterType?: string) {
-        return await this.roleRepository.update(
-            id,
-            getUpdateObjectByAction(action),
-        );
     }
 
     async delete(id: string, filterType?: string): Promise<any> {

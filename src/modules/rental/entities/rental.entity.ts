@@ -5,12 +5,6 @@ import { Buyer } from '../../users/buyer/entities/buyer.entity';
 
 @Entity('rental')
 export class Rental extends BaseEntity {
-    @Column({ unique: true })
-    name: string;
-
-    @Column({ default: '' })
-    description: string;
-
     @OneToOne(() => Product)
     product: Product;
 
@@ -23,7 +17,7 @@ export class Rental extends BaseEntity {
     @Column({ default: new Date() })
     endDate: Date;
 
-    @Column({ type: 'simple-array', default: [] })
+    @Column({ type: 'simple-array', default: '' })
     media: string[];
 
     @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
@@ -38,7 +32,7 @@ export class Rental extends BaseEntity {
     @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
     fine: number;
 
-    @Column({ default: '' })
+    @Column({ default: 'CASH' })
     paymentMethod: string;
 
 }

@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { getUpdateObjectByAction } from '../../../common/action-update';
 import * as bcrypt from 'bcryptjs';
 import { NotificationService } from '../../supporting-modules/notification/notification.service';
 import { Seller } from './entities/seller.entity';
@@ -90,13 +89,6 @@ export class SellerService {
     // let data = await this.repository.findOneBy({ id });
     // delete data.password;
     // return data;
-  }
-
-  async updateActionById(id: string, action: string) {
-    return await this.repository.update(
-      id,
-      getUpdateObjectByAction(action),
-    );
   }
 
   async setPassword(id: string, passwordDto: any) {

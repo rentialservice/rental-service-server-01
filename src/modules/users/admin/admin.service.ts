@@ -10,7 +10,6 @@ import { Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { Admin } from './entities/admin.entity';
 import { NotificationService } from '../../supporting-modules/notification/notification.service';
-import { getUpdateObjectByAction } from '../../../common/action-update';
 import { SelectConstants } from '../../../constants/select.constant';
 import { RoleService } from '../../role/role.service';
 
@@ -91,13 +90,6 @@ export class AdminService {
     // let data = await this.repository.findOneBy({ id });
     // delete data.password;
     // return data;
-  }
-
-  async updateActionById(id: string, action: string) {
-    return await this.repository.update(
-      id,
-      getUpdateObjectByAction(action),
-    );
   }
 
   async setPassword(id: string, passwordDto: any) {
