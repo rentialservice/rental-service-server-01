@@ -3,19 +3,36 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CustomFields } from './entities/custom-fields.entity';
 import { ModuleService } from '../module/module.service';
+import { FirmService } from '../firm/firm.service';
 
 @Injectable()
 export class CustomFieldsService {
     constructor(
         @InjectRepository(CustomFields) private readonly customFieldsRepository: Repository<CustomFields>,
-        private readonly moduleService: ModuleService
+        private readonly moduleService: ModuleService,
+        private readonly firmService: FirmService
     ) { }
 
     async create(createObject: any): Promise<any> {
-        if (!createObject?.modules?.length) {
-            throw new Error("At least one module is required to create any custom fields")
+        if (!createObject?.module && !createObject?.firm) {
+            throw new Error("Firm or Module is required")
         }
-        createObject.modules = await this.moduleService.filter({ id: createObject.modules })
+        if (createObject?.module) {
+            let [module] = await this.moduleService.filter({ id: createObject.module })
+            if (!module) {
+                throw new NotFoundException(`Module with id ${createObject.module} not found`);
+            } else {
+                createObject.module = module;
+            }
+        }
+        if (createObject?.firm) {
+            let [firm] = await this.firmService.filter({ id: createObject.firm })
+            if (!firm) {
+                throw new NotFoundException(`Firm with id ${createObject.firm} not found`);
+            } else {
+                createObject.firm = firm;
+            }
+        }
         const result = this.customFieldsRepository.create(createObject);
         return await this.customFieldsRepository.save(result);
     }
@@ -23,14 +40,17 @@ export class CustomFieldsService {
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
         return await this.customFieldsRepository.findAndCount({
             where: { deleteFlag: false },
-            relations: ["modules"],
+            relations: ["module", "firm"],
             skip: (page - 1) * pageSize,
             take: pageSize,
         });
     }
 
     async getById(id: string, filterType?: string): Promise<any> {
-        const result = await this.customFieldsRepository.findOne({ where: { id, deleteFlag: false }, relations: ["modules"] });
+        const result = await this.customFieldsRepository.findOne({
+            where: { id, deleteFlag: false },
+            relations: ["module", "firm"]
+        });
         if (!result) {
             throw new NotFoundException(`Custom Feilds with ID ${id} not found`);
         }
