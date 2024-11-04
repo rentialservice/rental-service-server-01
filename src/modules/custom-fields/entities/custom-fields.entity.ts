@@ -1,11 +1,12 @@
-import { Entity, Column, ManyToMany, JoinTable, ManyToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Module_Table } from '../../module/entities/module.entity';
 import { CustomFieldsData } from './custom-fields-data.entity';
+import { Firm } from '../../firm/entities/firm.entity';
 
 @Entity('custom_fields')
 export class CustomFields extends BaseEntity {
-  @Column({ unique: true })
+  @Column()
   fieldName: string;
 
   @Column('boolean', { default: false })
@@ -14,9 +15,11 @@ export class CustomFields extends BaseEntity {
   @Column()
   fieldType: string;
 
-  @ManyToMany(() => Module_Table, (module) => module.customFields)
-  @JoinTable()
-  modules: Module_Table[];
+  @ManyToOne(() => Module_Table, (module) => module.customFields)
+  module: Module_Table;
+
+  @ManyToOne(() => Firm, (firm) => firm.customFields)
+  firm: Firm;
 
   @Column('boolean', { default: false })
   isArray: boolean;
@@ -24,7 +27,6 @@ export class CustomFields extends BaseEntity {
   @Column({ default: '' })
   description: string;
 
-  @ManyToOne(() => CustomFieldsData, (customField) => customField.customField)
-  @JoinColumn({ name: "CustomFieldId" })
-  customFieldsData: CustomFieldsData;
+  @OneToMany(() => CustomFieldsData, (customFieldsData) => customFieldsData.product, { cascade: true })
+  customFieldsData: CustomFieldsData[];
 }

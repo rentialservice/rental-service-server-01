@@ -14,7 +14,7 @@ export class RoleService {
 
     async create(createObject: any): Promise<any> {
         if (!createObject?.permissions?.length) {
-            throw new NotAcceptableException("At least one permission is required to create any role")
+            throw new NotAcceptableException("At least one permission is required")
         }
         createObject.permissions = await this.permissionService.filter({ name: createObject.permissions })
         if (!createObject?.permissions?.length) {

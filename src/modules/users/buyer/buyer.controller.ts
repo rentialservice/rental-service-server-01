@@ -149,4 +149,19 @@ export class BuyerController {
     }
   }
 
+  @Post("/filter")
+  async filter(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Body() filterCriteria: any,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+  ): Promise<void> {
+    try {
+      const result: any = await this.service.filter(filterCriteria, [], filterType);
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
 }

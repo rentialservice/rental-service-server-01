@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne } from 'typeorm';
+import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Product } from '../../product/entities/product.entity';
 import { Buyer } from '../../users/buyer/entities/buyer.entity';
@@ -6,9 +6,11 @@ import { Buyer } from '../../users/buyer/entities/buyer.entity';
 @Entity('rental')
 export class Rental extends BaseEntity {
     @OneToOne(() => Product)
+    @JoinColumn()
     product: Product;
 
     @OneToOne(() => Buyer)
+    @JoinColumn()
     buyer: Buyer;
 
     @Column({ default: new Date() })

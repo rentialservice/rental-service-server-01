@@ -12,5 +12,6 @@ import { FirmModule } from '../firm/firm.module';
   imports: [TypeOrmModule.forFeature([Product, CustomFieldsData, CustomFields]), CategoryModule, FirmModule],
   providers: [ProductService],
   controllers: [ProductController],
+  exports: [ProductService],
 })
 export class ProductModule { }
