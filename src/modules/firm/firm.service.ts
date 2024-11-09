@@ -15,6 +15,13 @@ export class FirmService {
     ) { }
 
     async create(createObject: Partial<Firm>): Promise<any> {
+        if (createObject?.category?.length) {
+            let category = await this.categoryService.filter({ id: createObject.category })
+            if (!category?.length) {
+                throw new NotFoundException(`Categories with id ${createObject.category} not found`)
+            }
+            createObject.category = category;
+        }
         const result = this.firmRepository.create(createObject);
         return await this.firmRepository.save(result);
     }
@@ -22,7 +29,7 @@ export class FirmService {
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
         return await this.firmRepository.findAndCount({
             where: { deleteFlag: false },
-            relations: ["subscription", "categories"],
+            relations: ["subscription", "category"],
             skip: (page - 1) * pageSize,
             take: pageSize,
         });
@@ -31,10 +38,10 @@ export class FirmService {
     async getById(id: string, filterType?: string): Promise<any> {
         const firm = await this.firmRepository.findOne({
             where: { id, deleteFlag: false },
-            relations: ["subscription", "categories"],
+            relations: ["subscription", "category"],
         });
         if (!firm) {
-            throw new NotFoundException(`Firm with ID ${id} not found`);
+            throw new NotFoundException(`Firm with id ${id} not found`);
         }
         return firm;
     }
@@ -47,16 +54,16 @@ export class FirmService {
             }
             updateObject.subscription = subscription;
         }
-        if (updateObject?.categories?.length) {
-            let categories = await this.categoryService.filter({ id: updateObject.categories })
-            if (!categories?.length) {
-                throw new NotFoundException(`Categories with id ${updateObject.categories} not found`)
+        if (updateObject?.category?.length) {
+            let category = await this.categoryService.filter({ id: updateObject.category })
+            if (!category?.length) {
+                throw new NotFoundException(`Categories with id ${updateObject.category} not found`)
             }
-            const firm = await this.firmRepository.findOne({ where: { id }, relations: ['categories'] });
+            const firm = await this.firmRepository.findOne({ where: { id }, relations: ['category'] });
             if (!firm) {
                 throw new NotFoundException(`Firm with id ${id} not found`);
             }
-            firm.categories = categories;
+            firm.category = category;
             return await this.firmRepository.save(firm);
         } else {
             return await this.firmRepository.update(id, updateObject);
@@ -66,7 +73,7 @@ export class FirmService {
     async delete(id: string, filterType?: string): Promise<any> {
         const result = await this.firmRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`Firm with ID ${id} not found`);
+            throw new NotFoundException(`Firm with id ${id} not found`);
         }
         return result;
     }

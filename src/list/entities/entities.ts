@@ -16,7 +16,9 @@ import { Product } from "../../modules/product/entities/product.entity";
 import { CustomFieldsData } from "../../modules/custom-fields/entities/custom-fields-data.entity";
 import { Subscription } from "../../modules/subscription/entities/subscription.entity";
 import { Rental } from "../../modules/rental/entities/rental.entity";
-import { Installment } from "../../modules/installment/entities/installment.entity";
+import { PaymentCollection } from "../../modules/payment-collection/entities/payment-collection.entity";
+import { PaymentMode } from "../../modules/payment-mode/entities/payment-mode.entity";
+import { Prefix } from "../../modules/prefix/entities/prefix.entity";
 
 export const entities = [
     Admin,
@@ -37,5 +39,7 @@ export const entities = [
     Product,
     Subscription,
     Rental,
-    Installment,
+    PaymentCollection,
+    PaymentMode,
+    Prefix
 ];

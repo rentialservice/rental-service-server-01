@@ -2,6 +2,7 @@ import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Product } from '../../product/entities/product.entity';
 import { Buyer } from '../../users/buyer/entities/buyer.entity';
+import { RentalPeriod } from '../../../enums/status.enum';
 
 @Entity('rental')
 export class Rental extends BaseEntity {
@@ -34,7 +35,13 @@ export class Rental extends BaseEntity {
     @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
     fine: number;
 
+    @Column({
+        type: 'enum',
+        enum: RentalPeriod,
+        default: RentalPeriod.RentPerHour,
+    })
+    rentalPeriod: string;
+
     @Column({ default: 'CASH' })
     paymentMethod: string;
-
 }

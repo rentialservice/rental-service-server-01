@@ -1,13 +1,5 @@
-import {
-  Entity,
-  Column,
-  OneToMany,
-  OneToOne,
-  JoinColumn,
-  ManyToOne
-} from 'typeorm';
+import { Entity, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../../../base/base.entity';
-import { Firm } from '../../../firm/entities/firm.entity';
 import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
 import { Role } from '../../../role/entities/role.entity';
 
@@ -32,7 +24,7 @@ export class Admin extends BaseEntity {
   email: string;
 
   @OneToOne(() => Role)
-  @JoinColumn({ name: "roleId" }) 
+  @JoinColumn({ name: "roleId" })
   role: Role;
 
   @Column({

@@ -3,9 +3,11 @@ import { CategoryModule } from "../../modules/category/category.module";
 import { CustomFieldsModule } from "../../modules/custom-fields/custom-fields.module";
 import { DynamicModule } from "../../modules/dynamic/dynamic.module";
 import { FirmModule } from "../../modules/firm/firm.module";
-import { InstallmentModule } from "../../modules/installment/installment.module";
+import { PaymentCollectionModule } from "../../modules/payment-collection/payment-collection.module";
 import { ModuleModule } from "../../modules/module/module.module";
+import { PaymentModeModule } from "../../modules/payment-mode/payment-mode.module";
 import { PermissionModule } from "../../modules/permission/permission.module";
+import { PrefixModule } from "../../modules/prefix/prefix.module";
 import { ProductModule } from "../../modules/product/product.module";
 import { RentalModule } from "../../modules/rental/rental.module";
 import { RoleModule } from "../../modules/role/role.module";
@@ -35,5 +37,7 @@ export const modules = [
     RoleModule,
     SubscriptionModule,
     RentalModule,
-    InstallmentModule,
+    PaymentCollectionModule,
+    PaymentModeModule,
+    PrefixModule,
 ];

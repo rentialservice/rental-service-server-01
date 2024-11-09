@@ -15,8 +15,7 @@ export class ProductService {
         @InjectRepository(CustomFields) private readonly customFieldsRepository: Repository<CustomFields>,
         @InjectRepository(CustomFieldsData) private readonly customFieldsDataRepository: Repository<CustomFieldsData>,
         private readonly categoryService: CategoryService,
-        private readonly firmService: FirmService,
-        private readonly dataSource: DataSource
+        private readonly firmService: FirmService
     ) { }
 
     // private readonly dataSource: DataSource
@@ -36,7 +35,7 @@ export class ProductService {
 
     async create(createObject: Partial<Product>): Promise<any> {
         if (!createObject?.category && !createObject?.firm) {
-            throw new Error("Category and Buyer is required")
+            throw new Error("Category and Firm is required")
         }
         if (!createObject?.category) {
             throw new Error("Category is required")
@@ -104,7 +103,7 @@ export class ProductService {
             relations: ["customFieldsData.customField", "category", "firm"],
         });
         if (!product) {
-            throw new NotFoundException(`Product with ID ${id} not found`);
+            throw new NotFoundException(`Product with id ${id} not found`);
         }
         return product;
     }
@@ -116,7 +115,7 @@ export class ProductService {
     async delete(id: string, filterType?: string): Promise<any> {
         const result = await this.productRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`Product with ID ${id} not found`);
+            throw new NotFoundException(`Product with id ${id} not found`);
         }
         return result;
     }
