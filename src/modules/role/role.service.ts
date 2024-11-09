@@ -39,7 +39,7 @@ export class RoleService {
             relations: ["permissions"]
         });
         if (!role) {
-            throw new NotFoundException(`Role with ID ${id} not found`);
+            throw new NotFoundException(`Role with id ${id} not found`);
         }
         return role;
     }
@@ -54,7 +54,7 @@ export class RoleService {
     async delete(id: string, filterType?: string): Promise<any> {
         const result = await this.roleRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`Role with ID ${id} not found`);
+            throw new NotFoundException(`Role with id ${id} not found`);
         }
         return result;
     }

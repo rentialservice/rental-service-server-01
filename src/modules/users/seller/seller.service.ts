@@ -154,7 +154,7 @@ export class SellerService {
   async delete(id: string, filterType?: string): Promise<any> {
     const result = await this.repository.delete(id);
     if (result.affected === 0) {
-      throw new NotFoundException(`User with ID ${id} not found`);
+      throw new NotFoundException(`User with id ${id} not found`);
     }
     return result;
   }

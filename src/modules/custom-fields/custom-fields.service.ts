@@ -52,7 +52,7 @@ export class CustomFieldsService {
             relations: ["module", "firm"]
         });
         if (!result) {
-            throw new NotFoundException(`Custom Feilds with ID ${id} not found`);
+            throw new NotFoundException(`Custom Feilds with id ${id} not found`);
         }
         return result;
     }
@@ -67,7 +67,7 @@ export class CustomFieldsService {
     async delete(id: string, filterType?: string): Promise<any> {
         const result = await this.customFieldsRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`Custom Fields with ID ${id} not found`);
+            throw new NotFoundException(`Custom Fields with id ${id} not found`);
         }
         return result;
     }

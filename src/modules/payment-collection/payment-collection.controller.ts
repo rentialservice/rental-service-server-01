@@ -3,21 +3,21 @@ import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { Request, Response } from 'express';
 import { RoutesConstants } from '../../constants/routes.constant';
 import { errorResponse, successPaginatedResponse, successResponse } from '../../base/response';
-import { InstallmentService } from './installment.service';
-import { Installment } from './entities/installment.entity';
+import { PaymentCollectionService } from './payment-collection.service';
+import { PaymentCollection } from './entities/payment-collection.entity';
 
 @UseGuards(JwtAuthGuard)
-@Controller('installment')
-export class InstallmentController {
-    constructor(private readonly installmentService: InstallmentService) { }
+@Controller('payment-collection')
+export class PaymentCollectionController {
+    constructor(private readonly paymentCollectionService: PaymentCollectionService) { }
 
     @Post()
     async create(
         @Req() request: Request,
         @Res() response: Response,
-        @Body() createObject: Partial<Installment>): Promise<void> {
+        @Body() createObject: Partial<PaymentCollection>): Promise<void> {
         try {
-            let result = await this.installmentService.create(createObject);
+            let result = await this.paymentCollectionService.create(createObject);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -33,7 +33,7 @@ export class InstallmentController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            const [result, count]: any = await this.installmentService.getAll(page, pageSize, filterType);
+            const [result, count]: any = await this.paymentCollectionService.getAll(page, pageSize, filterType);
             successPaginatedResponse(response, result, count, page, pageSize);
         } catch (error: any) {
             errorResponse(response, error);
@@ -48,7 +48,7 @@ export class InstallmentController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.installmentService.getById(id, filterType);
+            let result = await this.paymentCollectionService.getById(id, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -60,11 +60,11 @@ export class InstallmentController {
         @Req() request: Request,
         @Res() response: Response,
         @Param(RoutesConstants.ID) id: string,
-        @Body() updateObject: Partial<Installment>,
+        @Body() updateObject: Partial<PaymentCollection>,
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.installmentService.update(id, updateObject, filterType);
+            let result = await this.paymentCollectionService.update(id, updateObject, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -79,7 +79,7 @@ export class InstallmentController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.installmentService.delete(id, filterType);
+            let result = await this.paymentCollectionService.delete(id, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -94,7 +94,7 @@ export class InstallmentController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            const result: any = await this.installmentService.filter(filterCriteria, [], filterType);
+            const result: any = await this.paymentCollectionService.filter(filterCriteria, [], filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);

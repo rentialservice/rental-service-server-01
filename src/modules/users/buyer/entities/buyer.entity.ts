@@ -1,10 +1,5 @@
 import { BaseEntity } from '../../../../base/base.entity';
-import {
-  Entity,
-  Column,
-  OneToMany,
-  ManyToOne,
-} from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
 import { Firm } from '../../../firm/entities/firm.entity';
 import { Role } from '../../../role/entities/role.entity';

@@ -60,7 +60,7 @@ export class RentalService {
             relations: ["buyer", "product"],
         });
         if (!rental) {
-            throw new NotFoundException(`Rental with ID ${id} not found`);
+            throw new NotFoundException(`Rental with id ${id} not found`);
         }
         return rental;
     }
@@ -72,7 +72,7 @@ export class RentalService {
     async delete(id: string, filterType?: string): Promise<any> {
         const result = await this.rentalRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`Rental with ID ${id} not found`);
+            throw new NotFoundException(`Rental with id ${id} not found`);
         }
         return result;
     }

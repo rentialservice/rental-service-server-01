@@ -1,5 +1,12 @@
 export enum ProductStatus {
-    Active = 'active',
-    Inactive = 'inactive',
-    Draft = 'draft',
+    Available = 'Available',
+    Rented = 'Rented'
+}
+
+export enum RentalPeriod {
+    RentPerHour = 'RentPerHour',
+    RentPerDay = 'RentPerDay',
+    RentPerWeek = 'RentPerWeek',
+    RentPerMonth = 'RentPerMonth',
+    RentPerYear = 'RentPerYear'
 }

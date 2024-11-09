@@ -28,7 +28,7 @@ export class SubscriptionService {
             where: { id, deleteFlag: false },
         });
         if (!subscription) {
-            throw new NotFoundException(`Subscription with ID ${id} not found`);
+            throw new NotFoundException(`Subscription with id ${id} not found`);
         }
         return subscription;
     }
@@ -40,7 +40,7 @@ export class SubscriptionService {
     async delete(id: string, filterType?: string): Promise<any> {
         const result = await this.subscriptionRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`Subscription with ID ${id} not found`);
+            throw new NotFoundException(`Subscription with id ${id} not found`);
         }
         return result;
     }

@@ -26,7 +26,7 @@ export class ModuleService {
     async getById(id: string, filterType?: string): Promise<any> {
         const module = await this.moduleRepository.findOne({ where: { id, deleteFlag: false } });
         if (!module) {
-            throw new NotFoundException(`Module with ID ${id} not found`);
+            throw new NotFoundException(`Module with id ${id} not found`);
         }
         return module;
     }
@@ -38,7 +38,7 @@ export class ModuleService {
     async delete(id: string, filterType?: string): Promise<any> {
         const result = await this.moduleRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`Module with ID ${id} not found`);
+            throw new NotFoundException(`Module with id ${id} not found`);
         }
         return result;
     }
