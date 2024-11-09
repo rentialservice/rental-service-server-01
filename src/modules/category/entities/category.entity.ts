@@ -6,14 +6,17 @@ import { Firm } from '../../firm/entities/firm.entity';
 @Entity('category')
 export class Category extends BaseEntity {
   @Column({ unique: true })
-  categoryName: string;
+  name: string;
 
   @Column({ default: "" })
-  categoryDescription: string;
+  description: string;
+
+  @Column('boolean', { default: false })
+  isAutoIncrementForProductCode: boolean;
 
   @OneToMany(() => Product, (product) => product.category)
   product: Product[];
 
-  @ManyToMany(() => Firm, (firm) => firm.categories)
-  firms: Firm[];
+  @ManyToMany(() => Firm, (firm) => firm.category)
+  firm: Firm[];
 }

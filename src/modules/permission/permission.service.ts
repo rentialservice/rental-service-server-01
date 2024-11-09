@@ -26,7 +26,7 @@ export class PermissionService {
     async getById(id: string, filterType?: string): Promise<any> {
         const permission = await this.permissionRepository.findOne({ where: { id, deleteFlag: false } });
         if (!permission) {
-            throw new NotFoundException(`Permission with ID ${id} not found`);
+            throw new NotFoundException(`Permission with id ${id} not found`);
         }
         return permission;
     }
@@ -38,7 +38,7 @@ export class PermissionService {
     async delete(id: string, filterType?: string): Promise<any> {
         const result = await this.permissionRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`Permission with ID ${id} not found`);
+            throw new NotFoundException(`Permission with id ${id} not found`);
         }
         return result;
     }

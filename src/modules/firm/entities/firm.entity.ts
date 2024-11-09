@@ -4,6 +4,8 @@ import { Subscription } from '../../subscription/entities/subscription.entity';
 import { Category } from '../../category/entities/category.entity';
 import { Product } from '../../product/entities/product.entity';
 import { CustomFields } from '../../custom-fields/entities/custom-fields.entity';
+import { Prefix } from '../../prefix/entities/prefix.entity';
+import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
 @Entity('firm')
 export class Firm extends BaseEntity {
   @Column()
@@ -26,10 +28,16 @@ export class Firm extends BaseEntity {
 
   @ManyToMany(() => Category)
   @JoinTable()
-  categories: Category[];
+  category: Category[];
 
-  @OneToMany(() => Product, (product) => product.category)
+  @OneToMany(() => Product, (product) => product.firm)
   product: Product[];
+
+  @OneToMany(() => Prefix, (prefix) => prefix.firm)
+  prefix: Prefix[];
+
+  @OneToMany(() => PaymentMode, (paymentMode) => paymentMode.firm)
+  paymentMode: PaymentMode[];
 
   @OneToMany(() => CustomFields, (customField) => customField.firm)
   customFields: CustomFields[];

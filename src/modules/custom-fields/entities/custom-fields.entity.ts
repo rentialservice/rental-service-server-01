@@ -7,7 +7,10 @@ import { Firm } from '../../firm/entities/firm.entity';
 @Entity('custom_fields')
 export class CustomFields extends BaseEntity {
   @Column()
-  fieldName: string;
+  name: string;
+
+  @Column({ default: '' })
+  description: string;
 
   @Column('boolean', { default: false })
   required: boolean;
@@ -23,9 +26,6 @@ export class CustomFields extends BaseEntity {
 
   @Column('boolean', { default: false })
   isArray: boolean;
-
-  @Column({ default: '' })
-  description: string;
 
   @OneToMany(() => CustomFieldsData, (customFieldsData) => customFieldsData.product, { cascade: true })
   customFieldsData: CustomFieldsData[];

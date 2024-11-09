@@ -26,7 +26,7 @@ export class CategoryService {
     async getById(id: string, filterType?: string): Promise<any> {
         const result = await this.categoryRepository.findOne({ where: { id, deleteFlag: false } });
         if (!result) {
-            throw new NotFoundException(`Category with ID ${id} not found`);
+            throw new NotFoundException(`Category with id ${id} not found`);
         }
         return result;
     }
@@ -38,7 +38,7 @@ export class CategoryService {
     async delete(id: string, filterType?: string): Promise<any> {
         const result = await this.categoryRepository.delete(id);
         if (result.affected === 0) {
-            throw new NotFoundException(`Category with ID ${id} not found`);
+            throw new NotFoundException(`Category with id ${id} not found`);
         }
         return result;
     }
