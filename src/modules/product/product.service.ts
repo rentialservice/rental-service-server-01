@@ -22,7 +22,7 @@ export class ProductService {
     // const queryRunner = this.dataSource.createQueryRunner();
     // await queryRunner.startTransaction();
     // try {
-    //     const product = this.productRepository.create(createObject);
+    //     const product = this.productRepository.create(createObject,request.query);
     //     const savedProduct = await queryRunner.manager.save(product);
     //     await queryRunner.commitTransaction();
     //     return savedProduct;
@@ -33,17 +33,17 @@ export class ProductService {
     //     await queryRunner.release();
     // }
 
-    async create(createObject: Partial<Product>): Promise<any> {
-        if (!createObject?.category && !createObject?.firm) {
+    async create(createObject: Partial<Product>, queryData: any): Promise<any> {
+        if (!queryData?.category && !queryData?.firm) {
             throw new Error("Category and Firm is required")
         }
-        if (!createObject?.category) {
+        if (!queryData?.category) {
             throw new Error("Category is required")
         }
-        if (!createObject?.firm) {
+        if (!queryData?.firm) {
             throw new Error("Firm is required")
         }
-        if (createObject?.category) {
+        if (queryData?.category) {
             let [category] = await this.categoryService.filter({
                 id: createObject.category
             });
@@ -53,7 +53,7 @@ export class ProductService {
                 createObject.category = category;
             }
         }
-        if (createObject?.firm) {
+        if (queryData?.firm) {
             let [firm] = await this.firmService.filter({
                 id: createObject.firm
             });
@@ -88,10 +88,13 @@ export class ProductService {
         }
     }
 
-    async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
+    async getAll(page: number = 1, pageSize: number = 10, filterType?: string, filterCriteria?: any): Promise<any> {
+        if (!filterCriteria?.firm) {
+            throw new Error("Firm is required")
+        }
         return await this.productRepository.findAndCount({
-            where: { deleteFlag: false },
-            relations: ["customFieldsData.customField", "category", "firm"],
+            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false, },
+            relations: ["customFieldsData.customField"],
             skip: (page - 1) * pageSize,
             take: pageSize,
         });
@@ -121,9 +124,14 @@ export class ProductService {
     }
 
     async filter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.productRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
+        filterCriteria = buildFilterCriteriaQuery(filterCriteria);
+        if (Object.values(filterCriteria).length) {
+            return await this.productRepository.find({
+                where: { ...filterCriteria, deleteFlag: false },
+                relations: [...fields]
+            });
+        } else {
+            return [];
+        }
     }
 }

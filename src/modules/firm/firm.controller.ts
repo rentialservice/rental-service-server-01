@@ -70,7 +70,23 @@ export class FirmController {
             errorResponse(response, error);
         }
     }
-    
+
+    @Put("/update-subscription/:id")
+    async updateSubscription(
+        @Req() request: Request,
+        @Res() response: Response,
+        @Param(RoutesConstants.ID) id: string,
+        @Body() updateObject: Partial<Firm>,
+        @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    ): Promise<void> {
+        try {
+            let result = await this.firmService.updateSubscription(id, updateObject, filterType);
+            successResponse(response, result);
+        } catch (error: any) {
+            errorResponse(response, error);
+        }
+    }
+
     @Delete(RoutesConstants.PARAM_ID)
     async delete(
         @Req() request: Request,
