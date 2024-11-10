@@ -17,7 +17,21 @@ export class ProductController {
         @Res() response: Response,
         @Body() createObject: Partial<Product>): Promise<void> {
         try {
-            let result = await this.productService.create(createObject);
+            let result = await this.productService.create(createObject, request.query);
+            successResponse(response, result);
+        } catch (error: any) {
+            errorResponse(response, error);
+        }
+    }
+
+    @Get("/filter")
+    async getFilter(
+        @Req() request: Request,
+        @Res() response: Response,
+        @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    ): Promise<void> {
+        try {
+            const result: any = await this.productService.filter(request.query, [], filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -33,7 +47,7 @@ export class ProductController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            const [result, count]: any = await this.productService.getAll(page, pageSize, filterType);
+            const [result, count]: any = await this.productService.getAll(page, pageSize, filterType, request.query);
             successPaginatedResponse(response, result, count, page, pageSize);
         } catch (error: any) {
             errorResponse(response, error);

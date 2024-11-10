@@ -46,13 +46,22 @@ export class FirmService {
         return firm;
     }
 
-    async update(id: string, updateObject: Partial<Firm>, filterType?: string): Promise<any> {
+    async updateSubscription(id: string, updateObject: Partial<Firm>, filterType?: string): Promise<any> {
+        if (!updateObject?.subscription) {
+            throw new NotFoundException(`Subscription Id not found`);
+        }
         if (updateObject?.subscription) {
             let [subscription] = await this.subscriptionService.filter({ name: updateObject.subscription })
             if (!subscription) {
                 throw new NotFoundException(`Subscription with name ${updateObject.subscription} not found`)
             }
             updateObject.subscription = subscription;
+        }
+        return await this.firmRepository.update(id, updateObject);
+    }
+    async update(id: string, updateObject: Partial<Firm>, filterType?: string): Promise<any> {
+        if (updateObject?.subscription) {
+            throw new Error(`You are not allowed to modify subscription details, contact your administrator`)
         }
         if (updateObject?.category?.length) {
             let category = await this.categoryService.filter({ id: updateObject.category })
