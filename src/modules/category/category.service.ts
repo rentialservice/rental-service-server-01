@@ -3,14 +3,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Category } from './entities/category.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
+import { PrefixService } from '../prefix/prefix.service';
 
 @Injectable()
 export class CategoryService {
     constructor(
         @InjectRepository(Category) private readonly categoryRepository: Repository<Category>,
+        // private readonly prefixService: PrefixService,
     ) { }
 
     async create(createObject: Partial<Category>): Promise<any> {
+        
         const result = this.categoryRepository.create(createObject);
         return await this.categoryRepository.save(result);
     }
