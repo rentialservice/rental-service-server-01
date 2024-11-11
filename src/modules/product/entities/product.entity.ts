@@ -7,8 +7,11 @@ import { Firm } from '../../firm/entities/firm.entity';
 
 @Entity('product')
 export class Product extends BaseEntity {
-  @Column()
+  @Column({ type: "text" })
   name: string;
+
+  @Column({ type: "text" })
+  code: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   price: number;
@@ -22,7 +25,7 @@ export class Product extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   deposit: number;
 
-  @Column({ default: '' })
+  @Column({ type: "text", default: '' })
   description: string;
 
   @Column({
@@ -32,8 +35,20 @@ export class Product extends BaseEntity {
   })
   rentalPeriod: string;
 
-  @Column({ default: '' })
+  @Column({ type: "text", default: '' })
   color: string;
+
+  @Column({ type: "text", default: '' })
+  type: string;
+
+  @Column({ type: "text", default: '' })
+  barcode: string;
+
+  @Column({ type: "text", default: '' })
+  brand: string;
+
+  @Column({ type: "text", default: '' })
+  size: string;
 
   @Column({ type: 'int', default: 0 })
   stock: number;
@@ -54,9 +69,6 @@ export class Product extends BaseEntity {
   })
   status: ProductStatus;
 
-  @Column()
-  code: string;
-
   @OneToMany(() => CustomFieldsData, (customFieldsData) => customFieldsData.product, { cascade: true })
   customFieldsData: CustomFieldsData[];
 
@@ -66,4 +78,3 @@ export class Product extends BaseEntity {
   @ManyToOne(() => Firm, (firm) => firm.product)
   firm: Firm;
 }
-

@@ -4,7 +4,6 @@ import { CustomFieldsModule } from "../../modules/custom-fields/custom-fields.mo
 import { DynamicModule } from "../../modules/dynamic/dynamic.module";
 import { FirmModule } from "../../modules/firm/firm.module";
 import { PaymentCollectionModule } from "../../modules/payment-collection/payment-collection.module";
-import { ModuleModule } from "../../modules/module/module.module";
 import { PaymentModeModule } from "../../modules/payment-mode/payment-mode.module";
 import { PermissionModule } from "../../modules/permission/permission.module";
 import { PrefixModule } from "../../modules/prefix/prefix.module";
@@ -31,7 +30,6 @@ export const modules = [
     DynamicModule,
     CategoryModule,
     CustomFieldsModule,
-    ModuleModule,
     ProductModule,
     PermissionModule,
     RoleModule,

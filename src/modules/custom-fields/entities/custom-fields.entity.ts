@@ -1,8 +1,8 @@
 import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
-import { Module_Table } from '../../module/entities/module.entity';
 import { CustomFieldsData } from './custom-fields-data.entity';
 import { Firm } from '../../firm/entities/firm.entity';
+import { ModuleNameList } from '../../../enums/status.enum';
 
 @Entity('custom_fields')
 export class CustomFields extends BaseEntity {
@@ -18,8 +18,12 @@ export class CustomFields extends BaseEntity {
   @Column()
   fieldType: string;
 
-  @ManyToOne(() => Module_Table, (module) => module.customFields)
-  module: Module_Table;
+  @Column({
+    type: 'enum',
+    enum: ModuleNameList,
+    default: ModuleNameList.Null,
+  })
+  module: string;
 
   @ManyToOne(() => Firm, (firm) => firm.customFields)
   firm: Firm;

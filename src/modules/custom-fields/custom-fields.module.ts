@@ -3,11 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { CustomFieldsService } from './custom-fields.service';
 import { CustomFieldsController } from './custom-fields.controller';
 import { CustomFields } from './entities/custom-fields.entity';
-import { ModuleModule } from '../module/module.module';
 import { FirmModule } from '../firm/firm.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([CustomFields]), ModuleModule, FirmModule],
+  imports: [TypeOrmModule.forFeature([CustomFields]), FirmModule],
   providers: [CustomFieldsService],
   controllers: [CustomFieldsController],
 })

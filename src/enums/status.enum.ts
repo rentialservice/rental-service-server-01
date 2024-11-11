@@ -10,3 +10,11 @@ export enum RentalPeriod {
     RentPerMonth = 'RentPerMonth',
     RentPerYear = 'RentPerYear'
 }
+
+export enum ModuleNameList {
+    Null = "Null",
+    Category = 'Category',
+    Product = 'Product',
+    Invoice = 'Invoice',
+    Subscription = 'Subscription',
+}

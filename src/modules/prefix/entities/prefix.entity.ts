@@ -1,7 +1,7 @@
 import { Entity, Column, ManyToOne, OneToOne, JoinColumn } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Firm } from '../../firm/entities/firm.entity';
-import { Module_Table } from '../../module/entities/module.entity';
+import { ModuleNameList } from '../../../enums/status.enum';
 
 @Entity('prefix')
 export class Prefix extends BaseEntity {
@@ -17,7 +17,10 @@ export class Prefix extends BaseEntity {
   @ManyToOne(() => Firm, (firm) => firm.prefix)
   firm: Firm;
 
-  @OneToOne(() => Module_Table)
-  @JoinColumn()
-  module: Module_Table;
+  @Column({
+    type: 'enum',
+    enum: ModuleNameList,
+    default: ModuleNameList.Null,
+  })
+  module: string;
 }
