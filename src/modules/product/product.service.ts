@@ -45,20 +45,20 @@ export class ProductService {
         }
         if (queryData?.category) {
             let [category] = await this.categoryService.filter({
-                id: createObject.category
+                id: queryData.category
             });
             if (!category) {
-                throw new NotFoundException(`Category with id ${createObject.category} not found`);
+                throw new NotFoundException(`Category with id ${queryData.category} not found`);
             } else {
                 createObject.category = category;
             }
         }
         if (queryData?.firm) {
             let [firm] = await this.firmService.filter({
-                id: createObject.firm
+                id: queryData.firm
             });
             if (!firm) {
-                throw new NotFoundException(`Firm with id ${createObject.firm} not found`);
+                throw new NotFoundException(`Firm with id ${queryData.firm} not found`);
             } else {
                 createObject.firm = firm;
             }
