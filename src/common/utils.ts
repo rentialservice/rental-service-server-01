@@ -2,6 +2,13 @@ import { ILike, In } from 'typeorm';
 
 export function buildFilterCriteriaQuery(filterCriteria: any): any {
     Object.keys(filterCriteria).forEach((key) => {
+        if (key === "page") {
+            delete filterCriteria[key];
+        }
+        if (key === "pageSize") {
+            delete filterCriteria[key];
+        }
+
         if (key === "search") {
             filterCriteria.name = ILike(`%${filterCriteria.search}%`);
         } else {

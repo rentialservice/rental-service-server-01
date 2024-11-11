@@ -18,11 +18,7 @@ export class CustomFields extends BaseEntity {
   @Column()
   fieldType: string;
 
-  @Column({
-    type: 'enum',
-    enum: ModuleNameList,
-    default: ModuleNameList.Null,
-  })
+  @Column({ type: 'enum', enum: ModuleNameList })
   module: string;
 
   @ManyToOne(() => Firm, (firm) => firm.customFields)
