@@ -4,14 +4,12 @@ import { Repository } from 'typeorm';
 import { Prefix } from './entities/prefix.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { FirmService } from '../firm/firm.service';
-import { ModuleService } from '../module/module.service';
 
 @Injectable()
 export class PrefixService {
     constructor(
         @InjectRepository(Prefix) private readonly prefixRepository: Repository<Prefix>,
         private readonly firmService: FirmService,
-        private readonly moduleService: ModuleService
     ) { }
 
     async create(createObject: Partial<Prefix>): Promise<any> {
@@ -23,16 +21,6 @@ export class PrefixService {
         }
         if (!createObject?.firm) {
             throw new Error("Firm is required")
-        }
-        if (createObject?.module) {
-            let [module] = await this.moduleService.filter({
-                id: createObject.module
-            });
-            if (!module) {
-                throw new NotFoundException(`Module with id ${createObject.module} not found`);
-            } else {
-                createObject.module = module;
-            }
         }
         if (createObject?.firm) {
             let [firm] = await this.firmService.filter({

@@ -4,10 +4,9 @@ import { PrefixService } from './prefix.service';
 import { PrefixController } from './prefix.controller';
 import { Prefix } from './entities/prefix.entity';
 import { FirmModule } from '../firm/firm.module';
-import { ModuleModule } from '../module/module.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Prefix]), FirmModule, ModuleModule],
+  imports: [TypeOrmModule.forFeature([Prefix]), FirmModule],
   providers: [PrefixService],
   controllers: [PrefixController],
   exports: [PrefixService]
