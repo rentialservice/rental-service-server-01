@@ -4,9 +4,8 @@ import { DataSource, Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CustomFieldsData } from '../custom-fields/entities/custom-fields-data.entity';
 import { CustomFields } from '../custom-fields/entities/custom-fields.entity';
-import { CategoryService } from '../category/category.service';
-import { FirmService } from '../firm/firm.service';
 import { buildFilterCriteriaQuery } from '../../common/utils';
+import { CommonService } from '../common/common.service';
 
 @Injectable()
 export class ProductService {
@@ -14,8 +13,7 @@ export class ProductService {
         @InjectRepository(Product) private readonly productRepository: Repository<Product>,
         @InjectRepository(CustomFields) private readonly customFieldsRepository: Repository<CustomFields>,
         @InjectRepository(CustomFieldsData) private readonly customFieldsDataRepository: Repository<CustomFieldsData>,
-        private readonly categoryService: CategoryService,
-        private readonly firmService: FirmService
+        private readonly commonService: CommonService,
     ) { }
 
     // private readonly dataSource: DataSource
@@ -43,8 +41,14 @@ export class ProductService {
         if (!queryData?.firm) {
             throw new Error("Firm is required")
         }
+        let [existing] = await this.filter({
+            firm: queryData.firm, code: createObject?.code
+        }, ["firm"]);
+        if (existing) {
+            throw new Error("Data already exists for this firm")
+        }
         if (queryData?.category) {
-            let [category] = await this.categoryService.filter({
+            let [category] = await this.commonService.categoryFilter({
                 id: queryData.category
             });
             if (!category) {
@@ -54,7 +58,7 @@ export class ProductService {
             }
         }
         if (queryData?.firm) {
-            let [firm] = await this.firmService.filter({
+            let [firm] = await this.commonService.firmFilter({
                 id: queryData.firm
             });
             if (!firm) {

@@ -39,6 +39,19 @@ export class BuyerController {
     }
   }
 
+  @Post()
+  async create(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Body() createObject: any): Promise<void> {
+    try {
+      let result = await this.service.create(createObject, request.query);
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
   @UseGuards(JwtAuthGuard)
   @Get(RoutesConstants.GET_USER_DETAILS)
   async getById(

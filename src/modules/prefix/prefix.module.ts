@@ -3,10 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { PrefixService } from './prefix.service';
 import { PrefixController } from './prefix.controller';
 import { Prefix } from './entities/prefix.entity';
-import { FirmModule } from '../firm/firm.module';
+import { CommonModule } from '../common/common.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Prefix]), FirmModule],
+  imports: [TypeOrmModule.forFeature([Prefix]), CommonModule],
   providers: [PrefixService],
   controllers: [PrefixController],
   exports: [PrefixService]

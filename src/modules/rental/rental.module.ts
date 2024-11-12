@@ -3,11 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { RentalService } from './rental.service';
 import { RentalController } from './rental.controller';
 import { Rental } from './entities/rental.entity';
-import { ProductModule } from '../product/product.module';
-import { BuyerModule } from '../users/buyer/buyer.module';
+import { CommonModule } from '../common/common.module';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Rental]), ProductModule, BuyerModule],
+    imports: [TypeOrmModule.forFeature([Rental]), CommonModule],
     providers: [RentalService],
     controllers: [RentalController],
     exports: [RentalService],

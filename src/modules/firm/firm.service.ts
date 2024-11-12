@@ -3,20 +3,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Firm } from './entities/firm.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
-import { SubscriptionService } from '../subscription/subscription.service';
-import { CategoryService } from '../category/category.service';
+import { CommonService } from '../common/common.service';
 
 @Injectable()
 export class FirmService {
     constructor(
         @InjectRepository(Firm) private readonly firmRepository: Repository<Firm>,
-        private readonly subscriptionService: SubscriptionService,
-        private readonly categoryService: CategoryService
+        private readonly commonService: CommonService,
     ) { }
 
     async create(createObject: Partial<Firm>): Promise<any> {
         if (createObject?.category?.length) {
-            let category = await this.categoryService.filter({ id: createObject.category })
+            let category = await this.commonService.categoryFilter({ id: createObject.category })
             if (!category?.length) {
                 throw new NotFoundException(`Categories with id ${createObject.category} not found`)
             }
@@ -51,7 +49,7 @@ export class FirmService {
             throw new NotFoundException(`Subscription Id not found`);
         }
         if (updateObject?.subscription) {
-            let [subscription] = await this.subscriptionService.filter({ name: updateObject.subscription })
+            let [subscription] = await this.commonService.subscriptionFilter({ name: updateObject.subscription })
             if (!subscription) {
                 throw new NotFoundException(`Subscription with name ${updateObject.subscription} not found`)
             }
@@ -64,7 +62,7 @@ export class FirmService {
             throw new Error(`You are not allowed to modify subscription details, contact your administrator`)
         }
         if (updateObject?.category?.length) {
-            let category = await this.categoryService.filter({ id: updateObject.category })
+            let category = await this.commonService.categoryFilter({ id: updateObject.category })
             if (!category?.length) {
                 throw new NotFoundException(`Categories with id ${updateObject.category} not found`)
             }

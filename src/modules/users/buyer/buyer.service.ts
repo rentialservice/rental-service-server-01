@@ -12,13 +12,14 @@ import { Buyer } from './entities/buyer.entity';
 import { SelectConstants } from '../../../constants/select.constant';
 import { RoleService } from '../../role/role.service';
 import { buildFilterCriteriaQuery } from '../../../common/utils';
+import { CommonService } from '../../common/common.service';
 
 @Injectable()
 export class BuyerService {
   constructor(
     @InjectRepository(Buyer) private readonly repository: Repository<Buyer>,
     private readonly notificationService: NotificationService,
-    private readonly roleService: RoleService,
+    private readonly commonService: CommonService,
   ) { }
 
   async sendPushNotification(
@@ -40,6 +41,22 @@ export class BuyerService {
       console.log('Error sending push notification', e);
       throw e;
     }
+  }
+
+  async create(createObject: any, queryData: any): Promise<any> {
+    if (!queryData?.firm) {
+      throw new Error("Firm is required")
+    }
+    let [firm] = await this.commonService.firmFilter({
+      id: queryData.firm
+    });
+    if (!firm) {
+      throw new NotFoundException(`Firm with id ${queryData.firm} not found`);
+    } else {
+      createObject.firm = firm;
+    }
+    const result = this.repository.create(createObject);
+    return await this.repository.save(result);
   }
 
   async getAll(page: number = 1, pageSize: number = 10): Promise<any> {
@@ -70,7 +87,7 @@ export class BuyerService {
 
   async updateById(id: string, user: any) {
     if (user?.role) {
-      let [role] = await this.roleService.filter({ name: user?.role })
+      let [role] = await this.commonService.roleFilter({ name: user?.role })
       if (!role) {
         throw new NotFoundException("Given Role is not exist")
       }
