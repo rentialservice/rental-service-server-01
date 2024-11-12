@@ -1,5 +1,6 @@
 import { AuthModule } from "../../modules/auth/auth.module";
 import { CategoryModule } from "../../modules/category/category.module";
+import { CommonModule } from "../../modules/common/common.module";
 import { CustomFieldsModule } from "../../modules/custom-fields/custom-fields.module";
 import { DynamicModule } from "../../modules/dynamic/dynamic.module";
 import { FirmModule } from "../../modules/firm/firm.module";
@@ -38,4 +39,6 @@ export const modules = [
     PaymentCollectionModule,
     PaymentModeModule,
     PrefixModule,
+    CommonModule,
+    
 ];

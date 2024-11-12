@@ -16,6 +16,18 @@ export class Buyer extends BaseEntity {
   phone: string;
 
   @Column({ default: '' })
+  address: string;
+
+  @Column({ default: '' })
+  alternatePhone: string;
+
+  @Column({ default: '' })
+  adhaarNo: string;
+
+  @Column({ default: '' })
+  drivingLicense: string;
+
+  @Column({ default: '' })
   password: string;
 
   @Column({ default: '' })

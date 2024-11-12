@@ -3,34 +3,38 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Prefix } from './entities/prefix.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
-import { FirmService } from '../firm/firm.service';
+import { CommonService } from '../common/common.service';
 
 @Injectable()
 export class PrefixService {
     constructor(
         @InjectRepository(Prefix) private readonly prefixRepository: Repository<Prefix>,
-        private readonly firmService: FirmService,
+        private readonly commonService: CommonService,
     ) { }
 
-    async create(createObject: Partial<Prefix>): Promise<any> {
-        if (!createObject?.module && !createObject?.firm) {
+    async create(createObject: Partial<Prefix>, queryData: any): Promise<any> {
+        if (!createObject?.module && !queryData?.firm) {
             throw new Error("Module and Frim is required")
         }
         if (!createObject?.module) {
             throw new Error("Module is required")
         }
-        if (!createObject?.firm) {
+        if (!queryData?.firm) {
             throw new Error("Firm is required")
         }
-        if (createObject?.firm) {
-            let [firm] = await this.firmService.filter({
-                id: createObject.firm
-            });
-            if (!firm) {
-                throw new NotFoundException(`Firm with id ${createObject.firm} not found`);
-            } else {
-                createObject.firm = firm;
-            }
+        let [existing] = await this.filter({
+            firm: queryData.firm, name: createObject?.name
+        }, ["firm"]);
+        if (existing) {
+            throw new Error("Data already exists for this firm")
+        }
+        let [firm] = await this.commonService.firmFilter({
+            id: queryData.firm
+        });
+        if (!firm) {
+            throw new NotFoundException(`Firm with id ${queryData.firm} not found`);
+        } else {
+            createObject.firm = firm;
         }
         const result = this.prefixRepository.create(createObject);
         return await this.prefixRepository.save(result);

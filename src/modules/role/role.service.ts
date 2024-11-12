@@ -2,21 +2,21 @@ import { Injectable, NotAcceptableException, NotFoundException } from '@nestjs/c
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Role } from './entities/role.entity';
-import { PermissionService } from '../permission/permission.service';
 import { buildFilterCriteriaQuery } from '../../common/utils';
+import { CommonService } from '../common/common.service';
 
 @Injectable()
 export class RoleService {
     constructor(
         @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
-        private readonly permissionService: PermissionService
+        private readonly commonService: CommonService
     ) { }
 
     async create(createObject: any): Promise<any> {
         if (!createObject?.permissions?.length) {
             throw new NotAcceptableException("At least one permission is required")
         }
-        createObject.permissions = await this.permissionService.filter({ name: createObject.permissions })
+        createObject.permissions = await this.commonService.permissionFilter({ name: createObject.permissions })
         if (!createObject?.permissions?.length) {
             throw new NotFoundException("Given permission is not exist")
         }
@@ -46,7 +46,7 @@ export class RoleService {
 
     async update(id: string, updateObject: any, filterType?: string): Promise<any> {
         if (updateObject?.permissions?.length) {
-            updateObject.permissions = await this.permissionService.filter({ id: updateObject.permissions })
+            updateObject.permissions = await this.commonService.permissionFilter({ id: updateObject.permissions })
         }
         return await this.roleRepository.update(id, updateObject);
     }

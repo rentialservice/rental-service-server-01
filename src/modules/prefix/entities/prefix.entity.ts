@@ -11,7 +11,7 @@ export class Prefix extends BaseEntity {
   @Column({ default: '' })
   description: string;
 
-  @Column({ type: 'int', default: 0 })
+  @Column({ type: 'int', default: 1 })
   nextNumber: number;
 
   @ManyToOne(() => Firm, (firm) => firm.prefix)

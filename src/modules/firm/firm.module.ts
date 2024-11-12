@@ -3,11 +3,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { FirmService } from './firm.service';
 import { FirmController } from './firm.controller';
 import { Firm } from './entities/firm.entity';
-import { SubscriptionModule } from '../subscription/subscription.module';
-import { CategoryModule } from '../category/category.module';
+import { CommonModule } from '../common/common.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Firm]), SubscriptionModule, CategoryModule],
+  imports: [TypeOrmModule.forFeature([Firm]), CommonModule],
   providers: [FirmService],
   controllers: [FirmController],
   exports: [FirmService],

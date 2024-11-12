@@ -17,7 +17,7 @@ export class PrefixController {
         @Res() response: Response,
         @Body() createObject: Partial<Prefix>): Promise<void> {
         try {
-            let result = await this.prefixService.create(createObject);
+            let result = await this.prefixService.create(createObject, request.query);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);

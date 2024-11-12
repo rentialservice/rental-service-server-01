@@ -5,11 +5,10 @@ import { ProductController } from './product.controller';
 import { Product } from './entities/product.entity';
 import { CustomFieldsData } from '../custom-fields/entities/custom-fields-data.entity';
 import { CustomFields } from '../custom-fields/entities/custom-fields.entity';
-import { CategoryModule } from '../category/category.module';
-import { FirmModule } from '../firm/firm.module';
+import { CommonModule } from '../common/common.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, CustomFieldsData, CustomFields]), CategoryModule, FirmModule],
+  imports: [TypeOrmModule.forFeature([Product, CustomFieldsData, CustomFields]), CommonModule],
   providers: [ProductService],
   controllers: [ProductController],
   exports: [ProductService],
