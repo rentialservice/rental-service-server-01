@@ -6,9 +6,10 @@ import { Product } from './entities/product.entity';
 import { CustomFieldsData } from '../custom-fields/entities/custom-fields-data.entity';
 import { CustomFields } from '../custom-fields/entities/custom-fields.entity';
 import { CommonModule } from '../common/common.module';
+import { PrefixModule } from '../prefix/prefix.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, CustomFieldsData, CustomFields]), CommonModule],
+  imports: [TypeOrmModule.forFeature([Product, CustomFieldsData, CustomFields]), CommonModule, PrefixModule],
   providers: [ProductService],
   controllers: [ProductController],
   exports: [ProductService],

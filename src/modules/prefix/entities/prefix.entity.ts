@@ -2,6 +2,7 @@ import { Entity, Column, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Firm } from '../../firm/entities/firm.entity';
 import { ModuleNameList } from '../../../enums/status.enum';
+import { Category } from '../../category/entities/category.entity';
 
 @Entity('prefix')
 export class Prefix extends BaseEntity {
@@ -16,6 +17,9 @@ export class Prefix extends BaseEntity {
 
   @ManyToOne(() => Firm, (firm) => firm.prefix)
   firm: Firm;
+
+  @ManyToOne(() => Category, (category) => category.prefix)
+  category: Category;
 
   @Column({ type: 'enum', enum: ModuleNameList })
   module: string;
