@@ -7,6 +7,7 @@ import { CustomFields } from '../custom-fields/entities/custom-fields.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
 import { PrefixService } from '../prefix/prefix.service';
+import { ModuleNameList } from '../../enums/status.enum';
 
 @Injectable()
 export class ProductService {
@@ -53,7 +54,7 @@ export class ProductService {
         }
         if (createObject?.category?.isAutoIncrementForProductCode) {
             let [prefix]: any = await this.prefixService.filter({
-                firm: queryData?.firm, category: queryData?.category, module: "Product"
+                firm: queryData?.firm, category: queryData?.category, module: ModuleNameList.Product
             }, ["firm", "category"]);
             createObject.code = prefix?.name + "-" + prefix?.nextNumber;
             if (prefix) {
