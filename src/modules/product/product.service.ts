@@ -1,11 +1,13 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Product } from './entities/product.entity';
 import { CustomFieldsData } from '../custom-fields/entities/custom-fields-data.entity';
 import { CustomFields } from '../custom-fields/entities/custom-fields.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
+import { PrefixService } from '../prefix/prefix.service';
+import { ModuleNameList } from '../../enums/status.enum';
 
 @Injectable()
 export class ProductService {
@@ -14,6 +16,7 @@ export class ProductService {
         @InjectRepository(CustomFields) private readonly customFieldsRepository: Repository<CustomFields>,
         @InjectRepository(CustomFieldsData) private readonly customFieldsDataRepository: Repository<CustomFieldsData>,
         private readonly commonService: CommonService,
+        private readonly prefixService: PrefixService,
     ) { }
 
     // private readonly dataSource: DataSource
@@ -41,32 +44,39 @@ export class ProductService {
         if (!queryData?.firm) {
             throw new Error("Firm is required")
         }
-        let [existing] = await this.filter({
-            firm: queryData.firm, code: createObject?.code
-        }, ["firm"]);
-        if (existing) {
-            throw new Error("Data already exists for this firm")
+        let [category] = await this.commonService.categoryFilter({
+            id: queryData.category
+        });
+        if (!category) {
+            throw new NotFoundException(`Category with id ${queryData.category} not found`);
+        } else {
+            createObject.category = category;
         }
-        if (queryData?.category) {
-            let [category] = await this.commonService.categoryFilter({
-                id: queryData.category
-            });
-            if (!category) {
-                throw new NotFoundException(`Category with id ${queryData.category} not found`);
-            } else {
-                createObject.category = category;
+        if (createObject?.category?.isAutoIncrementForProductCode) {
+            let [prefix]: any = await this.prefixService.filter({
+                firm: queryData?.firm, category: queryData?.category, module: ModuleNameList.Product
+            }, ["firm", "category"]);
+            createObject.code = prefix?.name + "-" + prefix?.nextNumber;
+            if (prefix) {
+                await this.prefixService.update(prefix.id, { nextNumber: prefix?.nextNumber + 1 })
+            }
+        } else {
+            let [existing] = await this.filter({
+                firm: queryData.firm, code: createObject?.code
+            }, ["firm"]);
+            if (existing) {
+                throw new Error("Data already exists for this firm")
             }
         }
-        if (queryData?.firm) {
-            let [firm] = await this.commonService.firmFilter({
-                id: queryData.firm
-            });
-            if (!firm) {
-                throw new NotFoundException(`Firm with id ${queryData.firm} not found`);
-            } else {
-                createObject.firm = firm;
-            }
+        let [firm] = await this.commonService.firmFilter({
+            id: queryData.firm
+        });
+        if (!firm) {
+            throw new NotFoundException(`Firm with id ${queryData.firm} not found`);
+        } else {
+            createObject.firm = firm;
         }
+
         createObject.customFieldsData = await this.customFieldsValidationAndCreation(createObject) || [];
         const result = this.productRepository.create(createObject);
         return await this.productRepository.save(result);

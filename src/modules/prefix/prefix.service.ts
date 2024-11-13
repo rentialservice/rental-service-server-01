@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Prefix } from './entities/prefix.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
+import { ModuleNameList } from '../../enums/status.enum';
 
 @Injectable()
 export class PrefixService {
@@ -14,13 +15,16 @@ export class PrefixService {
 
     async create(createObject: Partial<Prefix>, queryData: any): Promise<any> {
         if (!createObject?.module && !queryData?.firm) {
-            throw new Error("Module and Frim is required")
+            throw new Error("Module & Frim is required")
         }
         if (!createObject?.module) {
             throw new Error("Module is required")
         }
         if (!queryData?.firm) {
             throw new Error("Firm is required")
+        }
+        if (createObject?.module === ModuleNameList.Product && !queryData?.category) {
+            throw new Error("Category is also required for adding any prefix for Product module")
         }
         let [existing] = await this.filter({
             firm: queryData.firm, name: createObject?.name
@@ -35,6 +39,16 @@ export class PrefixService {
             throw new NotFoundException(`Firm with id ${queryData.firm} not found`);
         } else {
             createObject.firm = firm;
+        }
+        if (createObject?.module === ModuleNameList.Product && queryData?.category) {
+            let [category] = await this.commonService.categoryFilter({
+                id: queryData.category
+            });
+            if (!category) {
+                throw new NotFoundException(`Category with id ${queryData.category} not found`);
+            } else {
+                createObject.category = category;
+            }
         }
         const result = this.prefixRepository.create(createObject);
         return await this.prefixRepository.save(result);
