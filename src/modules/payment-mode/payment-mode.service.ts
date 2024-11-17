@@ -3,13 +3,13 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PaymentMode } from './entities/payment-mode.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
-import { FirmService } from '../firm/firm.service';
+import { CommonService } from '../common/common.service';
 
 @Injectable()
 export class PaymentModeService {
     constructor(
         @InjectRepository(PaymentMode) private readonly paymentModeRepository: Repository<PaymentMode>,
-        private readonly firmService: FirmService,
+        private readonly commonService: CommonService,
     ) { }
 
     async create(createObject: Partial<PaymentMode>): Promise<any> {
@@ -17,7 +17,7 @@ export class PaymentModeService {
             throw new Error("Firm is required")
         }
         if (createObject?.firm) {
-            let [firm] = await this.firmService.filter({
+            let [firm] = await this.commonService.firmFilter({
                 id: createObject.firm
             });
             if (!firm) {
