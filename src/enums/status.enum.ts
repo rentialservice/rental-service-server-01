@@ -11,6 +11,14 @@ export enum RentalPeriod {
     RentPerYear = 'RentPerYear'
 }
 
+export enum FinePeriod {
+    FinePerHour = 'FinePerHour',
+    FinePerDay = 'FinePerDay',
+    FinePerWeek = 'FinePerWeek',
+    FinePerMonth = 'FinePerMonth',
+    FinePerYear = 'FinePerYear'
+}
+
 export enum ModuleNameList {
     Null = "Null",
     Category = 'Category',

@@ -1,7 +1,7 @@
 import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { CustomFieldsData } from '../../custom-fields/entities/custom-fields-data.entity';
-import { ProductStatus, RentalPeriod } from '../../../enums/status.enum';
+import { FinePeriod, ProductStatus, RentalPeriod } from '../../../enums/status.enum';
 import { Category } from '../../category/entities/category.entity';
 import { Firm } from '../../firm/entities/firm.entity';
 
@@ -34,6 +34,13 @@ export class Product extends BaseEntity {
     default: RentalPeriod.RentPerHour,
   })
   rentalPeriod: string;
+
+  @Column({
+    type: 'enum',
+    enum: FinePeriod,
+    default: FinePeriod.FinePerDay,
+  })
+  finePeriod: string;
 
   @Column({ type: "text", default: '' })
   color: string;

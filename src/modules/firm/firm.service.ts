@@ -4,12 +4,14 @@ import { Repository } from 'typeorm';
 import { Firm } from './entities/firm.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
+import { PaymentModeService } from '../payment-mode/payment-mode.service';
 
 @Injectable()
 export class FirmService {
     constructor(
         @InjectRepository(Firm) private readonly firmRepository: Repository<Firm>,
         private readonly commonService: CommonService,
+        private readonly paymentModeService: PaymentModeService,
     ) { }
 
     async create(createObject: Partial<Firm>): Promise<any> {
@@ -20,8 +22,10 @@ export class FirmService {
             }
             createObject.category = category;
         }
-        const result = this.firmRepository.create(createObject);
-        return await this.firmRepository.save(result);
+        const result: any = this.firmRepository.create(createObject);
+        let response: any = await this.firmRepository.save(result);
+        await this.paymentModeService.create({ firm: response.id, name: "CASH" });
+        return response;
     }
 
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {

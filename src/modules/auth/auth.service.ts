@@ -101,7 +101,7 @@ export class AuthService {
       // if (userDetails) {
       //   throw new Error('User with this email already exist, please login...!');
       // } else {
-      let otp = otpGenerator();
+      let otp: any = otpGenerator();
       await this.mailService.sendOTP({ email: sendOtpDto.email, otp });
       let hashedOtp = await bcrypt.hash(otp, 8);
       if (process.env.OTP_PHASE === "testing") {
@@ -141,7 +141,7 @@ export class AuthService {
       // if (userDetails) {
       //   throw new Error('User with this phone number already exist, please login...!');
       // } else {
-      let otp = otpGenerator();
+      let otp: any = otpGenerator();
       // await this.mailService.sendOTP({ email: sendOtpDto.email, otp }); // TODO instead of this add phone service
       let hashedOtp = await bcrypt.hash(otp, 8);
       if (process.env.OTP_PHASE === "testing") {
@@ -171,12 +171,12 @@ export class AuthService {
       if (authType === "email") {
         userDetails = await this.buyerRepository.findOne({
           where: { email: verify?.email, deleteFlag: false },
-          relations: ["firm"]
+          relations: ["firm.category"]
         });
       } else if (authType === "phone") {
         userDetails = await this.buyerRepository.findOne({
           where: { phone: verify?.phone, deleteFlag: false },
-          relations: ["firm"]
+          relations: ["firm.category"]
         });
       } else {
         throw new Error('Invalid auth type...!');
@@ -185,12 +185,12 @@ export class AuthService {
       if (authType === "email") {
         userDetails = await this.sellerRepository.findOne({
           where: { email: verify?.email, deleteFlag: false },
-          relations: ["firm"]
+          relations: ["firm.category"]
         });
       } else if (authType === "phone") {
         userDetails = await this.sellerRepository.findOne({
           where: { phone: verify?.phone, deleteFlag: false },
-          relations: ["firm"]
+          relations: ["firm.category"]
         });
       } else {
         throw new Error('Invalid auth type...!');
@@ -211,7 +211,8 @@ export class AuthService {
       if (type === "buyer") {
         userDetails = await this.buyerRepository.save(user);
       } else if (type === "seller") {
-        let firm = await this.firmService.create({ name: "Firm ABC" });
+        let firm: any = await this.firmService.create({ name: "Firm ABC" });
+        firm.category = [];
         user.firm = firm;
         userDetails = await this.sellerRepository.save(user);
       } else {
@@ -244,7 +245,7 @@ export class AuthService {
       // if (userDetails) {
       //   throw new Error('User with this email already exist, please login...!');
       // } else {
-      let otp = otpGenerator();
+      let otp: any = otpGenerator();
       await this.mailService.sendOTP({ email: sendOtpDto.email, otp });
       let hashedOtp = await bcrypt.hash(otp, 8);
       if (process.env.OTP_PHASE === "testing") {
@@ -273,7 +274,7 @@ export class AuthService {
       // if (userDetails) {
       //   throw new Error('User with this phone number already exist, please login...!');
       // } else {
-      let otp = otpGenerator();
+      let otp: any = otpGenerator();
       // await this.mailService.sendOTP({ email: sendOtpDto.email, otp }); // TODO instead of this add phone service
       let hashedOtp = await bcrypt.hash(otp, 8);
       if (process.env.OTP_PHASE === "testing") {
@@ -397,7 +398,7 @@ export class AuthService {
     if (type === "buyer") {
       let userDetails = await this.buyerRepository.findOne({
         where: { email: ssoLoginDto.email, deleteFlag: false },
-        relations: ["firm"]
+        relations: ["firm.category"]
       });
       if (userDetails) {
         let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
@@ -432,7 +433,7 @@ export class AuthService {
     } else if (type === "seller") {
       let userDetails = await this.sellerRepository.findOne({
         where: { email: ssoLoginDto.email, deleteFlag: false },
-        relations: ["firm"]
+        relations: ["firm.category"]
       });
       if (userDetails) {
         let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
@@ -449,7 +450,8 @@ export class AuthService {
         username = userWithUsername
           ? `${username}${sixDigitGenerator()}`
           : username;
-        let firm = await this.firmService.create({ name: "Firm ABC" });
+        let firm: any = await this.firmService.create({ name: "Firm ABC" });
+        firm.category = [];
         let user: any = {
           email: ssoLoginDto.email,
           fullName: ssoLoginDto.fullName,
@@ -533,7 +535,7 @@ export class AuthService {
     });
     if (!userDetails)
       throw new Error('Invalid User/Email or User may be deleted...!');
-    let otp = otpGenerator();
+    let otp: any = otpGenerator();
     await this.mailService.sendOTP({
       email: forgotPasswordVerifyEmailDto.email,
       otp,
