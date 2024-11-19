@@ -3,14 +3,45 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PaymentCollection } from './entities/payment-collection.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
+import { CommonService } from '../common/common.service';
 
 @Injectable()
 export class PaymentCollectionService {
     constructor(
         @InjectRepository(PaymentCollection) private readonly paymentCollectionRepository: Repository<PaymentCollection>,
+        private readonly commonService: CommonService
     ) { }
 
-    async create(createObject: Partial<PaymentCollection>): Promise<any> {
+    async create(createObject: Partial<PaymentCollection>, queryData: any): Promise<any> {
+        if (!createObject?.paymentMode) {
+            throw new Error("Payment Mode is required")
+        }
+        if (!createObject?.rental) {
+            throw new Error("Rental is required")
+        }
+        if (!queryData?.firm) {
+            throw new Error("Firm is required")
+        }
+        let [firm] = await this.commonService.firmFilter({
+            id: queryData.firm
+        });
+        if (!firm) {
+            throw new NotFoundException(`Firm with id ${queryData.firm} not found`);
+        } else {
+            createObject.firm = firm;
+        }
+        let [paymentMode] = await this.commonService.paymentModeFilter({ id: createObject.paymentMode })
+        if (!paymentMode) {
+            throw new NotFoundException(`Payment Mode with id ${createObject.paymentMode} not found`);
+        } else {
+            createObject.paymentMode = paymentMode;
+        }
+        let [rental] = await this.commonService.rentalFilter({ id: createObject.rental })
+        if (!rental) {
+            throw new NotFoundException(`Payment Mode with id ${createObject.rental} not found`);
+        } else {
+            createObject.rental = rental;
+        }
         const result = this.paymentCollectionRepository.create(createObject);
         return await this.paymentCollectionRepository.save(result);
     }

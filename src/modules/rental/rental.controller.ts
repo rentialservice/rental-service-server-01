@@ -17,7 +17,7 @@ export class RentalController {
         @Res() response: Response,
         @Body() createObject: Partial<Rental>): Promise<void> {
         try {
-            let result = await this.rentalService.create(createObject);
+            let result = await this.rentalService.create(createObject, request.query);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);

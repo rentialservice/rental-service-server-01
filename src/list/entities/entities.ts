@@ -18,6 +18,7 @@ import { Rental } from "../../modules/rental/entities/rental.entity";
 import { PaymentCollection } from "../../modules/payment-collection/entities/payment-collection.entity";
 import { PaymentMode } from "../../modules/payment-mode/entities/payment-mode.entity";
 import { Prefix } from "../../modules/prefix/entities/prefix.entity";
+import { TermsAndConditions } from "../../modules/terms-and-conditions/entities/terms-and-conditions.entity";
 
 export const entities = [
     Admin,
@@ -39,5 +40,6 @@ export const entities = [
     Rental,
     PaymentCollection,
     PaymentMode,
-    Prefix
+    Prefix,
+    TermsAndConditions,
 ];

@@ -15,6 +15,7 @@ import { SubscriptionModule } from "../../modules/subscription/subscription.modu
 import { MailModule } from "../../modules/supporting-modules/mail/mail.module";
 import { NotificationModule } from "../../modules/supporting-modules/notification/notification.module";
 import { S3Module } from "../../modules/supporting-modules/s3/s3.module";
+import { TermsAndConditionsModule } from "../../modules/terms-and-conditions/terms-and-conditions.module";
 import { AdminModule } from "../../modules/users/admin/admin.module";
 import { BuyerModule } from "../../modules/users/buyer/buyer.module";
 import { SellerModule } from "../../modules/users/seller/seller.module";
@@ -40,5 +41,6 @@ export const modules = [
     PaymentModeModule,
     PrefixModule,
     CommonModule,
+    TermsAndConditionsModule,
     
 ];

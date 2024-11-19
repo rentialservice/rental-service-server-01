@@ -6,6 +6,9 @@ import { Product } from '../../product/entities/product.entity';
 import { CustomFields } from '../../custom-fields/entities/custom-fields.entity';
 import { Prefix } from '../../prefix/entities/prefix.entity';
 import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
+import { TermsAndConditions } from '../../terms-and-conditions/entities/terms-and-conditions.entity';
+import { Rental } from '../../rental/entities/rental.entity';
+import { PaymentCollection } from '../../payment-collection/entities/payment-collection.entity';
 @Entity('firm')
 export class Firm extends BaseEntity {
   @Column()
@@ -41,4 +44,13 @@ export class Firm extends BaseEntity {
 
   @OneToMany(() => CustomFields, (customField) => customField.firm)
   customFields: CustomFields[];
+
+  @OneToMany(() => TermsAndConditions, (termsAndConditions) => termsAndConditions.firm)
+  termsAndConditions: TermsAndConditions[];
+
+  @OneToMany(() => Rental, (rental) => rental.firm)
+  rental: Rental[];
+
+  @OneToMany(() => PaymentCollection, (rental) => rental.firm)
+  paymentCollection: PaymentCollection[];
 }
