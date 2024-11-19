@@ -1,4 +1,4 @@
-import { Entity, Column, OneToOne, JoinColumn, ManyToOne, OneToMany } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Product } from '../../product/entities/product.entity';
 import { Buyer } from '../../users/buyer/entities/buyer.entity';
@@ -9,12 +9,10 @@ import { PaymentCollection } from '../../payment-collection/entities/payment-col
 
 @Entity('rental')
 export class Rental extends BaseEntity {
-    @OneToOne(() => Product)
-    @JoinColumn()
+    @ManyToOne(() => Product, (product) => product.rental)
     product: Product;
 
-    @OneToOne(() => Buyer)
-    @JoinColumn()
+    @ManyToOne(() => Buyer, (buyer) => buyer.rental)
     buyer: Buyer;
 
     @Column({ default: new Date() })
@@ -48,8 +46,7 @@ export class Rental extends BaseEntity {
     })
     rentalPeriod: string;
 
-    @OneToOne(() => PaymentMode)
-    @JoinColumn()
+    @ManyToOne(() => PaymentMode, (paymentMode) => paymentMode.rental)
     paymentMode: PaymentMode;
 
     @ManyToOne(() => Firm, (firm) => firm.rental)

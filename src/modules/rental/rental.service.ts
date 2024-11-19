@@ -10,7 +10,6 @@ export class RentalService {
     constructor(
         @InjectRepository(Rental) private readonly rentalRepository: Repository<Rental>,
         private readonly commonService: CommonService
-
     ) { }
 
     async create(createObject: Partial<Rental>, queryData: any): Promise<any> {

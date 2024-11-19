@@ -26,12 +26,6 @@ export class PrefixService {
         if (createObject?.module === ModuleNameList.Product && !queryData?.category) {
             throw new Error("Category is also required for adding any prefix for Product module")
         }
-        let [existing] = await this.filter({
-            firm: queryData.firm, name: createObject?.name
-        }, ["firm"]);
-        if (existing) {
-            throw new Error("Data already exists for this firm")
-        }
         let [firm] = await this.commonService.firmFilter({
             id: queryData.firm
         });
