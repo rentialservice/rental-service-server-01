@@ -38,6 +38,20 @@ export class PaymentCollectionController {
         }
     }
 
+    @Get("/get-amount-statistics")
+    async getAmountStatistics(
+        @Req() request: Request,
+        @Res() response: Response,
+        @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    ): Promise<void> {
+        try {
+            const result: any = await this.paymentCollectionService.getAmountStatistics(request.query, [], filterType);
+            successResponse(response, result);
+        } catch (error: any) {
+            errorResponse(response, error);
+        }
+    }
+
     @Get()
     async getAll(
         @Req() request: Request,

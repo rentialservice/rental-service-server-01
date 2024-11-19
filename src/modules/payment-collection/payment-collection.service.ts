@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThanOrEqual, Repository } from 'typeorm';
 import { PaymentCollection } from './entities/payment-collection.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
@@ -80,4 +80,26 @@ export class PaymentCollectionService {
             relations: [...fields]
         });
     }
+
+    async getAmountStatistics(filterCriteria: any, fields: string[] = [], filterType?: any): Promise<any> {
+        if (!filterCriteria?.firm) {
+            throw new Error("Firm is required")
+        }
+        filterCriteria = buildFilterCriteriaQuery(filterCriteria);
+        let today = new Date();
+        const startOfDay = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()));
+        const startOfMonth = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1));
+        let dailyPayments = await this.paymentCollectionRepository.find({
+            where: { ...filterCriteria, createdAt: MoreThanOrEqual(startOfDay), deleteFlag: false },
+            relations: [...fields]
+        });
+        let monthlyPayments = await this.paymentCollectionRepository.find({
+            where: { ...filterCriteria, createdAt: MoreThanOrEqual(startOfMonth), deleteFlag: false, },
+            relations: [...fields]
+        });
+        let dailyTotal = dailyPayments.reduce((sum: any, payment: any) => sum + parseFloat(payment.amount), 0);
+        let monthlyTotal = monthlyPayments.reduce((sum: any, payment: any) => sum + parseFloat(payment.amount), 0);
+        return { dailyTotal, monthlyTotal };
+    }
+
 }
