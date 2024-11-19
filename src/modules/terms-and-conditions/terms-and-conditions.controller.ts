@@ -1,23 +1,23 @@
 import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Req, Res, Query } from '@nestjs/common';
+import { TermsAndConditionsService } from './terms-and-conditions.service';
+import { TermsAndConditions } from './entities/terms-and-conditions.entity';
 import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { Request, Response } from 'express';
 import { RoutesConstants } from '../../constants/routes.constant';
 import { errorResponse, successPaginatedResponse, successResponse } from '../../base/response';
-import { PaymentCollectionService } from './payment-collection.service';
-import { PaymentCollection } from './entities/payment-collection.entity';
 
 @UseGuards(JwtAuthGuard)
-@Controller('payment-collection')
-export class PaymentCollectionController {
-    constructor(private readonly paymentCollectionService: PaymentCollectionService) { }
+@Controller('terms-and-conditions')
+export class TermsAndConditionsController {
+    constructor(private readonly termsAndConditionsService: TermsAndConditionsService) { }
 
     @Post()
     async create(
         @Req() request: Request,
         @Res() response: Response,
-        @Body() createObject: Partial<PaymentCollection>): Promise<void> {
+        @Body() createObject: Partial<TermsAndConditions>): Promise<void> {
         try {
-            let result = await this.paymentCollectionService.create(createObject, request.query);
+            let result = await this.termsAndConditionsService.create(createObject, request.query);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -31,21 +31,7 @@ export class PaymentCollectionController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            const result: any = await this.paymentCollectionService.filter(request.query, [], filterType);
-            successResponse(response, result);
-        } catch (error: any) {
-            errorResponse(response, error);
-        }
-    }
-
-    @Get("/get-amount-statistics")
-    async getAmountStatistics(
-        @Req() request: Request,
-        @Res() response: Response,
-        @Query(RoutesConstants.FILTERTYPE) filterType: string,
-    ): Promise<void> {
-        try {
-            const result: any = await this.paymentCollectionService.getAmountStatistics(request.query, [], filterType);
+            const result: any = await this.termsAndConditionsService.filter(request.query, [], filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -61,7 +47,7 @@ export class PaymentCollectionController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            const [result, count]: any = await this.paymentCollectionService.getAll(page, pageSize, filterType);
+            const [result, count]: any = await this.termsAndConditionsService.getAll(page, pageSize, filterType);
             successPaginatedResponse(response, result, count, page, pageSize);
         } catch (error: any) {
             errorResponse(response, error);
@@ -76,7 +62,7 @@ export class PaymentCollectionController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.paymentCollectionService.getById(id, filterType);
+            let result = await this.termsAndConditionsService.getById(id, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -88,11 +74,11 @@ export class PaymentCollectionController {
         @Req() request: Request,
         @Res() response: Response,
         @Param(RoutesConstants.ID) id: string,
-        @Body() updateObject: Partial<PaymentCollection>,
+        @Body() updateObject: Partial<TermsAndConditions>,
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.paymentCollectionService.update(id, updateObject, filterType);
+            let result = await this.termsAndConditionsService.update(id, updateObject, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -107,7 +93,7 @@ export class PaymentCollectionController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            let result = await this.paymentCollectionService.delete(id, filterType);
+            let result = await this.termsAndConditionsService.delete(id, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -122,7 +108,7 @@ export class PaymentCollectionController {
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
     ): Promise<void> {
         try {
-            const result: any = await this.paymentCollectionService.filter(filterCriteria, [], filterType);
+            const result: any = await this.termsAndConditionsService.filter(filterCriteria, [], filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);

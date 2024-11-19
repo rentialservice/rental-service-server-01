@@ -1,4 +1,4 @@
-import { Entity, Column, OneToMany, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../../base/base.entity';
 import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
 import { Role } from '../../../role/entities/role.entity';
@@ -23,8 +23,7 @@ export class Admin extends BaseEntity {
   @Column({ default: '' })
   email: string;
 
-  @OneToOne(() => Role)
-  @JoinColumn({ name: "roleId" })
+  @ManyToOne(() => Role)
   role: Role;
 
   @Column({

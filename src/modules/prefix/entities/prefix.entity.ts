@@ -1,10 +1,11 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne, Unique } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Firm } from '../../firm/entities/firm.entity';
 import { ModuleNameList } from '../../../enums/status.enum';
 import { Category } from '../../category/entities/category.entity';
 
 @Entity('prefix')
+@Unique(["firm", "name"])
 export class Prefix extends BaseEntity {
   @Column()
   name: string;

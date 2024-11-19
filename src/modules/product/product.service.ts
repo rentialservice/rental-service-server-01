@@ -56,17 +56,20 @@ export class ProductService {
             let [prefix]: any = await this.prefixService.filter({
                 firm: queryData?.firm, category: queryData?.category, module: ModuleNameList.Product
             }, ["firm", "category"]);
+            if (!prefix) {
+                throw new NotFoundException("Prefix not found")
+            }
             createObject.code = prefix?.name + "-" + prefix?.nextNumber;
             if (prefix) {
                 await this.prefixService.update(prefix.id, { nextNumber: prefix?.nextNumber + 1 })
             }
         } else {
-            let [existing] = await this.filter({
-                firm: queryData.firm, code: createObject?.code
-            }, ["firm"]);
-            if (existing) {
-                throw new Error("Data already exists for this firm")
-            }
+            // let [existing] = await this.filter({
+            //     firm: queryData.firm, code: createObject?.code
+            // }, ["firm"]);
+            // if (existing) {
+            //     throw new Error("Data already exists for this firm")
+            // }
         }
         let [firm] = await this.commonService.firmFilter({
             id: queryData.firm

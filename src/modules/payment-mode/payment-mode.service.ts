@@ -33,6 +33,7 @@ export class PaymentModeService {
     async getAll(page: number = 1, pageSize: number = 10, filterType?: string): Promise<any> {
         return await this.paymentModeRepository.findAndCount({
             where: { deleteFlag: false },
+            relations: ["firm"],
             skip: (page - 1) * pageSize,
             take: pageSize,
         });

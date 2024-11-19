@@ -1,27 +1,31 @@
 import { ILike, In } from 'typeorm';
 
-export function buildFilterCriteriaQuery(filterCriteria: any): any {
-    Object.keys(filterCriteria).forEach((key) => {
+export function buildFilterCriteriaQuery(filterCriteria: any) {
+    // Create a deep copy of the filterCriteria object
+    let criteria: any = JSON.parse(JSON.stringify(filterCriteria));
+
+    Object.keys(criteria).forEach((key) => {
         if (key === "page") {
-            delete filterCriteria[key];
+            delete criteria[key];
         }
         if (key === "pageSize") {
-            delete filterCriteria[key];
+            delete criteria[key];
         }
 
         if (key === "search") {
-            filterCriteria.name = ILike(`%${filterCriteria.search}%`);
+            criteria.name = ILike(`%${criteria.search}%`);
+            delete criteria.search;
         } else {
             if (key === "category") {
-                filterCriteria.category = { id: filterCriteria.category };
+                criteria.category = { id: criteria.category };
             }
             if (key === "firm") {
-                filterCriteria.firm = { id: filterCriteria.firm };
+                criteria.firm = { id: criteria.firm };
             }
-            if (Array.isArray(filterCriteria[key])) {
-                filterCriteria[key] = In(filterCriteria[key]);
+            if (Array.isArray(criteria[key])) {
+                criteria[key] = In(criteria[key]);
             }
         }
     });
-    return filterCriteria;
+    return criteria;
 }

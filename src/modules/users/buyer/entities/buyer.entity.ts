@@ -3,6 +3,7 @@ import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
 import { Firm } from '../../../firm/entities/firm.entity';
 import { Role } from '../../../role/entities/role.entity';
+import { Rental } from '../../../rental/entities/rental.entity';
 
 @Entity("buyer")
 export class Buyer extends BaseEntity {
@@ -71,4 +72,7 @@ export class Buyer extends BaseEntity {
 
   @OneToMany(() => NotificationToken, (notificationToken) => notificationToken.user)
   notificationTokens: NotificationToken[];
+
+  @OneToMany(() => Rental, (rental) => rental.buyer)
+  rental: Rental[];
 }

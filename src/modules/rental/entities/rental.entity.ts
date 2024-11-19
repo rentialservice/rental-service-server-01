@@ -1,17 +1,18 @@
-import { Entity, Column, OneToOne, JoinColumn } from 'typeorm';
+import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Product } from '../../product/entities/product.entity';
 import { Buyer } from '../../users/buyer/entities/buyer.entity';
 import { RentalPeriod } from '../../../enums/status.enum';
+import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
+import { Firm } from '../../firm/entities/firm.entity';
+import { PaymentCollection } from '../../payment-collection/entities/payment-collection.entity';
 
 @Entity('rental')
 export class Rental extends BaseEntity {
-    @OneToOne(() => Product)
-    @JoinColumn()
+    @ManyToOne(() => Product, (product) => product.rental)
     product: Product;
 
-    @OneToOne(() => Buyer)
-    @JoinColumn()
+    @ManyToOne(() => Buyer, (buyer) => buyer.rental)
     buyer: Buyer;
 
     @Column({ default: new Date() })
@@ -33,6 +34,9 @@ export class Rental extends BaseEntity {
     paidAmount: number;
 
     @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+    totalAmount: number;
+
+    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
     fine: number;
 
     @Column({
@@ -42,6 +46,12 @@ export class Rental extends BaseEntity {
     })
     rentalPeriod: string;
 
-    @Column({ default: 'CASH' })
-    paymentMethod: string;
+    @ManyToOne(() => PaymentMode, (paymentMode) => paymentMode.rental)
+    paymentMode: PaymentMode;
+
+    @ManyToOne(() => Firm, (firm) => firm.rental)
+    firm: Firm;
+
+    @OneToMany(() => PaymentCollection, (paymentCollection) => paymentCollection.rental)
+    paymentCollection: PaymentCollection[];
 }

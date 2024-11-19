@@ -1,11 +1,13 @@
-import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne, Unique } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { CustomFieldsData } from '../../custom-fields/entities/custom-fields-data.entity';
 import { FinePeriod, ProductStatus, RentalPeriod } from '../../../enums/status.enum';
 import { Category } from '../../category/entities/category.entity';
 import { Firm } from '../../firm/entities/firm.entity';
+import { Rental } from '../../rental/entities/rental.entity';
 
 @Entity('product')
+@Unique(['code', 'firm'])
 export class Product extends BaseEntity {
   @Column({ type: "text" })
   name: string;
@@ -84,4 +86,7 @@ export class Product extends BaseEntity {
 
   @ManyToOne(() => Firm, (firm) => firm.product)
   firm: Firm;
+
+  @OneToMany(() => Rental, (rental) => rental.product)
+  rental: Rental[];
 }
