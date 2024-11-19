@@ -24,12 +24,6 @@ export class TermsAndConditionsService {
         } else {
             createObject.firm = firm;
         }
-        // let [existing] = await this.filter({
-        //     firm: queryData.firm, code: createObject?.name
-        // }, ["firm"]);
-        // if (existing) {
-        //     throw new Error("Data already exists for this firm")
-        // }
         const result = this.termsAndConditionsRepository.create(createObject);
         return await this.termsAndConditionsRepository.save(result);
     }
