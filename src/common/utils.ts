@@ -1,4 +1,5 @@
 import { ILike, In } from 'typeorm';
+import { FilterConstants } from '../constants/filter.constants';
 
 export function buildFilterCriteriaQuery(filterCriteria: any) {
     // Create a deep copy of the filterCriteria object
@@ -13,16 +14,12 @@ export function buildFilterCriteriaQuery(filterCriteria: any) {
         }
 
         if (key === "search") {
-            criteria.name = ILike(`%${criteria.search}%`);
-            delete criteria.search;
+            criteria.name = ILike(`%${criteria?.search}%`);
+            delete criteria?.search;
         } else {
-            if (key === "category") {
-                criteria.category = { id: criteria.category };
-            }
-            if (key === "firm") {
-                criteria.firm = { id: criteria.firm };
-            }
-            if (Array.isArray(criteria[key])) {
+            if (FilterConstants.FILTER_KEYS.includes(key)) {
+                criteria[key] = { id: criteria[key] };
+            } else if (Array.isArray(criteria[key])) {
                 criteria[key] = In(criteria[key]);
             }
         }
