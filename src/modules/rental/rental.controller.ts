@@ -24,6 +24,21 @@ export class RentalController {
         }
     }
 
+    @Get("/create-invoice")
+    async createInvoice(
+        @Req() request: Request,
+        @Res() response: Response,
+        @Query(RoutesConstants.ID) id: string,
+        @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    ): Promise<void> {
+        try {
+            let result = await this.rentalService.createInvoice(id, filterType);
+            successResponse(response, result);
+        } catch (error: any) {
+            errorResponse(response, error);
+        }
+    }
+
     @Get()
     async getAll(
         @Req() request: Request,

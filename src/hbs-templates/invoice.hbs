@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice {{invoiceNumber}}</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+
+    .header,
+    .footer {
+      text-align: center;
+    }
+
+    .invoice-details,
+    .client-details {
+      margin-bottom: 20px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="header">
+    <h1>Invoice</h1>
+    <p>Date: {{invoiceDate}}</p>
+    <p>Invoice Number: {{invoiceNumber}}</p>
+  </div>
+
+  <div class="client-details">
+    <h2>Bill To:</h2>
+    <p>Name: {{client.name}}</p>
+    <p>Email: {{client.email}}</p>
+    <p>Address: {{client.address}}</p>
+  </div>
+
+  <div class="invoice-details">
+    <h2>Invoice Details:</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Quantity</th>
+          <th>Unit Price</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each items}}
+        <tr>
+          <td>{{this.description}}</td>
+          <td>{{this.quantity}}</td>
+          <td>${{this.unitPrice}}</td>
+          <td>${{this.totalAmount}}</td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+
+    <h3>Total Amount Due: ${{totalAmount}}</h3>
+  </div>
+
+  <div class="footer">
+    <p>Thank you for your business!</p>
+  </div>
+
+</body>
+
+</html>

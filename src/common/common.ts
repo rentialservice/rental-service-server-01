@@ -1,3 +1,7 @@
+import handlebars from 'handlebars';
+import * as path from 'path';
+import * as fs from 'fs';
+
 export function extractUsername(email: string) {
   const parts = email.split('@');
   return parts[0];
@@ -16,4 +20,23 @@ export function validateEmail(email: string) {
 export function validatePhoneNumber(phoneNumber: string) {
   const regex = /^[6-9]\d{9}$/;
   return regex.test(phoneNumber);
+}
+
+export async function generatePdfFromTemplate(
+  data: any,
+  template: any,
+  type?: any,
+) {
+  try {
+    const filePath = 'src/hbs-templates';
+    let htmlTemplate: any;
+    htmlTemplate = fs.readFileSync(
+      path.resolve(filePath, `${template}.hbs`),
+      'utf8',
+    );
+    const compiledTemplate = handlebars.compile(htmlTemplate);
+    return compiledTemplate(data);
+  } catch (error) {
+    console.log({ error })
+  }
 }
