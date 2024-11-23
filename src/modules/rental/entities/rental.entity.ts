@@ -2,10 +2,10 @@ import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Product } from '../../product/entities/product.entity';
 import { Buyer } from '../../users/buyer/entities/buyer.entity';
-import { RentalPeriod } from '../../../enums/status.enum';
 import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
 import { Firm } from '../../firm/entities/firm.entity';
 import { PaymentCollection } from '../../payment-collection/entities/payment-collection.entity';
+import { RentalPeriod } from '../../../enums/period.enum';
 
 @Entity('rental')
 export class Rental extends BaseEntity {

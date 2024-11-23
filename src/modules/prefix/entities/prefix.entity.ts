@@ -1,8 +1,8 @@
 import { Entity, Column, ManyToOne, Unique } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Firm } from '../../firm/entities/firm.entity';
-import { ModuleNameList } from '../../../enums/status.enum';
 import { Category } from '../../category/entities/category.entity';
+import { ModuleNameList } from '../../../enums/module.enum';
 
 @Entity('prefix')
 @Unique(["firm", "name"])

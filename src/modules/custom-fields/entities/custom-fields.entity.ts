@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { CustomFieldsData } from './custom-fields-data.entity';
 import { Firm } from '../../firm/entities/firm.entity';
-import { ModuleNameList } from '../../../enums/status.enum';
+import { ModuleNameList } from '../../../enums/module.enum';
 
 @Entity('custom_fields')
 export class CustomFields extends BaseEntity {

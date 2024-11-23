@@ -7,7 +7,7 @@ import { CustomFields } from '../custom-fields/entities/custom-fields.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
 import { PrefixService } from '../prefix/prefix.service';
-import { ModuleNameList } from '../../enums/status.enum';
+import { ModuleNameList } from '../../enums/module.enum';
 
 @Injectable()
 export class ProductService {

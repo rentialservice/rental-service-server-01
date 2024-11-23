@@ -48,7 +48,7 @@ export class SellerService {
       relations: ["role", "firm"],
       skip: (page - 1) * pageSize,
       take: pageSize,
-      select: SelectConstants.USER_SELECT,
+      select: SelectConstants.SELLER_SELECT,
     });
   }
 
@@ -56,7 +56,7 @@ export class SellerService {
     return await this.repository.findOne({
       where: { id },
       relations: ["role", "firm"],
-      select: SelectConstants.USER_SELECT,
+      select: SelectConstants.SELLER_SELECT,
     });
   }
 
@@ -64,7 +64,7 @@ export class SellerService {
     return await this.repository.findOne({
       where: { username },
       relations: ["role", "firm"],
-      select: SelectConstants.USER_SELECT,
+      select: SelectConstants.SELLER_SELECT,
     });
   }
 
