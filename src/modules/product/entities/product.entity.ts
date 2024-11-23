@@ -1,10 +1,11 @@
 import { Entity, Column, OneToMany, ManyToOne, Unique } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { CustomFieldsData } from '../../custom-fields/entities/custom-fields-data.entity';
-import { FinePeriod, ProductStatus, RentalPeriod } from '../../../enums/status.enum';
+import { ProductStatus } from '../../../enums/status.enum';
 import { Category } from '../../category/entities/category.entity';
 import { Firm } from '../../firm/entities/firm.entity';
 import { Rental } from '../../rental/entities/rental.entity';
+import { FinePeriod, RentalPeriod } from '../../../enums/period.enum';
 
 @Entity('product')
 @Unique(['code', 'firm'])

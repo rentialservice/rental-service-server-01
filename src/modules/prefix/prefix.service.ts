@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Prefix } from './entities/prefix.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
-import { ModuleNameList } from '../../enums/status.enum';
+import { ModuleNameList } from '../../enums/module.enum';
 
 @Injectable()
 export class PrefixService {
