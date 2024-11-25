@@ -8,6 +8,7 @@ import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
 import { PrefixService } from '../prefix/prefix.service';
 import { ModuleNameList } from '../../enums/module.enum';
+import { S3Service } from '../supporting-modules/s3/s3.service';
 
 @Injectable()
 export class ProductService {
@@ -17,6 +18,7 @@ export class ProductService {
         @InjectRepository(CustomFieldsData) private readonly customFieldsDataRepository: Repository<CustomFieldsData>,
         private readonly commonService: CommonService,
         private readonly prefixService: PrefixService,
+        private readonly s3Service: S3Service,
     ) { }
 
     // private readonly dataSource: DataSource
@@ -34,7 +36,16 @@ export class ProductService {
     //     await queryRunner.release();
     // }
 
-    async create(createObject: Partial<Product>, queryData: any): Promise<any> {
+    async create(createObject: Partial<Product>, queryData: any, media?: any[]): Promise<any> {
+        if (media) {
+            createObject.media = [];
+            await Promise.all(
+                media.map(async (m) => {
+                    let fileURL = await this.s3Service.uploadImageS3(m, process.env.PRODUCT_MEDIA_FOLDER_NAME as string);
+                    createObject.media.push(fileURL);
+                }),
+            );
+        }
         if (!queryData?.category && !queryData?.firm) {
             throw new Error("Category and Firm is required")
         }

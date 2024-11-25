@@ -7,9 +7,10 @@ import { CustomFieldsData } from '../custom-fields/entities/custom-fields-data.e
 import { CustomFields } from '../custom-fields/entities/custom-fields.entity';
 import { CommonModule } from '../common/common.module';
 import { PrefixModule } from '../prefix/prefix.module';
+import { S3Module } from '../supporting-modules/s3/s3.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, CustomFieldsData, CustomFields]), CommonModule, PrefixModule],
+  imports: [TypeOrmModule.forFeature([Product, CustomFieldsData, CustomFields]), CommonModule, PrefixModule, S3Module],
   providers: [ProductService],
   controllers: [ProductController],
   exports: [ProductService],
