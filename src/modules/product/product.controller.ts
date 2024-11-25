@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Req, Res, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Req, Res, Query, UseInterceptors, UploadedFiles } from '@nestjs/common';
 import { ProductService } from './product.service';
 import { Product } from './entities/product.entity';
 import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { Request, Response } from 'express';
 import { RoutesConstants } from '../../constants/routes.constant';
 import { errorResponse, successPaginatedResponse, successResponse } from '../../base/response';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @UseGuards(JwtAuthGuard)
 @Controller('product')
@@ -12,12 +13,15 @@ export class ProductController {
     constructor(private readonly productService: ProductService) { }
 
     @Post()
+    @UseInterceptors(FilesInterceptor('media', 10))
     async create(
         @Req() request: Request,
         @Res() response: Response,
-        @Body() createObject: Partial<Product>): Promise<void> {
+        @Body() createObject: Partial<Product>,
+        @UploadedFiles() media: Express.Multer.File[],
+    ): Promise<void> {
         try {
-            let result = await this.productService.create(createObject, request.query);
+            let result = await this.productService.create(createObject, request.query, media);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
