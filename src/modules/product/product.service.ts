@@ -139,7 +139,16 @@ export class ProductService {
         return product;
     }
 
-    async update(id: string, updateObject: any, filterType?: string): Promise<any> {
+    async update(id: string, updateObject: any, media: any, filterType?: string): Promise<any> {
+        if (media) {
+            updateObject.media = [];
+            await Promise.all(
+                media.map(async (m) => {
+                    let fileURL = await this.s3Service.uploadImageS3(m, process.env.PRODUCT_MEDIA_FOLDER_NAME as string);
+                    updateObject.media.push(fileURL);
+                }),
+            );
+        }
         return await this.productRepository.update(id, updateObject);
     }
 

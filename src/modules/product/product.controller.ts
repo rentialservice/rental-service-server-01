@@ -74,15 +74,17 @@ export class ProductController {
     }
 
     @Put(RoutesConstants.PARAM_ID)
+    @UseInterceptors(FilesInterceptor('media', 10))
     async update(
         @Req() request: Request,
         @Res() response: Response,
         @Param(RoutesConstants.ID) id: string,
         @Body() updateObject: Partial<Product>,
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
+        @UploadedFiles() media: Express.Multer.File[],
     ): Promise<void> {
         try {
-            let result = await this.productService.update(id, updateObject, filterType);
+            let result = await this.productService.update(id, updateObject, media, filterType);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
