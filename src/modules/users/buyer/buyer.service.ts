@@ -10,7 +10,6 @@ import * as bcrypt from 'bcryptjs';
 import { NotificationService } from '../../supporting-modules/notification/notification.service';
 import { Buyer } from './entities/buyer.entity';
 import { SelectConstants } from '../../../constants/select.constant';
-import { RoleService } from '../../role/role.service';
 import { buildFilterCriteriaQuery } from '../../../common/utils';
 import { CommonService } from '../../common/common.service';
 
@@ -173,6 +172,18 @@ export class BuyerService {
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
       relations: [...fields]
     });
+  }
+
+  async delete(id: string, filterType?: string): Promise<any> {
+    let [buyer] = await this.commonService.rentalFilter({ buyer: { id }, status: "Rented" })
+    if (buyer) {
+      throw new Error("Buyer can't be deleted")
+    }
+    const result = await this.repository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException(`Buyer with id ${id} not found`);
+    }
+    return result;
   }
 
 }

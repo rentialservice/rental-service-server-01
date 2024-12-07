@@ -1,4 +1,5 @@
-export enum ProductStatus {
+export enum Status {
     Available = 'Available',
-    Rented = 'Rented'
+    Rented = 'Rented',
+    Finished = 'Finished'
 }
