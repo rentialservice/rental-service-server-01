@@ -6,6 +6,7 @@ import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
 import { Firm } from '../../firm/entities/firm.entity';
 import { PaymentCollection } from '../../payment-collection/entities/payment-collection.entity';
 import { RentalPeriod } from '../../../enums/period.enum';
+import { Status } from '../../../enums/status.enum';
 
 @Entity('rental')
 export class Rental extends BaseEntity {
@@ -20,6 +21,13 @@ export class Rental extends BaseEntity {
 
     @Column({ default: new Date() })
     endDate: Date;
+
+    @Column({
+        type: 'enum',
+        enum: Status,
+        default: Status.Rented,
+    })
+    status: Status;
 
     @Column({ type: 'simple-array', default: '' })
     media: string[];

@@ -1,7 +1,7 @@
 import { Entity, Column, OneToMany, ManyToOne, Unique } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { CustomFieldsData } from '../../custom-fields/entities/custom-fields-data.entity';
-import { ProductStatus } from '../../../enums/status.enum';
+import { Status } from '../../../enums/status.enum';
 import { Category } from '../../category/entities/category.entity';
 import { Firm } from '../../firm/entities/firm.entity';
 import { Rental } from '../../rental/entities/rental.entity';
@@ -74,10 +74,10 @@ export class Product extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: ProductStatus,
-    default: ProductStatus.Available,
+    enum: Status,
+    default: Status.Available,
   })
-  status: ProductStatus;
+  status: Status;
 
   @OneToMany(() => CustomFieldsData, (customFieldsData) => customFieldsData.product, { cascade: true })
   customFieldsData: CustomFieldsData[];
