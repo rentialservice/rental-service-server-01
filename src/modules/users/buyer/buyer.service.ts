@@ -73,6 +73,7 @@ export class BuyerService {
     if (!filterCriteria?.firm) {
       throw new Error("Firm is required")
     }
+    delete filterCriteria?.category;
     return await this.repository.findAndCount({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false, },
       skip: (page - 1) * pageSize,
