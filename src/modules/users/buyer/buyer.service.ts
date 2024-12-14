@@ -12,6 +12,7 @@ import { Buyer } from './entities/buyer.entity';
 import { SelectConstants } from '../../../constants/select.constant';
 import { buildFilterCriteriaQuery } from '../../../common/utils';
 import { CommonService } from '../../common/common.service';
+import { S3Service } from '../../supporting-modules/s3/s3.service';
 
 @Injectable()
 export class BuyerService {
@@ -19,6 +20,7 @@ export class BuyerService {
     @InjectRepository(Buyer) private readonly repository: Repository<Buyer>,
     private readonly notificationService: NotificationService,
     private readonly commonService: CommonService,
+    private readonly s3Service: S3Service,
   ) { }
 
   async sendPushNotification(
@@ -42,7 +44,16 @@ export class BuyerService {
     }
   }
 
-  async create(createObject: any, queryData: any): Promise<any> {
+  async create(createObject: any, queryData: any, documents?: any[]): Promise<any> {
+    if (documents) {
+      createObject.documents = [];
+      await Promise.all(
+        documents.map(async (m) => {
+          let fileURL = await this.s3Service.uploadImageS3(m, process.env.PRODUCT_MEDIA_FOLDER_NAME as string);
+          createObject.documents.push(fileURL);
+        }),
+      );
+    }
     if (!queryData?.firm) {
       throw new Error("Firm is required")
     }
@@ -58,10 +69,12 @@ export class BuyerService {
     return await this.repository.save(result);
   }
 
-  async getAll(page: number = 1, pageSize: number = 10): Promise<any> {
+  async getAll(page: number = 1, pageSize: number = 10, filterType?: string, filterCriteria?: any): Promise<any> {
+    if (!filterCriteria?.firm) {
+      throw new Error("Firm is required")
+    }
     return await this.repository.findAndCount({
-      where: { deleteFlag: false },
-      relations: ["role", "firm"],
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false, },
       skip: (page - 1) * pageSize,
       take: pageSize,
       select: SelectConstants.BUYER_SELECT,
@@ -71,7 +84,6 @@ export class BuyerService {
   async getById(id: string, selfId: string) {
     return await this.repository.findOne({
       where: { id },
-      relations: ["role", "firm"],
       select: SelectConstants.BUYER_SELECT,
     });
   }
@@ -79,12 +91,20 @@ export class BuyerService {
   async getByUsername(username: string, selfId: string) {
     return await this.repository.findOne({
       where: { username },
-      relations: ["role", "firm"],
       select: SelectConstants.BUYER_SELECT,
     });
   }
 
-  async updateById(id: string, user: any) {
+  async updateById(id: string, user: any, documents?: any[]) {
+    if (documents) {
+      user.documents = [];
+      await Promise.all(
+        documents.map(async (m) => {
+          let fileURL = await this.s3Service.uploadImageS3(m, process.env.PRODUCT_MEDIA_FOLDER_NAME as string);
+          user.documents.push(fileURL);
+        }),
+      );
+    }
     if (user?.role) {
       let [role] = await this.commonService.roleFilter({ name: user?.role })
       if (!role) {
