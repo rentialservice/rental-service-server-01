@@ -19,6 +19,18 @@ export class Buyer extends BaseEntity {
   @Column({ default: '' })
   address: string;
 
+  @Column({ type: 'simple-array', default: "" })
+  documents: string[];
+
+  @Column({ default: '' })
+  city: string;
+
+  @Column({ default: '' })
+  state: string;
+
+  @Column({ default: '' })
+  pincode: string;
+
   @Column({ default: '' })
   alternatePhone: string;
 

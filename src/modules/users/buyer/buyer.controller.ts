@@ -9,7 +9,9 @@ import {
   Query,
   Req,
   Res,
+  UploadedFiles,
   UseGuards,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { JwtAuthGuard } from '../../auth/jwt.auth.guard';
@@ -20,6 +22,7 @@ import {
   successResponse,
 } from '../../../base/response';
 import { BuyerService } from './buyer.service';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @Controller("buyer")
 export class BuyerController {
@@ -28,12 +31,14 @@ export class BuyerController {
   // @UseGuards(JwtAuthGuard)
   @Get(RoutesConstants.GET_ALL_USER)
   async getAll(
+    @Req() request: Request,
     @Res() response: Response,
     @Query(RoutesConstants.PAGE) page: number = 1,
     @Query(RoutesConstants.PAGESIZE) pageSize: number = 10,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
-      let [users, count] = await this.service.getAll(page, pageSize);
+      let [users, count] = await this.service.getAll(page, pageSize, filterType, request.query);
       successPaginatedResponse(response, users, count, page, pageSize);
     } catch (error: any) {
       errorResponse(response, error);
@@ -41,12 +46,15 @@ export class BuyerController {
   }
 
   @Post()
+  @UseInterceptors(FilesInterceptor('documents', 10))
   async create(
     @Req() request: Request,
     @Res() response: Response,
-    @Body() createObject: any): Promise<void> {
+    @Body() createObject: any,
+    @UploadedFiles() documents: Express.Multer.File[],
+  ): Promise<void> {
     try {
-      let result = await this.service.create(createObject, request.query);
+      let result = await this.service.create(createObject, request.query, documents);
       successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);
@@ -91,16 +99,19 @@ export class BuyerController {
 
   @UseGuards(JwtAuthGuard)
   @Put(RoutesConstants.UPDATE_USER_DETAILS)
+  @UseInterceptors(FilesInterceptor('documents', 10))
   async updateById(
     @Req() request: Request,
     @Res() response: Response,
     @Query(RoutesConstants.ID) id: string,
     @Body() updateUserDto: any,
+    @UploadedFiles() documents: Express.Multer.File[],
   ): Promise<void> {
     try {
       let result = await this.service.updateById(
         id || (request.user as any).id,
         updateUserDto,
+        documents
       );
       successResponse(response, result);
     } catch (error: any) {
@@ -180,17 +191,17 @@ export class BuyerController {
 
   @Delete(RoutesConstants.PARAM_ID)
   async delete(
-      @Req() request: Request,
-      @Res() response: Response,
-      @Param(RoutesConstants.ID) id: string,
-      @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Req() request: Request,
+    @Res() response: Response,
+    @Param(RoutesConstants.ID) id: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
-      try {
-          let result = await this.service.delete(id, filterType);
-          successResponse(response, result);
-      } catch (error: any) {
-          errorResponse(response, error);
-      }
+    try {
+      let result = await this.service.delete(id, filterType);
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
   }
 
 }

@@ -5,12 +5,14 @@ import { Buyer } from './entities/buyer.entity';
 import { BuyerController } from './buyer.controller';
 import { BuyerService } from './buyer.service';
 import { CommonModule } from '../../common/common.module';
+import { S3Module } from '../../supporting-modules/s3/s3.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Buyer]),
     NotificationModule,
-    CommonModule
+    CommonModule,
+    S3Module
   ],
   controllers: [BuyerController],
   providers: [BuyerService],
