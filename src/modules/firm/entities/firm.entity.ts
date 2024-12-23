@@ -18,6 +18,12 @@ export class Firm extends BaseEntity {
   address: string;
 
   @Column({ default: '' })
+  city: string;
+
+  @Column({ default: '' })
+  state: string;
+
+  @Column({ default: '' })
   phone: string;
 
   @Column({ default: '' })

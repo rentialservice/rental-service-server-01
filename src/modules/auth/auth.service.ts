@@ -530,7 +530,6 @@ export class AuthService {
       where: {
         email: forgotPasswordVerifyEmailDto.email,
         deleteFlag: false,
-        ssoLogin: false,
       },
     });
     if (!userDetails)
