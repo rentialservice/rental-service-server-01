@@ -4,8 +4,8 @@ import { CustomFieldsData } from '../../custom-fields/entities/custom-fields-dat
 import { Status } from '../../../enums/status.enum';
 import { Category } from '../../category/entities/category.entity';
 import { Firm } from '../../firm/entities/firm.entity';
-import { Rental } from '../../rental/entities/rental.entity';
 import { FinePeriod, RentalPeriod } from '../../../enums/period.enum';
+import { RentalProduct } from '../../rental-products/entities/rental-product.entity';
 
 @Entity('product')
 @Unique(['code', 'firm'])
@@ -88,6 +88,6 @@ export class Product extends BaseEntity {
   @ManyToOne(() => Firm, (firm) => firm.product)
   firm: Firm;
 
-  @OneToMany(() => Rental, (rental) => rental.product)
-  rental: Rental[];
+  @OneToMany(() => RentalProduct, (rentalProduct) => rentalProduct.product)
+  rental: RentalProduct[];
 }

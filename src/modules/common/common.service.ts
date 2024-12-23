@@ -13,6 +13,7 @@ import { Role } from '../role/entities/role.entity';
 import { PaymentMode } from '../payment-mode/entities/payment-mode.entity';
 import { TermsAndConditions } from '../terms-and-conditions/entities/terms-and-conditions.entity';
 import { Rental } from '../rental/entities/rental.entity';
+import { RentalProduct } from '../rental-products/entities/rental-product.entity';
 
 @Injectable()
 export class CommonService {
@@ -28,6 +29,7 @@ export class CommonService {
         @InjectRepository(PaymentMode) private readonly paymentModeRepository: Repository<PaymentMode>,
         @InjectRepository(TermsAndConditions) private readonly termsAndConditionsRepository: Repository<TermsAndConditions>,
         @InjectRepository(Rental) private readonly rentalRepository: Repository<Rental>,
+        @InjectRepository(RentalProduct) private readonly rentalProductRepository: Repository<RentalProduct>,
     ) { }
 
     async prefixFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
@@ -60,6 +62,13 @@ export class CommonService {
 
     async productFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
         return await this.productRepository.find({
+            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+            relations: [...fields]
+        });
+    }
+
+    async rentalProductFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
+        return await this.rentalProductRepository.find({
             where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
             relations: [...fields]
         });

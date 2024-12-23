@@ -5,17 +5,19 @@ import { Rental } from './entities/rental.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
 import { generatePdfFromTemplate } from '../../common/common';
+import { RentalProductService } from '../rental-products/rental-product.service';
 
 @Injectable()
 export class RentalService {
     constructor(
         @InjectRepository(Rental) private readonly rentalRepository: Repository<Rental>,
-        private readonly commonService: CommonService
+        private readonly commonService: CommonService,
+        private readonly rentalProductService: RentalProductService
     ) { }
 
     async create(createObject: Partial<Rental>, queryData: any): Promise<any> {
-        if (!createObject?.product) {
-            throw new Error("Product is required")
+        if (!createObject?.rentalProduct) {
+            throw new Error("Products are required")
         }
         if (!createObject?.buyer) {
             throw new Error("Buyer is required")
@@ -35,11 +37,11 @@ export class RentalService {
         } else {
             createObject.firm = firm;
         }
-        let [product] = await this.commonService.productFilter({ id: createObject.product })
-        if (!product) {
-            throw new NotFoundException(`Product with id ${createObject.product} not found`);
+        let rentalProduct = await this.rentalProductService.create(createObject.rentalProduct)
+        if (!rentalProduct) {
+            throw new NotFoundException(`Product with id ${createObject.rentalProduct} not found`);
         } else {
-            createObject.product = product;
+            createObject.rentalProduct = rentalProduct;
         }
         let [buyer] = await this.commonService.buyerFilter({ id: createObject.buyer })
         if (!buyer) {
@@ -117,7 +119,7 @@ export class RentalService {
     async filter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
         return await this.rentalRepository.find({
             where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
+            relations: ["rentalProduct.product"]
         });
     }
 }

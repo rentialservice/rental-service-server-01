@@ -9,6 +9,7 @@ import { PaymentModeModule } from "../../modules/payment-mode/payment-mode.modul
 import { PermissionModule } from "../../modules/permission/permission.module";
 import { PrefixModule } from "../../modules/prefix/prefix.module";
 import { ProductModule } from "../../modules/product/product.module";
+import { RentalProductModule } from "../../modules/rental-products/rental-product.module";
 import { RentalModule } from "../../modules/rental/rental.module";
 import { RoleModule } from "../../modules/role/role.module";
 import { SubscriptionModule } from "../../modules/subscription/subscription.module";
@@ -42,5 +43,5 @@ export const modules = [
     PrefixModule,
     CommonModule,
     TermsAndConditionsModule,
-    
+    RentalProductModule,
 ];

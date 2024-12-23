@@ -1,26 +1,20 @@
 import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
-import { Product } from '../../product/entities/product.entity';
 import { Buyer } from '../../users/buyer/entities/buyer.entity';
 import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
 import { Firm } from '../../firm/entities/firm.entity';
 import { PaymentCollection } from '../../payment-collection/entities/payment-collection.entity';
 import { RentalPeriod } from '../../../enums/period.enum';
 import { Status } from '../../../enums/status.enum';
+import { RentalProduct } from '../../rental-products/entities/rental-product.entity';
 
 @Entity('rental')
 export class Rental extends BaseEntity {
-    @ManyToOne(() => Product, (product) => product.rental)
-    product: Product;
+    @OneToMany(() => RentalProduct, (rentalProduct) => rentalProduct.rental)
+    rentalProduct: RentalProduct[];
 
     @ManyToOne(() => Buyer, (buyer) => buyer.rental)
     buyer: Buyer;
-
-    @Column({ default: new Date() })
-    startDate: Date;
-
-    @Column({ default: new Date() })
-    endDate: Date;
 
     @Column({
         type: 'enum',
