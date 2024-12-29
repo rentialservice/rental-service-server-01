@@ -21,6 +21,12 @@ export class Firm extends BaseEntity {
   city: string;
 
   @Column({ default: '' })
+  media: string;
+
+  @Column({ default: '' })
+  gstn: string;
+
+  @Column({ default: '' })
   state: string;
 
   @Column({ default: '' })

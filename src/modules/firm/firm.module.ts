@@ -5,9 +5,10 @@ import { FirmController } from './firm.controller';
 import { Firm } from './entities/firm.entity';
 import { CommonModule } from '../common/common.module';
 import { PaymentModeModule } from '../payment-mode/payment-mode.module';
+import { S3Module } from '../supporting-modules/s3/s3.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Firm]), CommonModule, PaymentModeModule],
+  imports: [TypeOrmModule.forFeature([Firm]), CommonModule, PaymentModeModule, S3Module],
   providers: [FirmService],
   controllers: [FirmController],
   exports: [FirmService],

@@ -37,7 +37,7 @@ export class ProductService {
     // }
 
     async create(createObject: Partial<Product>, queryData: any, media?: any[]): Promise<any> {
-        if (media) {
+        if (media.length) {
             createObject.media = [];
             await Promise.all(
                 media.map(async (m) => {
@@ -140,7 +140,7 @@ export class ProductService {
     }
 
     async update(id: string, updateObject: any, media: any, filterType?: string): Promise<any> {
-        if (media) {
+        if (media.length) {
             updateObject.media = [];
             await Promise.all(
                 media.map(async (m) => {

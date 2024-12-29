@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Req, Res, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Put, Delete, UseGuards, Req, Res, Query, UseInterceptors, UploadedFile } from '@nestjs/common';
 import { FirmService } from './firm.service';
 import { Firm } from './entities/firm.entity';
 import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { Request, Response } from 'express';
 import { RoutesConstants } from '../../constants/routes.constant';
 import { errorResponse, successPaginatedResponse, successResponse } from '../../base/response';
+import { FilesInterceptor } from '@nestjs/platform-express';
 
 @UseGuards(JwtAuthGuard)
 @Controller('firm')
@@ -12,12 +13,15 @@ export class FirmController {
     constructor(private readonly firmService: FirmService) { }
 
     @Post()
+    @UseInterceptors(FilesInterceptor('media', 1))
     async create(
         @Req() request: Request,
         @Res() response: Response,
-        @Body() createObject: Partial<Firm>): Promise<void> {
+        @Body() createObject: Partial<Firm>,
+        @UploadedFile() media: Express.Multer.File,
+    ): Promise<void> {
         try {
-            let result = await this.firmService.create(createObject);
+            let result = await this.firmService.create(createObject, media);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);
@@ -56,15 +60,17 @@ export class FirmController {
     }
 
     @Put(RoutesConstants.PARAM_ID)
+    @UseInterceptors(FilesInterceptor('media', 1))
     async update(
         @Req() request: Request,
         @Res() response: Response,
         @Param(RoutesConstants.ID) id: string,
         @Body() updateObject: Partial<Firm>,
         @Query(RoutesConstants.FILTERTYPE) filterType: string,
+        @UploadedFile() media: Express.Multer.File,
     ): Promise<void> {
         try {
-            let result = await this.firmService.update(id, updateObject, filterType);
+            let result = await this.firmService.update(id, updateObject, filterType, media);
             successResponse(response, result);
         } catch (error: any) {
             errorResponse(response, error);

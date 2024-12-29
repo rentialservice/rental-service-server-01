@@ -5,6 +5,7 @@ import { Firm } from './entities/firm.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
 import { PaymentModeService } from '../payment-mode/payment-mode.service';
+import { S3Service } from '../supporting-modules/s3/s3.service';
 
 @Injectable()
 export class FirmService {
@@ -12,9 +13,13 @@ export class FirmService {
         @InjectRepository(Firm) private readonly firmRepository: Repository<Firm>,
         private readonly commonService: CommonService,
         private readonly paymentModeService: PaymentModeService,
+        private readonly s3Service: S3Service,
     ) { }
 
-    async create(createObject: Partial<Firm>): Promise<any> {
+    async create(createObject: Partial<Firm>, media?: any): Promise<any> {
+        if (media) {
+            createObject.media = await this.s3Service.uploadImageS3(media, process.env.FIRM_MEDIA_FOLDER_NAME as string || "FirmMedia");
+        }
         if (createObject?.category?.length) {
             let category = await this.commonService.categoryFilter({ id: createObject.category })
             if (!category?.length) {
@@ -61,7 +66,11 @@ export class FirmService {
         }
         return await this.firmRepository.update(id, updateObject);
     }
-    async update(id: string, updateObject: Partial<Firm>, filterType?: string): Promise<any> {
+
+    async update(id: string, updateObject: Partial<Firm>, filterType?: string, media?: any): Promise<any> {
+        if (media) {
+            updateObject.media = await this.s3Service.uploadImageS3(media, process.env.FIRM_MEDIA_FOLDER_NAME as string || "FirmMedia");
+        }
         if (updateObject?.subscription) {
             throw new Error(`You are not allowed to modify subscription details, contact your administrator`)
         }
