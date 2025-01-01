@@ -78,6 +78,7 @@ export class RentalService {
     filterType?: string,
     filterCriteria?: any,
   ): Promise<any> {
+    delete filterCriteria.category;
     return await this.rentalRepository.findAndCount({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
       relations: [
@@ -94,7 +95,12 @@ export class RentalService {
   async getById(id: string, filterType?: string): Promise<any> {
     const rental = await this.rentalRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['buyer', 'rentalProduct.product', 'paymentCollection'],
+      relations: [
+        'buyer',
+        'rentalProduct.product',
+        'firm',
+        'paymentCollection',
+      ],
     });
     if (!rental) {
       throw new NotFoundException(`Rental with id ${id} not found`);
