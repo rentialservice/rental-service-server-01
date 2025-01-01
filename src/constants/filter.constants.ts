@@ -1,3 +1,3 @@
 export const FilterConstants: any = {
-    FILTER_KEYS: ["firm", "category"]
-}
+  FILTER_KEYS: ['firm', 'category', 'buyer'],
+};

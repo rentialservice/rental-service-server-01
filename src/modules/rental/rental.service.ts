@@ -76,10 +76,16 @@ export class RentalService {
     page: number = 1,
     pageSize: number = 10,
     filterType?: string,
+    filterCriteria?: any,
   ): Promise<any> {
     return await this.rentalRepository.findAndCount({
-      where: { deleteFlag: false },
-      relations: ['buyer', 'rentalProduct.product', 'paymentCollection'],
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [
+        'buyer',
+        'firm',
+        'rentalProduct.product',
+        'paymentCollection',
+      ],
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
