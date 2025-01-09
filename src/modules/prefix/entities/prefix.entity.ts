@@ -1,11 +1,10 @@
 import { Entity, Column, ManyToOne, Unique } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Firm } from '../../firm/entities/firm.entity';
-import { Category } from '../../category/entities/category.entity';
 import { ModuleNameList } from '../../../enums/module.enum';
 
 @Entity('prefix')
-@Unique(["firm", "name"])
+@Unique(['firm', 'name'])
 export class Prefix extends BaseEntity {
   @Column()
   name: string;
@@ -18,9 +17,6 @@ export class Prefix extends BaseEntity {
 
   @ManyToOne(() => Firm, (firm) => firm.prefix)
   firm: Firm;
-
-  @ManyToOne(() => Category, (category) => category.prefix)
-  category: Category;
 
   @Column({ type: 'enum', enum: ModuleNameList })
   module: string;

@@ -10,9 +10,13 @@ import { PrefixModule } from '../prefix/prefix.module';
 import { S3Module } from '../supporting-modules/s3/s3.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, CustomFieldsData, CustomFields]), CommonModule, PrefixModule, S3Module],
+  imports: [
+    TypeOrmModule.forFeature([Product, CustomFieldsData, CustomFields]),
+    CommonModule,
+    S3Module,
+  ],
   providers: [ProductService],
   controllers: [ProductController],
   exports: [ProductService],
 })
-export class ProductModule { }
+export class ProductModule {}

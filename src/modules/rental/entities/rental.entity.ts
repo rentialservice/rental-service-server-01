@@ -10,50 +10,56 @@ import { RentalProduct } from '../../rental-products/entities/rental-product.ent
 
 @Entity('rental')
 export class Rental extends BaseEntity {
-    @OneToMany(() => RentalProduct, (rentalProduct) => rentalProduct.rental)
-    rentalProduct: RentalProduct[];
+  @OneToMany(() => RentalProduct, (rentalProduct) => rentalProduct.rental)
+  rentalProduct: RentalProduct[];
 
-    @ManyToOne(() => Buyer, (buyer) => buyer.rental)
-    buyer: Buyer;
+  @ManyToOne(() => Buyer, (buyer) => buyer.rental)
+  buyer: Buyer;
 
-    @Column({
-        type: 'enum',
-        enum: Status,
-        default: Status.Rented,
-    })
-    status: Status;
+  @Column({
+    type: 'enum',
+    enum: Status,
+    default: Status.Rented,
+  })
+  status: Status;
 
-    @Column({ type: 'simple-array', default: '' })
-    media: string[];
+  @Column({ type: 'simple-array', default: '' })
+  media: string[];
 
-    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-    salesPrice: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  salesPrice: number;
 
-    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-    deposit: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  discount: number;
 
-    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-    paidAmount: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  deposit: number;
 
-    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-    totalAmount: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  paidAmount: number;
 
-    @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-    fine: number;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  totalAmount: number;
 
-    @Column({
-        type: 'enum',
-        enum: RentalPeriod,
-        default: RentalPeriod.RentPerHour,
-    })
-    rentalPeriod: string;
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  fine: number;
 
-    @ManyToOne(() => PaymentMode, (paymentMode) => paymentMode.rental)
-    paymentMode: PaymentMode;
+  @Column({
+    type: 'enum',
+    enum: RentalPeriod,
+    default: RentalPeriod.RentPerHour,
+  })
+  rentalPeriod: string;
 
-    @ManyToOne(() => Firm, (firm) => firm.rental)
-    firm: Firm;
+  @ManyToOne(() => PaymentMode, (paymentMode) => paymentMode.rental)
+  paymentMode: PaymentMode;
 
-    @OneToMany(() => PaymentCollection, (paymentCollection) => paymentCollection.rental)
-    paymentCollection: PaymentCollection[];
+  @ManyToOne(() => Firm, (firm) => firm.rental)
+  firm: Firm;
+
+  @OneToMany(
+    () => PaymentCollection,
+    (paymentCollection) => paymentCollection.rental,
+  )
+  paymentCollection: PaymentCollection[];
 }

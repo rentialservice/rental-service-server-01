@@ -10,10 +10,10 @@ import { RentalProduct } from '../../rental-products/entities/rental-product.ent
 @Entity('product')
 @Unique(['code', 'firm'])
 export class Product extends BaseEntity {
-  @Column({ type: "text" })
+  @Column({ type: 'text' })
   name: string;
 
-  @Column({ type: "text" })
+  @Column({ type: 'text', nullable: true })
   code: string;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
@@ -28,7 +28,7 @@ export class Product extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   deposit: number;
 
-  @Column({ type: "text", default: '' })
+  @Column({ type: 'text', default: '' })
   description: string;
 
   @Column({
@@ -45,19 +45,19 @@ export class Product extends BaseEntity {
   })
   finePeriod: string;
 
-  @Column({ type: "text", default: '' })
+  @Column({ type: 'text', default: '' })
   color: string;
 
-  @Column({ type: "text", default: '' })
+  @Column({ type: 'text', default: '' })
   type: string;
 
-  @Column({ type: "text", default: '' })
+  @Column({ type: 'text', default: '' })
   barcode: string;
 
-  @Column({ type: "text", default: '' })
+  @Column({ type: 'text', default: '' })
   brand: string;
 
-  @Column({ type: "text", default: '' })
+  @Column({ type: 'text', default: '' })
   size: string;
 
   @Column({ type: 'int', default: 0 })
@@ -66,10 +66,10 @@ export class Product extends BaseEntity {
   @Column({ type: 'int', default: 0 })
   currentRentedStock: number;
 
-  @Column({ type: 'simple-array', default: "" })
+  @Column({ type: 'simple-array', default: '' })
   keywords: string[];
 
-  @Column({ type: 'simple-array', default: "" })
+  @Column({ type: 'simple-array', default: '' })
   media: string[];
 
   @Column({
@@ -79,7 +79,11 @@ export class Product extends BaseEntity {
   })
   status: Status;
 
-  @OneToMany(() => CustomFieldsData, (customFieldsData) => customFieldsData.product, { cascade: true })
+  @OneToMany(
+    () => CustomFieldsData,
+    (customFieldsData) => customFieldsData.product,
+    { cascade: true },
+  )
   customFieldsData: CustomFieldsData[];
 
   @ManyToOne(() => Category, (category) => category.product)

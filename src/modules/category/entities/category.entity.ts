@@ -2,14 +2,13 @@ import { Entity, Column, OneToMany, ManyToMany } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Product } from '../../product/entities/product.entity';
 import { Firm } from '../../firm/entities/firm.entity';
-import { Prefix } from '../../prefix/entities/prefix.entity';
 
 @Entity('category')
 export class Category extends BaseEntity {
   @Column({ unique: true })
   name: string;
 
-  @Column({ default: "" })
+  @Column({ default: '' })
   description: string;
 
   @Column('boolean', { default: false })
@@ -20,7 +19,4 @@ export class Category extends BaseEntity {
 
   @ManyToMany(() => Firm, (firm) => firm.category)
   firm: Firm[];
-
-  @OneToMany(() => Prefix, (prefix) => prefix.category)
-  prefix: Prefix[];
 }
