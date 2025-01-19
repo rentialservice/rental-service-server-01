@@ -48,9 +48,11 @@ export class PrefixService {
     page: number = 1,
     pageSize: number = 10,
     filterType?: string,
+    filterCriteria?: any,
   ): Promise<any> {
+    delete filterCriteria?.category;
     return await this.prefixRepository.findAndCount({
-      where: { deleteFlag: false },
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -87,6 +89,7 @@ export class PrefixService {
     fields: string[] = [],
     filterType?: string,
   ): Promise<any> {
+    delete filterCriteria?.category;
     return await this.prefixRepository.find({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
       relations: [...fields],

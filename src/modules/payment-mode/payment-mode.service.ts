@@ -37,10 +37,11 @@ export class PaymentModeService {
     page: number = 1,
     pageSize: number = 10,
     filterType?: string,
+    filterCriteria?: any,
   ): Promise<any> {
+    delete filterCriteria?.category;
     return await this.paymentModeRepository.findAndCount({
-      where: { deleteFlag: false },
-      relations: ['firm'],
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -77,6 +78,7 @@ export class PaymentModeService {
     fields: string[] = [],
     filterType?: string,
   ): Promise<any> {
+    delete filterCriteria?.category;
     return await this.paymentModeRepository.find({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
       relations: [...fields],
