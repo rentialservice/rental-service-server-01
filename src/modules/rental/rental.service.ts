@@ -109,13 +109,13 @@ export class RentalService {
   }
 
   async createInvoice(id: string, filterType?: string): Promise<any> {
-    const rental = await this.rentalRepository.findOne({
-      where: { id, deleteFlag: false },
-      relations: ['buyer', 'product', 'paymentCollection'],
-    });
-    if (!rental) {
-      throw new NotFoundException(`Rental with id ${id} not found`);
-    }
+    // const rental = await this.rentalRepository.findOne({
+    //   where: { id, deleteFlag: false },
+    //   relations: ['buyer', 'product', 'paymentCollection'],
+    // });
+    // if (!rental) {
+    //   throw new NotFoundException(`Rental with id ${id} not found`);
+    // }
     const data = {
       invoiceDate: new Date().toLocaleDateString(),
       invoiceNumber: 'INV-12345',

@@ -41,7 +41,7 @@ export class RentalController {
     }
   }
 
-  @Get('/create-invoice')
+  @Get('/invoice')
   async createInvoice(
     @Req() request: Request,
     @Res() response: Response,
@@ -50,7 +50,8 @@ export class RentalController {
   ): Promise<void> {
     try {
       let result = await this.rentalService.createInvoice(id, filterType);
-      successResponse(response, result);
+      response.send(result);
+      // successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);
     }

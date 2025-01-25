@@ -5,7 +5,7 @@ import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
 import { Firm } from '../../firm/entities/firm.entity';
 import { PaymentCollection } from '../../payment-collection/entities/payment-collection.entity';
 import { RentalPeriod } from '../../../enums/period.enum';
-import { Status } from '../../../enums/status.enum';
+import { InvoiceStatus, Status } from '../../../enums/status.enum';
 import { RentalProduct } from '../../rental-products/entities/rental-product.entity';
 
 @Entity('rental')
@@ -18,10 +18,16 @@ export class Rental extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: Status,
-    default: Status.Rented,
+    enum: InvoiceStatus,
+    default: InvoiceStatus.PartiallyPaid,
   })
-  status: Status;
+  invoiceStatus: InvoiceStatus;
+
+  @Column({ default: new Date() })
+  invoiceDate: Date;
+
+  @Column({ default: '' })
+  invoiceNumber: string;
 
   @Column({ type: 'simple-array', default: '' })
   media: string[];
