@@ -39,6 +39,12 @@ export class Rental extends BaseEntity {
   paidAmount: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  pendingAmount: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  advanceAmount: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalAmount: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
