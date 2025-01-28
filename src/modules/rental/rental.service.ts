@@ -6,6 +6,7 @@ import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
 import { generatePdfFromTemplate } from '../../common/common';
 import { RentalProductService } from '../rental-products/rental-product.service';
+import { InvoiceStatus } from '../../enums/status.enum';
 
 @Injectable()
 export class RentalService {
@@ -68,6 +69,9 @@ export class RentalService {
     } else {
       createObject.paymentMode = paymentMode;
     }
+    createObject.pendingAmount
+      ? (createObject.invoiceStatus = InvoiceStatus.PartiallyPaid)
+      : (createObject.invoiceStatus = InvoiceStatus.Paid);
     const result = this.rentalRepository.create(createObject);
     return await this.rentalRepository.save(result);
   }

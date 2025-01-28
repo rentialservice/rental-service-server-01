@@ -27,7 +27,10 @@ export class Rental extends BaseEntity {
   invoiceDate: Date;
 
   @Column({ default: '' })
-  invoiceNumber: string;
+  invoicePrefix: string;
+
+  @Column({ default: '' })
+  invoiceId: string;
 
   @Column({ type: 'simple-array', default: '' })
   media: string[];
