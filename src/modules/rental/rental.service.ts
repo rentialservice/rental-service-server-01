@@ -170,7 +170,7 @@ export class RentalService {
   ): Promise<any> {
     return await this.rentalRepository.find({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: ['rentalProduct.product'],
+      relations: ['rentalProduct.product', 'buyer'],
     });
   }
 }

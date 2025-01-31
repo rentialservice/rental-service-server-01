@@ -41,6 +41,25 @@ export class RentalController {
     }
   }
 
+  @Post('/filter')
+  async getFilter(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Body() filterCriteria: any,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+  ): Promise<void> {
+    try {
+      const result: any = await this.rentalService.filter(
+        filterCriteria,
+        [],
+        filterType,
+      );
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
   @Get('/invoice')
   async createInvoice(
     @Req() request: Request,

@@ -9,6 +9,15 @@ export class PaymentCollection extends BaseEntity {
   @Column({ default: '' })
   description: string;
 
+  @Column({ default: new Date() })
+  receiptDate: Date;
+
+  @Column({ default: '' })
+  receiptPrefix: string;
+
+  @Column({ default: '' })
+  receiptId: string;
+
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   amount: number;
 
