@@ -3,7 +3,6 @@ import { BaseEntity } from '../../../base/base.entity';
 import { Buyer } from '../../users/buyer/entities/buyer.entity';
 import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
 import { Firm } from '../../firm/entities/firm.entity';
-import { PaymentCollection } from '../../payment-collection/entities/payment-collection.entity';
 import { RentalPeriod } from '../../../enums/period.enum';
 import { InvoiceStatus, Status } from '../../../enums/status.enum';
 import { RentalProduct } from '../../rental-products/entities/rental-product.entity';
@@ -72,9 +71,9 @@ export class Rental extends BaseEntity {
   @ManyToOne(() => Firm, (firm) => firm.rental)
   firm: Firm;
 
-  @OneToMany(
-    () => PaymentCollection,
-    (paymentCollection) => paymentCollection.rental,
-  )
-  paymentCollection: PaymentCollection[];
+  // @OneToMany(
+  //   () => PaymentCollection,
+  //   (paymentCollection) => paymentCollection.rental,
+  // )
+  // paymentCollection: PaymentCollection[];
 }

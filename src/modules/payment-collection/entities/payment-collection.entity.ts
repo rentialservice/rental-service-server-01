@@ -1,6 +1,5 @@
 import { Entity, Column, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
-import { Rental } from '../../rental/entities/rental.entity';
 import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
 import { Firm } from '../../firm/entities/firm.entity';
 
@@ -18,11 +17,8 @@ export class PaymentCollection extends BaseEntity {
   @Column({ default: '' })
   receiptId: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  amount: number;
-
-  @ManyToOne(() => Rental, (rental) => rental.paymentCollection)
-  rental: Rental;
+  @Column('jsonb', { default: () => "'[]'" })
+  rental: any[];
 
   @ManyToOne(() => Firm, (firm) => firm.paymentCollection)
   firm: Firm;

@@ -22,7 +22,7 @@ export class PaymentCollectionService {
     if (!createObject?.paymentMode) {
       throw new Error('Payment Mode is required');
     }
-    if (!createObject?.rental) {
+    if (!createObject?.rental?.length) {
       throw new Error('Rental is required');
     }
     if (!queryData?.firm) {
@@ -46,36 +46,39 @@ export class PaymentCollectionService {
     } else {
       createObject.paymentMode = paymentMode;
     }
-    let [rental] = await this.commonService.rentalFilter({
-      id: createObject.rental,
-    });
-    if (!rental) {
-      throw new NotFoundException(
-        `Rental with id ${createObject.rental} not found`,
-      );
-    } else if (rental?.pendingAmount < createObject?.amount) {
-      throw new NotFoundException(
-        `Receipt Amount cannot be greater than Rental pending amount`,
-      );
-    } else {
-      createObject.rental = rental;
+    if (createObject?.rental?.length) {
+      for (const rental of createObject.rental) {
+        let [rentalResponse] = await this.commonService.rentalFilter({
+          id: rental?.id,
+        });
+
+        if (!rentalResponse) {
+          throw new NotFoundException(`Rental with id ${rental?.id} not found`);
+        } else if (
+          parseFloat(rentalResponse?.pendingAmount) < parseFloat(rental?.amount)
+        ) {
+          throw new NotFoundException(
+            `Receipt Amount ${rental?.amount} cannot be greater than Rental pending amount`,
+          );
+        }
+
+        let updateObj = {
+          pendingAmount:
+            parseFloat(rentalResponse?.pendingAmount) - (rental?.amount || 0),
+          paidAmount:
+            parseFloat(rentalResponse?.paidAmount) + (rental?.amount || 0),
+          invoiceStatus:
+            parseFloat(rentalResponse?.pendingAmount) === rental?.amount
+              ? 'Paid'
+              : rentalResponse?.invoiceStatus,
+        };
+
+        await this.rentalService.update(rental?.id, updateObj);
+      }
     }
+
     const result = this.paymentCollectionRepository.create(createObject);
-    let response = await this.paymentCollectionRepository.save(result);
-    if (response) {
-      let updateObj = {
-        pendingAmount:
-          parseFloat(rental?.pendingAmount) - (createObject?.amount || 0),
-        paidAmount:
-          parseFloat(rental?.paidAmount) + (createObject?.amount || 0),
-        invoiceStatus:
-          parseFloat(rental?.pendingAmount) === createObject?.amount
-            ? 'Paid'
-            : rental?.invoiceStatus,
-      };
-      await this.rentalService.update(rental?.id, updateObj);
-    }
-    return response;
+    return await this.paymentCollectionRepository.save(result);
   }
 
   async getAll(
