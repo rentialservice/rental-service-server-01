@@ -85,12 +85,7 @@ export class RentalService {
     delete filterCriteria.category;
     return await this.rentalRepository.findAndCount({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: [
-        'buyer',
-        'firm',
-        'rentalProduct.product',
-        'paymentCollection',
-      ],
+      relations: ['buyer', 'firm', 'rentalProduct.product'],
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -99,12 +94,7 @@ export class RentalService {
   async getById(id: string, filterType?: string): Promise<any> {
     const rental = await this.rentalRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: [
-        'buyer',
-        'rentalProduct.product',
-        'firm',
-        'paymentCollection',
-      ],
+      relations: ['buyer', 'rentalProduct.product', 'firm'],
     });
     if (!rental) {
       throw new NotFoundException(`Rental with id ${id} not found`);
@@ -168,6 +158,7 @@ export class RentalService {
     fields: string[] = [],
     filterType?: string,
   ): Promise<any> {
+    delete filterCriteria.category;
     return await this.rentalRepository.find({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
       relations: ['rentalProduct.product', 'buyer'],
