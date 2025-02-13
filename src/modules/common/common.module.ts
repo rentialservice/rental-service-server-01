@@ -4,10 +4,9 @@ import { CommonService } from './common.service';
 import { entities } from '../../list/entities/entities';
 
 @Module({
-    imports: [TypeOrmModule.forFeature(entities)],
-    controllers: [],
-    providers: [CommonService],
-    exports: [CommonService],
+  imports: [TypeOrmModule.forFeature(entities)],
+  controllers: [],
+  providers: [CommonService],
+  exports: [CommonService],
 })
-export class CommonModule { }
-
+export class CommonModule {}

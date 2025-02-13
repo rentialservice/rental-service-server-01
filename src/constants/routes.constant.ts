@@ -33,5 +33,4 @@ export const RoutesConstants = {
   USER: 'user',
   SET_PASSWORD: 'set-password',
   CHECK_USERNAME: 'check-username',
-
 };

@@ -10,13 +10,13 @@
     "node": ">=8.0.0"
   },
   "scripts": {
-    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "build": "rm -rf dist && tsc -p tsconfig.build.json && npx puppeteer browsers install chrome",
     "gcp-build": "npm run build",
     "format": "prettier --write \"src/**/*.ts\"",
     "dev": "nest start --watch",
     "start": "npm run start:prod",
     "start:dev": "nodemon",
-    "postinstall": "npx puppeteer install",
+    "postinstall": "npx puppeteer browsers install chrome",
     "start:test": "NODE_ENV=test nodemon",
     "start:debug": "nodemon --config nodemon-debug.json",
     "start:prod": "node dist/main.js",

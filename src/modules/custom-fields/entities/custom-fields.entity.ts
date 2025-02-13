@@ -27,6 +27,10 @@ export class CustomFields extends BaseEntity {
   @Column('boolean', { default: false })
   isArray: boolean;
 
-  @OneToMany(() => CustomFieldsData, (customFieldsData) => customFieldsData.product, { cascade: true })
+  @OneToMany(
+    () => CustomFieldsData,
+    (customFieldsData) => customFieldsData.product,
+    { cascade: true },
+  )
   customFieldsData: CustomFieldsData[];
 }

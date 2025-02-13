@@ -6,12 +6,9 @@ import { DynamicSchema } from './entities/dynamic-schema.entity';
 import { DynamicData } from './entities/dynamic-data.entity';
 
 @Module({
-    imports: [
-        TypeOrmModule.forFeature([DynamicSchema, DynamicData]),
-    ],
-    controllers: [DynamicController],
-    providers: [DynamicService],
-    exports: [DynamicService],
+  imports: [TypeOrmModule.forFeature([DynamicSchema, DynamicData])],
+  controllers: [DynamicController],
+  providers: [DynamicService],
+  exports: [DynamicService],
 })
-export class DynamicModule { }
-
+export class DynamicModule {}

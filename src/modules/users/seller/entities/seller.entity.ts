@@ -4,7 +4,7 @@ import { NotificationToken } from '../../../supporting-modules/notification/enti
 import { Firm } from '../../../firm/entities/firm.entity';
 import { Role } from '../../../role/entities/role.entity';
 
-@Entity("seller")
+@Entity('seller')
 export class Seller extends BaseEntity {
   @Column({ default: '' })
   fullName: string;
@@ -60,6 +60,9 @@ export class Seller extends BaseEntity {
   @Column({ type: 'timestamptz', default: new Date() })
   lastSeen: Date;
 
-  @OneToMany(() => NotificationToken, (notificationToken) => notificationToken.user)
+  @OneToMany(
+    () => NotificationToken,
+    (notificationToken) => notificationToken.user,
+  )
   notificationTokens: NotificationToken[];
 }

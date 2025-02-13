@@ -1,4 +1,11 @@
-import { Entity, Column, ManyToOne, ManyToMany, JoinTable, OneToMany } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  ManyToMany,
+  JoinTable,
+  OneToMany,
+} from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Subscription } from '../../subscription/entities/subscription.entity';
 import { Category } from '../../category/entities/category.entity';
@@ -57,7 +64,10 @@ export class Firm extends BaseEntity {
   @OneToMany(() => CustomFields, (customField) => customField.firm)
   customFields: CustomFields[];
 
-  @OneToMany(() => TermsAndConditions, (termsAndConditions) => termsAndConditions.firm)
+  @OneToMany(
+    () => TermsAndConditions,
+    (termsAndConditions) => termsAndConditions.firm,
+  )
   termsAndConditions: TermsAndConditions[];
 
   @OneToMany(() => Rental, (rental) => rental.firm)

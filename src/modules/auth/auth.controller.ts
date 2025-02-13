@@ -14,7 +14,7 @@ import { errorResponse, successResponse } from '../../base/response';
 
 @Controller(RoutesConstants.AUTH)
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+  constructor(private readonly authService: AuthService) {}
 
   @Post(RoutesConstants.SEND_OTP)
   async sendOtp(
@@ -60,7 +60,10 @@ export class AuthController {
     @Body() verifyOtpDto: VerifyOtpDto,
   ): Promise<void> {
     try {
-      successResponse(response, await this.authService.verifyOtpAdmin(verifyOtpDto));
+      successResponse(
+        response,
+        await this.authService.verifyOtpAdmin(verifyOtpDto),
+      );
     } catch (error: any) {
       errorResponse(response, error);
     }
@@ -108,7 +111,10 @@ export class AuthController {
     @Body() ssoLoginDto: any,
   ): Promise<void> {
     try {
-      successResponse(response, await this.authService.ssoLoginAdmin(ssoLoginDto));
+      successResponse(
+        response,
+        await this.authService.ssoLoginAdmin(ssoLoginDto),
+      );
     } catch (error: any) {
       errorResponse(response, error);
     }

@@ -9,6 +9,6 @@ import { CommonModule } from '../common/common.module';
   imports: [TypeOrmModule.forFeature([PaymentMode]), CommonModule],
   providers: [PaymentModeService],
   controllers: [PaymentModeController],
-  exports: [PaymentModeService]
+  exports: [PaymentModeService],
 })
-export class PaymentModeModule { }
+export class PaymentModeModule {}

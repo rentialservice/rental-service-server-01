@@ -17,102 +17,160 @@ import { RentalProduct } from '../rental-products/entities/rental-product.entity
 
 @Injectable()
 export class CommonService {
-    constructor(
-        @InjectRepository(Prefix) private readonly prefixRepository: Repository<Prefix>,
-        @InjectRepository(Firm) private readonly firmRepository: Repository<Firm>,
-        @InjectRepository(Category) private readonly categoryRepository: Repository<Category>,
-        @InjectRepository(Permission) private readonly permissionRepository: Repository<Permission>,
-        @InjectRepository(Product) private readonly productRepository: Repository<Product>,
-        @InjectRepository(Buyer) private readonly buyerRepository: Repository<Buyer>,
-        @InjectRepository(Subscription) private readonly subscriptionRepository: Repository<Subscription>,
-        @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
-        @InjectRepository(PaymentMode) private readonly paymentModeRepository: Repository<PaymentMode>,
-        @InjectRepository(TermsAndConditions) private readonly termsAndConditionsRepository: Repository<TermsAndConditions>,
-        @InjectRepository(Rental) private readonly rentalRepository: Repository<Rental>,
-        @InjectRepository(RentalProduct) private readonly rentalProductRepository: Repository<RentalProduct>,
-    ) { }
+  constructor(
+    @InjectRepository(Prefix)
+    private readonly prefixRepository: Repository<Prefix>,
+    @InjectRepository(Firm) private readonly firmRepository: Repository<Firm>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(Permission)
+    private readonly permissionRepository: Repository<Permission>,
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
+    @InjectRepository(Buyer)
+    private readonly buyerRepository: Repository<Buyer>,
+    @InjectRepository(Subscription)
+    private readonly subscriptionRepository: Repository<Subscription>,
+    @InjectRepository(Role) private readonly roleRepository: Repository<Role>,
+    @InjectRepository(PaymentMode)
+    private readonly paymentModeRepository: Repository<PaymentMode>,
+    @InjectRepository(TermsAndConditions)
+    private readonly termsAndConditionsRepository: Repository<TermsAndConditions>,
+    @InjectRepository(Rental)
+    private readonly rentalRepository: Repository<Rental>,
+    @InjectRepository(RentalProduct)
+    private readonly rentalProductRepository: Repository<RentalProduct>,
+  ) {}
 
-    async prefixFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.prefixRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async prefixFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.prefixRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 
-    async firmFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.firmRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async firmFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.firmRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 
-    async categoryFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.categoryRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async categoryFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.categoryRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 
-    async permissionFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.permissionRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async permissionFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.permissionRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 
-    async productFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.productRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async productFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.productRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 
-    async rentalProductFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.rentalProductRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async rentalProductFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.rentalProductRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 
-    async buyerFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.buyerRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async buyerFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.buyerRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 
-    async subscriptionFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.subscriptionRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async subscriptionFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.subscriptionRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 
-    async roleFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.roleRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async roleFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.roleRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 
-    async paymentModeFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.paymentModeRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async paymentModeFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.paymentModeRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 
-    async termsAndConditionsFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.termsAndConditionsRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async termsAndConditionsFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.termsAndConditionsRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 
-    async rentalFilter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
-        return await this.rentalRepository.find({
-            where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-            relations: [...fields]
-        });
-    }
+  async rentalFilter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
+    return await this.rentalRepository.find({
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      relations: [...fields],
+    });
+  }
 }

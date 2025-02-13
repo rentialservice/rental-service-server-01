@@ -11,4 +11,4 @@ import { CommonModule } from '../common/common.module';
   controllers: [TermsAndConditionsController],
   exports: [TermsAndConditionsService],
 })
-export class TermsAndConditionsModule { }
+export class TermsAndConditionsModule {}

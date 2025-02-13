@@ -7,11 +7,7 @@ import { NotificationModule } from '../../supporting-modules/notification/notifi
 import { RoleModule } from '../../role/role.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Admin]),
-    NotificationModule,
-    RoleModule
-  ],
+  imports: [TypeOrmModule.forFeature([Admin]), NotificationModule, RoleModule],
   controllers: [AdminController],
   providers: [AdminService],
   exports: [AdminService],

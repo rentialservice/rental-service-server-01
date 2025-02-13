@@ -21,9 +21,9 @@ import {
 } from '../../../base/response';
 import { SellerService } from './seller.service';
 
-@Controller("seller")
+@Controller('seller')
 export class SellerController {
-  constructor(private readonly service: SellerService) { }
+  constructor(private readonly service: SellerService) {}
 
   // @UseGuards(JwtAuthGuard)
   @Get(RoutesConstants.GET_ALL_USER)
@@ -164,5 +164,4 @@ export class SellerController {
       errorResponse(response, error);
     }
   }
-
 }

@@ -18,6 +18,9 @@ export class PaymentMode extends BaseEntity {
   @OneToMany(() => Rental, (rental) => rental.paymentMode)
   rental: Rental[];
 
-  @OneToMany(() => PaymentCollection, (paymentCollection) => paymentCollection.paymentMode)
+  @OneToMany(
+    () => PaymentCollection,
+    (paymentCollection) => paymentCollection.paymentMode,
+  )
   paymentCollection: PaymentCollection[];
 }

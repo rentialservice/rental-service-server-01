@@ -11,4 +11,4 @@ import { CommonModule } from '../common/common.module';
   controllers: [RoleController],
   exports: [RoleService],
 })
-export class RoleModule { }
+export class RoleModule {}

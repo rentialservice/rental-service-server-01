@@ -13,12 +13,16 @@ import {
 import { Request, Response } from 'express';
 import { AdminService } from './admin.service';
 import { RoutesConstants } from '../../../constants/routes.constant';
-import { errorResponse, successPaginatedResponse, successResponse } from '../../../base/response';
+import {
+  errorResponse,
+  successPaginatedResponse,
+  successResponse,
+} from '../../../base/response';
 import { JwtAuthGuard } from '../../auth/jwt.auth.guard';
 
-@Controller("admin")
+@Controller('admin')
 export class AdminController {
-  constructor(private readonly service: AdminService) { }
+  constructor(private readonly service: AdminService) {}
 
   // @UseGuards(JwtAuthGuard)
   @Get(RoutesConstants.GET_ALL_USER)
@@ -144,5 +148,4 @@ export class AdminController {
       errorResponse(response, error);
     }
   }
-
 }

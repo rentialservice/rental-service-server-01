@@ -12,8 +12,9 @@ import { Buyer } from '../../users/buyer/entities/buyer.entity';
 @Injectable()
 export class S3Service {
   constructor(
-    @InjectRepository(Buyer) private readonly buyerRepository: Repository<Buyer>,
-  ) { }
+    @InjectRepository(Buyer)
+    private readonly buyerRepository: Repository<Buyer>,
+  ) {}
   bucketName = process.env.S3_BUCKET_NAME;
   s3 = new S3Client({
     credentials: {

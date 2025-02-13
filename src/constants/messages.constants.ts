@@ -1,1 +1,1 @@
-export const MessagesConstants = {}
+export const MessagesConstants = {};

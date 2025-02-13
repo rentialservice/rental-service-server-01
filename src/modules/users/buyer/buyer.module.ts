@@ -12,10 +12,10 @@ import { S3Module } from '../../supporting-modules/s3/s3.module';
     TypeOrmModule.forFeature([Buyer]),
     NotificationModule,
     CommonModule,
-    S3Module
+    S3Module,
   ],
   controllers: [BuyerController],
   providers: [BuyerService],
   exports: [BuyerService],
 })
-export class BuyerModule { }
+export class BuyerModule {}

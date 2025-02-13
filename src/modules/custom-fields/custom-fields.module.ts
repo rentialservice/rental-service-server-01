@@ -10,4 +10,4 @@ import { FirmModule } from '../firm/firm.module';
   providers: [CustomFieldsService],
   controllers: [CustomFieldsController],
 })
-export class CustomFieldsModule { }
+export class CustomFieldsModule {}

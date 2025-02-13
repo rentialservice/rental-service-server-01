@@ -15,7 +15,11 @@ import {
 import * as bcrypt from 'bcryptjs';
 import { Blacklist } from './entities/blacklist.entity';
 import { otpGenerator, sixDigitGenerator } from '../../common/generator';
-import { extractUsername, validateEmail, validatePhoneNumber } from '../../common/common';
+import {
+  extractUsername,
+  validateEmail,
+  validatePhoneNumber,
+} from '../../common/common';
 import { Buyer } from '../users/buyer/entities/buyer.entity';
 import { Seller } from '../users/seller/entities/seller.entity';
 import { Admin } from '../users/admin/entities/admin.entity';
@@ -36,7 +40,7 @@ export class AuthService {
     private readonly adminRepository: Repository<Admin>,
     @InjectRepository(Blacklist)
     private readonly blackListRepository: Repository<Blacklist>,
-  ) { }
+  ) {}
 
   #createOtpToken(user: any) {
     let accessToken = this.jwtSvc.sign(user, {
@@ -71,13 +75,13 @@ export class AuthService {
     let type = sendOtpDto?.type;
     let authType = sendOtpDto?.authType;
     if (!type) {
-      throw new Error("Invalid User Type");
+      throw new Error('Invalid User Type');
     }
 
-    if (authType === "email") {
+    if (authType === 'email') {
       let userDetails: any;
       if (!validateEmail(sendOtpDto.email)) {
-        throw new Error("Invalid Email Id");
+        throw new Error('Invalid Email Id');
       }
 
       // if (type === "buyer") {
@@ -104,7 +108,7 @@ export class AuthService {
       let otp: any = otpGenerator();
       await this.mailService.sendOTP({ email: sendOtpDto.email, otp });
       let hashedOtp = await bcrypt.hash(otp, 8);
-      if (process.env.OTP_PHASE === "testing") {
+      if (process.env.OTP_PHASE === 'testing') {
         return {
           otp,
           otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
@@ -118,7 +122,7 @@ export class AuthService {
     } else {
       let userDetails: any;
       if (!validatePhoneNumber(sendOtpDto.phone)) {
-        throw new Error("Invalid Phone Number");
+        throw new Error('Invalid Phone Number');
       }
       // if (type === "buyer") {
       //   userDetails = await this.buyerRepository.findOne({
@@ -144,7 +148,7 @@ export class AuthService {
       let otp: any = otpGenerator();
       // await this.mailService.sendOTP({ email: sendOtpDto.email, otp }); // TODO instead of this add phone service
       let hashedOtp = await bcrypt.hash(otp, 8);
-      if (process.env.OTP_PHASE === "testing") {
+      if (process.env.OTP_PHASE === 'testing') {
         return {
           otp,
           otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
@@ -167,30 +171,30 @@ export class AuthService {
     if (!otpIsValid) throw new Error('OTP is not valid...!');
 
     let userDetails: any;
-    if (type === "buyer") {
-      if (authType === "email") {
+    if (type === 'buyer') {
+      if (authType === 'email') {
         userDetails = await this.buyerRepository.findOne({
           where: { email: verify?.email, deleteFlag: false },
-          relations: ["firm.category"]
+          relations: ['firm.category'],
         });
-      } else if (authType === "phone") {
+      } else if (authType === 'phone') {
         userDetails = await this.buyerRepository.findOne({
           where: { phone: verify?.phone, deleteFlag: false },
-          relations: ["firm.category"]
+          relations: ['firm.category'],
         });
       } else {
         throw new Error('Invalid auth type...!');
       }
-    } else if (type === "seller") {
-      if (authType === "email") {
+    } else if (type === 'seller') {
+      if (authType === 'email') {
         userDetails = await this.sellerRepository.findOne({
           where: { email: verify?.email, deleteFlag: false },
-          relations: ["firm.category"]
+          relations: ['firm.category'],
         });
-      } else if (authType === "phone") {
+      } else if (authType === 'phone') {
         userDetails = await this.sellerRepository.findOne({
           where: { phone: verify?.phone, deleteFlag: false },
-          relations: ["firm.category"]
+          relations: ['firm.category'],
         });
       } else {
         throw new Error('Invalid auth type...!');
@@ -205,13 +209,13 @@ export class AuthService {
       return { ...userDetails, accessToken, refreshToken, isNewUser: false };
     } else {
       let user: any = {
-        email: verify?.email || "",
-        phone: verify?.phone || "",
+        email: verify?.email || '',
+        phone: verify?.phone || '',
       };
-      if (type === "buyer") {
+      if (type === 'buyer') {
         userDetails = await this.buyerRepository.save(user);
-      } else if (type === "seller") {
-        let firm: any = await this.firmService.create({ name: "Firm ABC" });
+      } else if (type === 'seller') {
+        let firm: any = await this.firmService.create({ name: 'Firm ABC' });
         firm.category = [];
         user.firm = firm;
         userDetails = await this.sellerRepository.save(user);
@@ -225,14 +229,13 @@ export class AuthService {
       delete userDetails.deleteFlag;
       return { ...userDetails, accessToken, refreshToken, isNewUser: true };
     }
-
   }
 
   async sendOtpAdmin(sendOtpDto: any): Promise<any> {
     let authType = sendOtpDto?.authType;
-    if (authType === "email") {
+    if (authType === 'email') {
       if (!validateEmail(sendOtpDto.email)) {
-        throw new Error("Invalid Email Id");
+        throw new Error('Invalid Email Id');
       }
 
       // let userDetails = await this.adminRepository.findOne({
@@ -248,7 +251,7 @@ export class AuthService {
       let otp: any = otpGenerator();
       await this.mailService.sendOTP({ email: sendOtpDto.email, otp });
       let hashedOtp = await bcrypt.hash(otp, 8);
-      if (process.env.OTP_PHASE === "testing") {
+      if (process.env.OTP_PHASE === 'testing') {
         return {
           otp,
           otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
@@ -261,7 +264,7 @@ export class AuthService {
       // }
     } else {
       if (!validatePhoneNumber(sendOtpDto.phone)) {
-        throw new Error("Invalid Phone Number");
+        throw new Error('Invalid Phone Number');
       }
 
       // let userDetails = await this.adminRepository.findOne({
@@ -277,7 +280,7 @@ export class AuthService {
       let otp: any = otpGenerator();
       // await this.mailService.sendOTP({ email: sendOtpDto.email, otp }); // TODO instead of this add phone service
       let hashedOtp = await bcrypt.hash(otp, 8);
-      if (process.env.OTP_PHASE === "testing") {
+      if (process.env.OTP_PHASE === 'testing') {
         return {
           otp,
           otpToken: this.#createOtpToken({ hashedOtp, ...sendOtpDto }),
@@ -299,11 +302,11 @@ export class AuthService {
     let authType = verify?.authType;
     let userDetails: any;
 
-    if (authType === "email") {
+    if (authType === 'email') {
       userDetails = await this.adminRepository.findOne({
         where: { email: verify?.email, deleteFlag: false },
       });
-    } else if (authType === "phone") {
+    } else if (authType === 'phone') {
       userDetails = await this.adminRepository.findOne({
         where: { phone: verify?.phone, deleteFlag: false },
       });
@@ -312,21 +315,32 @@ export class AuthService {
     }
 
     if (userDetails) {
-      let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
-      let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
+      let accessToken = this.#createJwtAccessToken({
+        ...userDetails,
+        type: 'admin',
+      });
+      let refreshToken = this.#createJwtRefreshToken({
+        ...userDetails,
+        type: 'admin',
+      });
       delete userDetails.password;
       delete userDetails.activeFlag;
       delete userDetails.deleteFlag;
       return { ...userDetails, accessToken, refreshToken, isNewUser: false };
     } else {
-
       let user: any = {
-        email: verify?.email || "",
-        phone: verify?.phone || "",
+        email: verify?.email || '',
+        phone: verify?.phone || '',
       };
       userDetails = await this.adminRepository.save(user);
-      let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
-      let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
+      let accessToken = this.#createJwtAccessToken({
+        ...userDetails,
+        type: 'admin',
+      });
+      let refreshToken = this.#createJwtRefreshToken({
+        ...userDetails,
+        type: 'admin',
+      });
       delete userDetails.password;
       delete userDetails.activeFlag;
       delete userDetails.deleteFlag;
@@ -338,7 +352,7 @@ export class AuthService {
     let userDetails: any;
     let type = loginDto?.type;
     let usernameOrEmail: string = loginDto.user;
-    if (type === "buyer") {
+    if (type === 'buyer') {
       userDetails = await this.buyerRepository
         .createQueryBuilder('userDetails')
         .where('userDetails.username = :usernameOrEmail', { usernameOrEmail })
@@ -346,7 +360,7 @@ export class AuthService {
         .andWhere('userDetails.deleteFlag = :deleteFlag', { deleteFlag: false })
         .andWhere('userDetails.ssoLogin = :ssoLogin', { ssoLogin: false })
         .getOne();
-    } else if (type === "seller") {
+    } else if (type === 'seller') {
       userDetails = await this.sellerRepository
         .createQueryBuilder('userDetails')
         .where('userDetails.username = :usernameOrEmail', { usernameOrEmail })
@@ -382,8 +396,14 @@ export class AuthService {
     if (!userDetails) throw new Error('Incorrect username/email');
     let match = await bcrypt.compare(loginDto.password, userDetails.password);
     if (!match) throw new Error('Incorrect password');
-    let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
-    let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
+    let accessToken = this.#createJwtAccessToken({
+      ...userDetails,
+      type: 'admin',
+    });
+    let refreshToken = this.#createJwtRefreshToken({
+      ...userDetails,
+      type: 'admin',
+    });
     delete userDetails.password;
     delete userDetails.activeFlag;
     delete userDetails.deleteFlag;
@@ -393,16 +413,19 @@ export class AuthService {
   async ssoLogin(ssoLoginDto: SSOLoginDto): Promise<any> {
     let type = ssoLoginDto.type;
     if (!type) {
-      throw new Error("Invalid type");
+      throw new Error('Invalid type');
     }
-    if (type === "buyer") {
+    if (type === 'buyer') {
       let userDetails = await this.buyerRepository.findOne({
         where: { email: ssoLoginDto.email, deleteFlag: false },
-        relations: ["firm.category"]
+        relations: ['firm.category'],
       });
       if (userDetails) {
         let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
-        let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
+        let refreshToken = this.#createJwtRefreshToken({
+          ...userDetails,
+          type,
+        });
         delete userDetails.password;
         delete userDetails.activeFlag;
         delete userDetails.deleteFlag;
@@ -424,20 +447,26 @@ export class AuthService {
         };
         let userDetails = await this.buyerRepository.save(user);
         let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
-        let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
+        let refreshToken = this.#createJwtRefreshToken({
+          ...userDetails,
+          type,
+        });
         delete userDetails.password;
         delete userDetails.activeFlag;
         delete userDetails.deleteFlag;
         return { ...userDetails, accessToken, refreshToken, isNewUser: true };
       }
-    } else if (type === "seller") {
+    } else if (type === 'seller') {
       let userDetails = await this.sellerRepository.findOne({
         where: { email: ssoLoginDto.email, deleteFlag: false },
-        relations: ["firm.category"]
+        relations: ['firm.category'],
       });
       if (userDetails) {
         let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
-        let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
+        let refreshToken = this.#createJwtRefreshToken({
+          ...userDetails,
+          type,
+        });
         delete userDetails.password;
         delete userDetails.activeFlag;
         delete userDetails.deleteFlag;
@@ -450,7 +479,7 @@ export class AuthService {
         username = userWithUsername
           ? `${username}${sixDigitGenerator()}`
           : username;
-        let firm: any = await this.firmService.create({ name: "Firm ABC" });
+        let firm: any = await this.firmService.create({ name: 'Firm ABC' });
         firm.category = [];
         let user: any = {
           email: ssoLoginDto.email,
@@ -462,7 +491,10 @@ export class AuthService {
         };
         let userDetails = await this.sellerRepository.save(user);
         let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
-        let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type });
+        let refreshToken = this.#createJwtRefreshToken({
+          ...userDetails,
+          type,
+        });
         delete userDetails.password;
         delete userDetails.activeFlag;
         delete userDetails.deleteFlag;
@@ -471,7 +503,6 @@ export class AuthService {
     } else {
       throw new Error('Invalid user type...!');
     }
-
   }
 
   async ssoLoginAdmin(ssoLoginDto: any): Promise<any> {
@@ -479,8 +510,14 @@ export class AuthService {
       where: { email: ssoLoginDto.email, deleteFlag: false, ssoLogin: true },
     });
     if (userDetails) {
-      let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
-      let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
+      let accessToken = this.#createJwtAccessToken({
+        ...userDetails,
+        type: 'admin',
+      });
+      let refreshToken = this.#createJwtRefreshToken({
+        ...userDetails,
+        type: 'admin',
+      });
       delete userDetails.password;
       delete userDetails.activeFlag;
       delete userDetails.deleteFlag;
@@ -501,8 +538,14 @@ export class AuthService {
         ssoLogin: true,
       };
       let userDetails = await this.adminRepository.save(user);
-      let accessToken = this.#createJwtAccessToken({ ...userDetails, type: "admin" });
-      let refreshToken = this.#createJwtRefreshToken({ ...userDetails, type: "admin" });
+      let accessToken = this.#createJwtAccessToken({
+        ...userDetails,
+        type: 'admin',
+      });
+      let refreshToken = this.#createJwtRefreshToken({
+        ...userDetails,
+        type: 'admin',
+      });
       delete userDetails.password;
       delete userDetails.activeFlag;
       delete userDetails.deleteFlag;

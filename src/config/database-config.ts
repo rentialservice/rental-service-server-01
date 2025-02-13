@@ -20,30 +20,32 @@ const url =
 // })
 
 export const databaseConfig: DataSourceOptions =
-  type === "local" ? {
-    type: 'postgres',
-    host,
-    port,
-    username,
-    password,
-    database,
-    url,
-    entities,
-    // ssl: {
-    //   rejectUnauthorized: false,
-    // },
-    synchronize: true,
-  } : {
-    type: 'postgres',
-    host,
-    port,
-    username,
-    password,
-    database,
-    url,
-    entities,
-    ssl: {
-      rejectUnauthorized: false,
-    },
-    synchronize: true,
-  };
+  type === 'local'
+    ? {
+        type: 'postgres',
+        host,
+        port,
+        username,
+        password,
+        database,
+        url,
+        entities,
+        // ssl: {
+        //   rejectUnauthorized: false,
+        // },
+        synchronize: true,
+      }
+    : {
+        type: 'postgres',
+        host,
+        port,
+        username,
+        password,
+        database,
+        url,
+        entities,
+        ssl: {
+          rejectUnauthorized: false,
+        },
+        synchronize: true,
+      };

@@ -31,4 +31,3 @@ export class RentalProduct extends BaseEntity {
   @ManyToOne(() => Rental, (rental) => rental.rentalProduct)
   rental: Rental;
 }
-

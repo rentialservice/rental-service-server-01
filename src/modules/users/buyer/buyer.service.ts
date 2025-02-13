@@ -21,7 +21,7 @@ export class BuyerService {
     private readonly notificationService: NotificationService,
     private readonly commonService: CommonService,
     private readonly s3Service: S3Service,
-  ) { }
+  ) {}
 
   async sendPushNotification(
     id: string,
@@ -44,21 +44,28 @@ export class BuyerService {
     }
   }
 
-  async create(createObject: any, queryData: any, documents?: any[]): Promise<any> {
+  async create(
+    createObject: any,
+    queryData: any,
+    documents?: any[],
+  ): Promise<any> {
     if (documents) {
       createObject.documents = [];
       await Promise.all(
         documents.map(async (m) => {
-          let fileURL = await this.s3Service.uploadImageS3(m, process.env.PRODUCT_MEDIA_FOLDER_NAME as string);
+          let fileURL = await this.s3Service.uploadImageS3(
+            m,
+            process.env.PRODUCT_MEDIA_FOLDER_NAME as string,
+          );
           createObject.documents.push(fileURL);
         }),
       );
     }
     if (!queryData?.firm) {
-      throw new Error("Firm is required")
+      throw new Error('Firm is required');
     }
     let [firm] = await this.commonService.firmFilter({
-      id: queryData.firm
+      id: queryData.firm,
     });
     if (!firm) {
       throw new NotFoundException(`Firm with id ${queryData.firm} not found`);
@@ -69,13 +76,18 @@ export class BuyerService {
     return await this.repository.save(result);
   }
 
-  async getAll(page: number = 1, pageSize: number = 10, filterType?: string, filterCriteria?: any): Promise<any> {
+  async getAll(
+    page: number = 1,
+    pageSize: number = 10,
+    filterType?: string,
+    filterCriteria?: any,
+  ): Promise<any> {
     if (!filterCriteria?.firm) {
-      throw new Error("Firm is required")
+      throw new Error('Firm is required');
     }
     delete filterCriteria?.category;
     return await this.repository.findAndCount({
-      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false, },
+      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
       skip: (page - 1) * pageSize,
       take: pageSize,
       select: SelectConstants.BUYER_SELECT,
@@ -101,17 +113,20 @@ export class BuyerService {
       user.documents = [];
       await Promise.all(
         documents.map(async (m) => {
-          let fileURL = await this.s3Service.uploadImageS3(m, process.env.PRODUCT_MEDIA_FOLDER_NAME as string);
+          let fileURL = await this.s3Service.uploadImageS3(
+            m,
+            process.env.PRODUCT_MEDIA_FOLDER_NAME as string,
+          );
           user.documents.push(fileURL);
         }),
       );
     }
     if (user?.role) {
-      let [role] = await this.commonService.roleFilter({ name: user?.role })
+      let [role] = await this.commonService.roleFilter({ name: user?.role });
       if (!role) {
-        throw new NotFoundException("Given Role is not exist")
+        throw new NotFoundException('Given Role is not exist');
       }
-      user.role = role
+      user.role = role;
     }
     let result = await this.repository.update(id, user);
     if (result) {
@@ -188,17 +203,24 @@ export class BuyerService {
     return true;
   }
 
-  async filter(filterCriteria: any, fields: string[] = [], filterType?: string): Promise<any> {
+  async filter(
+    filterCriteria: any,
+    fields: string[] = [],
+    filterType?: string,
+  ): Promise<any> {
     return await this.repository.find({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: [...fields]
+      relations: [...fields],
     });
   }
 
   async delete(id: string, filterType?: string): Promise<any> {
-    let [buyer] = await this.commonService.rentalFilter({ buyer: { id }, status: "Rented" })
+    let [buyer] = await this.commonService.rentalFilter({
+      buyer: { id },
+      status: 'Rented',
+    });
     if (buyer) {
-      throw new Error("Buyer can't be deleted")
+      throw new Error("Buyer can't be deleted");
     }
     const result = await this.repository.delete(id);
     if (result.affected === 0) {
@@ -206,5 +228,4 @@ export class BuyerService {
     }
     return result;
   }
-
 }

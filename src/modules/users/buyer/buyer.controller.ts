@@ -24,9 +24,9 @@ import {
 import { BuyerService } from './buyer.service';
 import { FilesInterceptor } from '@nestjs/platform-express';
 
-@Controller("buyer")
+@Controller('buyer')
 export class BuyerController {
-  constructor(private readonly service: BuyerService) { }
+  constructor(private readonly service: BuyerService) {}
 
   // @UseGuards(JwtAuthGuard)
   @Get(RoutesConstants.GET_ALL_USER)
@@ -38,7 +38,12 @@ export class BuyerController {
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
-      let [users, count] = await this.service.getAll(page, pageSize, filterType, request.query);
+      let [users, count] = await this.service.getAll(
+        page,
+        pageSize,
+        filterType,
+        request.query,
+      );
       successPaginatedResponse(response, users, count, page, pageSize);
     } catch (error: any) {
       errorResponse(response, error);
@@ -54,7 +59,11 @@ export class BuyerController {
     @UploadedFiles() documents: Express.Multer.File[],
   ): Promise<void> {
     try {
-      let result = await this.service.create(createObject, request.query, documents);
+      let result = await this.service.create(
+        createObject,
+        request.query,
+        documents,
+      );
       successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);
@@ -111,7 +120,7 @@ export class BuyerController {
       let result = await this.service.updateById(
         id || (request.user as any).id,
         updateUserDto,
-        documents
+        documents,
       );
       successResponse(response, result);
     } catch (error: any) {
@@ -174,7 +183,7 @@ export class BuyerController {
     }
   }
 
-  @Post("/filter")
+  @Post('/filter')
   async filter(
     @Req() request: Request,
     @Res() response: Response,
@@ -182,7 +191,11 @@ export class BuyerController {
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
-      const result: any = await this.service.filter(filterCriteria, [], filterType);
+      const result: any = await this.service.filter(
+        filterCriteria,
+        [],
+        filterType,
+      );
       successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);
@@ -203,5 +216,4 @@ export class BuyerController {
       errorResponse(response, error);
     }
   }
-
 }

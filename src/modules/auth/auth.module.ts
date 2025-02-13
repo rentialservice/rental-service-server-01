@@ -12,9 +12,14 @@ import { Admin } from '../users/admin/entities/admin.entity';
 import { FirmModule } from '../firm/firm.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Blacklist, Seller, Admin, Buyer]), JwtModule, MailModule, FirmModule],
+  imports: [
+    TypeOrmModule.forFeature([Blacklist, Seller, Admin, Buyer]),
+    JwtModule,
+    MailModule,
+    FirmModule,
+  ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],
   exports: [AuthService],
 })
-export class AuthModule { }
+export class AuthModule {}

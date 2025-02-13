@@ -1,7 +1,7 @@
 const crypto = require('crypto');
 
 export const otpGenerator = () => {
-  return "123456";
+  return '123456';
   // return crypto.randomInt(100000, 999999).toString();
 };
 

@@ -9,4 +9,4 @@ import { Buyer } from '../../users/buyer/entities/buyer.entity';
   providers: [S3Service],
   exports: [S3Service],
 })
-export class S3Module { }
+export class S3Module {}

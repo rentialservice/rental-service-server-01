@@ -10,4 +10,4 @@ import { Subscription } from './entities/subscription.entity';
   controllers: [SubscriptionController],
   exports: [SubscriptionService],
 })
-export class SubscriptionModule { }
+export class SubscriptionModule {}

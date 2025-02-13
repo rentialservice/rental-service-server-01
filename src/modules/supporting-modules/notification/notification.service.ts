@@ -21,7 +21,7 @@ export class NotificationService {
     private readonly notificationsRepo: Repository<Notification>,
     @InjectRepository(NotificationToken)
     private readonly notificationTokenRepo: Repository<NotificationToken>,
-  ) { }
+  ) {}
 
   acceptPushNotification = async (
     user: any,
@@ -99,7 +99,7 @@ export class NotificationService {
       return { notificationType: r.notificationType, ...notification };
     });
 
-    return { result, count }
+    return { result, count };
   };
 
   sendPush = async (

@@ -9,6 +9,6 @@ import { CommonModule } from '../common/common.module';
   imports: [TypeOrmModule.forFeature([Prefix]), CommonModule],
   providers: [PrefixService],
   controllers: [PrefixController],
-  exports: [PrefixService]
+  exports: [PrefixService],
 })
-export class PrefixModule { }
+export class PrefixModule {}

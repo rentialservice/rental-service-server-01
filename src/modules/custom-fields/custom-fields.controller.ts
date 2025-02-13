@@ -25,7 +25,7 @@ import { CustomFields } from './entities/custom-fields.entity';
 @UseGuards(JwtAuthGuard)
 @Controller('custom-fields')
 export class CustomFieldsController {
-  constructor(private readonly customFieldsService: CustomFieldsService) { }
+  constructor(private readonly customFieldsService: CustomFieldsService) {}
 
   @Post()
   async create(
@@ -85,7 +85,11 @@ export class CustomFieldsController {
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
-      let result = await this.customFieldsService.update(id, updateObject, filterType);
+      let result = await this.customFieldsService.update(
+        id,
+        updateObject,
+        filterType,
+      );
       successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);

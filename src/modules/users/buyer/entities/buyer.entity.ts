@@ -4,7 +4,7 @@ import { NotificationToken } from '../../../supporting-modules/notification/enti
 import { Firm } from '../../../firm/entities/firm.entity';
 import { Rental } from '../../../rental/entities/rental.entity';
 
-@Entity("buyer")
+@Entity('buyer')
 export class Buyer extends BaseEntity {
   @Column({ default: '' })
   fullName: string;
@@ -18,7 +18,7 @@ export class Buyer extends BaseEntity {
   @Column({ default: '' })
   address: string;
 
-  @Column({ type: 'simple-array', default: "" })
+  @Column({ type: 'simple-array', default: '' })
   documents: string[];
 
   @Column({ default: '' })
@@ -48,7 +48,10 @@ export class Buyer extends BaseEntity {
   @ManyToOne(() => Firm)
   firm: Firm;
 
-  @OneToMany(() => NotificationToken, (notificationToken) => notificationToken.user)
+  @OneToMany(
+    () => NotificationToken,
+    (notificationToken) => notificationToken.user,
+  )
   notificationTokens: NotificationToken[];
 
   @OneToMany(() => Rental, (rental) => rental.buyer)

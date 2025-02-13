@@ -7,11 +7,7 @@ import { SellerService } from './seller.service';
 import { RoleModule } from '../../role/role.module';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([Seller]),
-    NotificationModule,
-    RoleModule
-  ],
+  imports: [TypeOrmModule.forFeature([Seller]), NotificationModule, RoleModule],
   controllers: [SellerController],
   providers: [SellerService],
   exports: [SellerService],

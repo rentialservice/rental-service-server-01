@@ -5,12 +5,18 @@ import { Product } from '../../product/entities/product.entity';
 
 @Entity('custom_fields_data')
 export class CustomFieldsData extends BaseEntity {
-    @ManyToOne(() => CustomFields, (customField) => customField.customFieldsData, { onDelete: 'CASCADE' })
-    customField: CustomFields;
+  @ManyToOne(
+    () => CustomFields,
+    (customField) => customField.customFieldsData,
+    { onDelete: 'CASCADE' },
+  )
+  customField: CustomFields;
 
-    @Column()
-    value: string
+  @Column()
+  value: string;
 
-    @ManyToOne(() => Product, (product) => product.customFieldsData, { onDelete: 'CASCADE' })
-    product: Product;
+  @ManyToOne(() => Product, (product) => product.customFieldsData, {
+    onDelete: 'CASCADE',
+  })
+  product: Product;
 }

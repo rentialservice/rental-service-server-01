@@ -15,9 +15,12 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   constructor(
     private configSvc: ConfigService,
     private jwtSvc: JwtService,
-    @InjectRepository(Buyer) private readonly buyerRepository: Repository<Buyer>,
-    @InjectRepository(Admin) private readonly adminRepository: Repository<Admin>,
-    @InjectRepository(Seller) private readonly sellerRepository: Repository<Seller>,
+    @InjectRepository(Buyer)
+    private readonly buyerRepository: Repository<Buyer>,
+    @InjectRepository(Admin)
+    private readonly adminRepository: Repository<Admin>,
+    @InjectRepository(Seller)
+    private readonly sellerRepository: Repository<Seller>,
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -36,11 +39,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       throw new UnauthorizedException('JwtStrategy unauthorized');
     }
     let userData: any;
-    if (user?.type === "buyer") {
+    if (user?.type === 'buyer') {
       userData = await this.buyerRepository.findOne({
         where: { id: user.id, deleteFlag: false },
       });
-    } else if (user?.type === "seller") {
+    } else if (user?.type === 'seller') {
       userData = await this.sellerRepository.findOne({
         where: { id: user.id, deleteFlag: false },
       });

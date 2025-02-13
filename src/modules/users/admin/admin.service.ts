@@ -13,14 +13,13 @@ import { NotificationService } from '../../supporting-modules/notification/notif
 import { SelectConstants } from '../../../constants/select.constant';
 import { RoleService } from '../../role/role.service';
 
-
 @Injectable()
 export class AdminService {
   constructor(
     @InjectRepository(Admin) private readonly repository: Repository<Admin>,
     private readonly notificationService: NotificationService,
     private readonly roleService: RoleService,
-  ) { }
+  ) {}
 
   async sendPushNotification(
     id: string,
@@ -46,7 +45,7 @@ export class AdminService {
   async getAll(page: number = 1, pageSize: number = 10): Promise<any> {
     return await this.repository.findAndCount({
       where: { deleteFlag: false },
-      relations: ["role"],
+      relations: ['role'],
       skip: (page - 1) * pageSize,
       take: pageSize,
       select: SelectConstants.ADMIN_SELECT,
@@ -56,7 +55,7 @@ export class AdminService {
   async getById(id: string, selfId: string) {
     return await this.repository.findOne({
       where: { id },
-      relations: ["role"],
+      relations: ['role'],
       select: SelectConstants.ADMIN_SELECT,
     });
   }
@@ -64,18 +63,18 @@ export class AdminService {
   async getByUsername(username: string, selfId: string) {
     return await this.repository.findOne({
       where: { username },
-      relations: ["role"],
+      relations: ['role'],
       select: SelectConstants.ADMIN_SELECT,
     });
   }
 
   async updateById(id: string, user: any) {
     if (user?.role) {
-      let [role] = await this.roleService.filter({ name: user?.role })
+      let [role] = await this.roleService.filter({ name: user?.role });
       if (!role) {
-        throw new NotFoundException("Given Role is not exist")
+        throw new NotFoundException('Given Role is not exist');
       }
-      user.role = role
+      user.role = role;
     }
     let result = await this.repository.update(id, user);
     if (result) {
@@ -151,5 +150,4 @@ export class AdminService {
     }
     return true;
   }
-
 }

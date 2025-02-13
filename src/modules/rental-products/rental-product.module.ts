@@ -11,4 +11,4 @@ import { CommonModule } from '../common/common.module';
   controllers: [RentalProductController],
   exports: [RentalProductService],
 })
-export class RentalProductModule { }
+export class RentalProductModule {}

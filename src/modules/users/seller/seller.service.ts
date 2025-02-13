@@ -12,14 +12,13 @@ import { Seller } from './entities/seller.entity';
 import { SelectConstants } from '../../../constants/select.constant';
 import { RoleService } from '../../role/role.service';
 
-
 @Injectable()
 export class SellerService {
   constructor(
     @InjectRepository(Seller) private readonly repository: Repository<Seller>,
     private readonly notificationService: NotificationService,
     private readonly roleService: RoleService,
-  ) { }
+  ) {}
 
   async sendPushNotification(
     id: string,
@@ -45,7 +44,7 @@ export class SellerService {
   async getAll(page: number = 1, pageSize: number = 10): Promise<any> {
     return await this.repository.findAndCount({
       where: { deleteFlag: false },
-      relations: ["role", "firm"],
+      relations: ['role', 'firm'],
       skip: (page - 1) * pageSize,
       take: pageSize,
       select: SelectConstants.SELLER_SELECT,
@@ -55,7 +54,7 @@ export class SellerService {
   async getById(id: string, selfId: string) {
     return await this.repository.findOne({
       where: { id },
-      relations: ["role", "firm"],
+      relations: ['role', 'firm'],
       select: SelectConstants.SELLER_SELECT,
     });
   }
@@ -63,18 +62,18 @@ export class SellerService {
   async getByUsername(username: string, selfId: string) {
     return await this.repository.findOne({
       where: { username },
-      relations: ["role", "firm"],
+      relations: ['role', 'firm'],
       select: SelectConstants.SELLER_SELECT,
     });
   }
 
   async updateById(id: string, user: any) {
     if (user?.role) {
-      let [role] = await this.roleService.filter({ name: user?.role })
+      let [role] = await this.roleService.filter({ name: user?.role });
       if (!role) {
-        throw new NotFoundException("Given Role is not exist")
+        throw new NotFoundException('Given Role is not exist');
       }
-      user.role = role
+      user.role = role;
     }
     let result = await this.repository.update(id, user);
     if (result) {
@@ -158,5 +157,4 @@ export class SellerService {
     }
     return result;
   }
-
 }

@@ -12,6 +12,4 @@ export class TermsAndConditions extends BaseEntity {
 
   @ManyToOne(() => Firm, (firm) => firm.termsAndConditions)
   firm: Firm;
-
 }
-

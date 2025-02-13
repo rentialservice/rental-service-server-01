@@ -10,9 +10,9 @@ import { modules } from './list/modules/modules';
   imports: [
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     ConfigModule.forRoot({ isGlobal: true }),
-    ...modules
+    ...modules,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {}
