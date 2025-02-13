@@ -59,6 +59,7 @@ export async function generatePdfFromTemplate(
     const compiledTemplate = handlebars.compile(htmlTemplate);
     const html = compiledTemplate(data);
     browser = await puppeteer.launch({
+      executablePath: '/home/kashif/.cache/puppeteer/chrome/linux-133.0.6943.53/chrome-linux64/chrome',
       headless: true,
       args: [
         '--no-sandbox',
