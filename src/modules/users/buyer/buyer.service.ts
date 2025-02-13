@@ -217,7 +217,6 @@ export class BuyerService {
   async delete(id: string, filterType?: string): Promise<any> {
     let [buyer] = await this.commonService.rentalFilter({
       buyer: { id },
-      status: 'Rented',
     });
     if (buyer) {
       throw new Error("Buyer can't be deleted");
