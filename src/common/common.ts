@@ -1,6 +1,8 @@
 import handlebars from 'handlebars';
 import * as path from 'path';
 import * as fs from 'fs';
+import puppeteer from 'puppeteer';
+import { Readable } from 'stream';
 
 export function extractUsername(email: string) {
   const parts = email.split('@');
@@ -22,7 +24,7 @@ export function validatePhoneNumber(phoneNumber: string) {
   return regex.test(phoneNumber);
 }
 
-export async function generatePdfFromTemplate(
+export async function generateHTMLFromTemplate(
   data: any,
   template: any,
   type?: any,
@@ -37,6 +39,61 @@ export async function generatePdfFromTemplate(
     const compiledTemplate = handlebars.compile(htmlTemplate);
     return compiledTemplate(data);
   } catch (error) {
-    console.log({ error })
+    console.log({ error });
+  }
+}
+
+export async function generatePdfFromTemplate(
+  data: any,
+  template: string,
+  type?: string,
+): Promise<Readable> {
+  let browser: any = null;
+  try {
+    const filePath = 'src/hbs-templates';
+    const templatePath = path.resolve(filePath, `${template}.hbs`);
+    if (!fs.existsSync(templatePath)) {
+      throw new Error(`Template not found: ${templatePath}`);
+    }
+    const htmlTemplate = fs.readFileSync(templatePath, 'utf8');
+    const compiledTemplate = handlebars.compile(htmlTemplate);
+    const html = compiledTemplate(data);
+    browser = await puppeteer.launch({
+      headless: true,
+      args: [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+      ],
+    });
+
+    const page = await browser.newPage();
+    await page.setDefaultNavigationTimeout(60000);
+    await page.setContent(html, {
+      waitUntil: 'domcontentloaded',
+      timeout: 60000,
+    });
+    const pdfBuffer: Buffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: '20mm',
+        bottom: '20mm',
+        left: '20mm',
+        right: '20mm',
+      },
+      preferCSSPageSize: true,
+    });
+    const bufferToStream = new Readable();
+    bufferToStream.push(pdfBuffer);
+    bufferToStream.push(null);
+    return bufferToStream;
+  } catch (error) {
+    console.error('PDF Generation Error:', error);
+    throw error;
+  } finally {
+    if (browser) {
+      await browser.close();
+    }
   }
 }

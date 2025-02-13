@@ -4,7 +4,10 @@ import { Repository } from 'typeorm';
 import { Rental } from './entities/rental.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
-import { generatePdfFromTemplate } from '../../common/common';
+import {
+  generateHTMLFromTemplate,
+  generatePdfFromTemplate,
+} from '../../common/common';
 import { RentalProductService } from '../rental-products/rental-product.service';
 import { InvoiceStatus } from '../../enums/status.enum';
 
@@ -129,7 +132,42 @@ export class RentalService {
       ],
       totalAmount: 620,
     };
-    return generatePdfFromTemplate(data, 'invoice');
+    return await generatePdfFromTemplate(data, 'invoice');
+  }
+
+  async createInvoicePreview(id: string, filterType?: string): Promise<any> {
+    // const rental = await this.rentalRepository.findOne({
+    //   where: { id, deleteFlag: false },
+    //   relations: ['buyer', 'product', 'paymentCollection'],
+    // });
+    // if (!rental) {
+    //   throw new NotFoundException(`Rental with id ${id} not found`);
+    // }
+    const data = {
+      invoiceDate: new Date().toLocaleDateString(),
+      invoiceNumber: 'INV-12345',
+      client: {
+        name: 'John Doe',
+        email: 'john@example.com',
+        address: '123 Main St, Anytown, USA',
+      },
+      items: [
+        {
+          description: 'Web Design',
+          quantity: 1,
+          unitPrice: 500,
+          totalAmount: 500,
+        },
+        {
+          description: 'Hosting',
+          quantity: 12,
+          unitPrice: 10,
+          totalAmount: 120,
+        },
+      ],
+      totalAmount: 620,
+    };
+    return await generateHTMLFromTemplate(data, 'invoice');
   }
 
   async update(

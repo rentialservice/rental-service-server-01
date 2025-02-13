@@ -11,6 +11,7 @@ import {
   Res,
   Query,
 } from '@nestjs/common';
+import * as fs from 'fs';
 import { RentalService } from './rental.service';
 import { Rental } from './entities/rental.entity';
 import { JwtAuthGuard } from '../auth/jwt.auth.guard';
@@ -22,7 +23,7 @@ import {
   successResponse,
 } from '../../base/response';
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('rental')
 export class RentalController {
   constructor(private readonly rentalService: RentalService) {}
@@ -60,17 +61,46 @@ export class RentalController {
     }
   }
 
-  @Get('/invoice')
-  async createInvoice(
+  @Get('/invoice/download')
+  async createInvoiceDownload(
     @Req() request: Request,
     @Res() response: Response,
     @Query(RoutesConstants.ID) id: string,
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
-      let result = await this.rentalService.createInvoice(id, filterType);
+      const pdfStream = await this.rentalService.createInvoice(id, filterType);
+      response.setHeader('Content-Type', 'application/pdf');
+      response.setHeader(
+        'Content-Disposition',
+        `attachment; filename="invoice-${id}.pdf"`,
+      );
+      pdfStream.pipe(response);
+      pdfStream.on('end', () => {
+        console.log('PDF stream finished');
+      });
+      pdfStream.on('error', (error) => {
+        console.error('PDF stream error:', error);
+        response.status(500).send('Error streaming PDF');
+      });
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Get('/invoice/preview')
+  async createInvoicePreview(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Query(RoutesConstants.ID) id: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+  ): Promise<void> {
+    try {
+      const result = await this.rentalService.createInvoicePreview(
+        id,
+        filterType,
+      );
       response.send(result);
-      // successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);
     }
