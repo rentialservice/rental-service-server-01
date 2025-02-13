@@ -42,13 +42,8 @@ export class RentalService {
     let rentalProduct = await this.rentalProductService.create(
       createObject.rentalProduct,
     );
-    if (!rentalProduct) {
-      throw new NotFoundException(
-        `Product with id ${createObject.rentalProduct} not found`,
-      );
-    } else {
-      createObject.rentalProduct = rentalProduct;
-    }
+    createObject.rentalProduct = rentalProduct;
+
     let [buyer] = await this.commonService.buyerFilter({
       id: createObject.buyer,
     });
@@ -142,6 +137,47 @@ export class RentalService {
     updateObject: Partial<Rental>,
     filterType?: string,
   ): Promise<any> {
+    if (updateObject?.firm) {
+      let [firm] = await this.commonService.firmFilter({
+        id: updateObject.firm,
+      });
+      if (!firm) {
+        throw new NotFoundException(
+          `Firm with id ${updateObject.firm} not found`,
+        );
+      } else {
+        updateObject.firm = firm;
+      }
+    }
+    await this.rentalProductService.update(id, updateObject.rentalProduct);
+    if (updateObject?.buyer) {
+      let [buyer] = await this.commonService.buyerFilter({
+        id: updateObject.buyer,
+      });
+      if (!buyer) {
+        throw new NotFoundException(
+          `Buyer with id ${updateObject.buyer} not found`,
+        );
+      } else {
+        updateObject.buyer = buyer;
+      }
+    }
+    if (updateObject?.paymentMode) {
+      let [paymentMode] = await this.commonService.paymentModeFilter({
+        id: updateObject.paymentMode,
+      });
+      if (!paymentMode) {
+        throw new NotFoundException(
+          `Payment Mode with id ${updateObject.paymentMode} not found`,
+        );
+      } else {
+        updateObject.paymentMode = paymentMode;
+      }
+    }
+    updateObject.pendingAmount
+      ? (updateObject.invoiceStatus = InvoiceStatus.PartiallyPaid)
+      : (updateObject.invoiceStatus = InvoiceStatus.Paid);
+    delete updateObject?.rentalProduct;
     return await this.rentalRepository.update(id, updateObject);
   }
 
