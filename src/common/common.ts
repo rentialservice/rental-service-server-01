@@ -59,12 +59,13 @@ export async function generatePdfFromTemplate(
     const compiledTemplate = handlebars.compile(htmlTemplate);
     const html = compiledTemplate(data);
     browser = await puppeteer.launch({
-      // executablePath: '/home/kashif/.cache/puppeteer/chrome/linux-133.0.6943.53/chrome-linux64/chrome',
       headless: true,
+      executablePath: `/usr/bin/google-chrome`,
       args: [
-        '--no-sandbox',
-        '--disable-setuid-sandbox',
-        '--disable-dev-shm-usage',
+        `--no-sandbox`,
+        `--headless`,
+        `--disable-gpu`,
+        `--disable-dev-shm-usage`,
       ],
     });
 
