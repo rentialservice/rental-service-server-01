@@ -83,7 +83,7 @@ export class RentalService {
     delete filterCriteria.category;
     return await this.rentalRepository.findAndCount({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: ['buyer', 'firm', 'rentalProduct.product'],
+      relations: ['buyer'],
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -235,7 +235,7 @@ export class RentalService {
     delete filterCriteria.category;
     return await this.rentalRepository.find({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: ['rentalProduct.product', 'buyer'],
+      relations: ['buyer'],
     });
   }
 }
