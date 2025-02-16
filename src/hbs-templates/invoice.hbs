@@ -1,31 +1,35 @@
+{{! Rent Invoice Template }}
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Invoice {{invoiceNumber}}</title>
+  <title>Rent Invoice</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      margin: 20px;
     }
 
-    .header,
-    .footer {
+    .invoice-box {
+      max-width: 800px;
+      margin: auto;
+      padding: 20px;
+      border: 1px solid #eee;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .header {
       text-align: center;
-    }
-
-    .invoice-details,
-    .client-details {
-      margin-bottom: 20px;
+      font-size: 20px;
+      font-weight: bold;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
+      margin-top: 20px;
     }
 
+    table,
     th,
     td {
       border: 1px solid #ddd;
@@ -33,57 +37,61 @@
       text-align: left;
     }
 
-    th {
-      background-color: #f2f2f2;
+    .total {
+      text-align: right;
+      font-weight: bold;
     }
   </style>
 </head>
 
 <body>
+  <div class="invoice-box">
+    <div class="header">Rental Invoice</div>
+    <p><strong>To:</strong> {{recipient.name}}</p>
+    <p><strong>Mobile:</strong> {{recipient.mobile}}</p>
+    <p><strong>Address:</strong> {{recipient.address}}</p>
+    <p><strong>Invoice No:</strong> {{invoice.number}}</p>
+    <p><strong>Date:</strong> {{invoice.date}}</p>
 
-  <div class="header">
-    <h1>Invoice</h1>
-    <p>Date: {{invoiceDate}}</p>
-    <p>Invoice Number: {{invoiceNumber}}</p>
-  </div>
-
-  <div class="client-details">
-    <h2>Bill To:</h2>
-    <p>Name: {{client.name}}</p>
-    <p>Email: {{client.email}}</p>
-    <p>Address: {{client.address}}</p>
-  </div>
-
-  <div class="invoice-details">
-    <h2>Invoice Details:</h2>
     <table>
       <thead>
         <tr>
-          <th>Description</th>
-          <th>Quantity</th>
-          <th>Unit Price</th>
-          <th>Total</th>
+          <th>SR</th>
+          <th>PRODUCT</th>
+          <th>DESCRIPTION</th>
+          <th>DELIVERY DATE</th>
+          <th>RETURN DATE</th>
+          <th>QTY</th>
+          <th>RATE</th>
+          <th>TOTAL</th>
         </tr>
       </thead>
       <tbody>
-        {{#each items}}
+        {{#each invoice.items}}
         <tr>
+          <td>{{this.sr}}</td>
+          <td>{{this.product}}</td>
           <td>{{this.description}}</td>
-          <td>{{this.quantity}}</td>
-          <td>${{this.unitPrice}}</td>
-          <td>${{this.totalAmount}}</td>
+          <td>{{this.deliveryDate}}</td>
+          <td>{{this.returnDate}}</td>
+          <td>{{this.qty}}</td>
+          <td>{{this.rate}}</td>
+          <td>{{this.total}}</td>
         </tr>
         {{/each}}
       </tbody>
     </table>
 
-    <h3>Total Amount Due: ${{totalAmount}}</h3>
-  </div>
+    <p class="total">Total: {{invoice.total}}</p>
+    <p class="total">Discount: {{invoice.discount}}</p>
+    <p class="total">Deposit: {{invoice.deposit}}</p>
+    <p class="total">Advance: {{invoice.advance}}</p>
+    <p class="total">Received: {{invoice.received}}</p>
+    <p class="total">Outstanding: {{invoice.outstanding}}</p>
 
-  <div class="footer">
-    <p>Thank you for your business!</p>
+    <p><strong>Prepared by:</strong> {{invoice.preparedBy}}</p>
+    <p class="note">This is a computer-generated document and does not require a signature.</p>
   </div>
-
 </body>
 
 </html>

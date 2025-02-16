@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import { ILike, In } from 'typeorm';
 import { FilterConstants } from '../constants/filter.constants';
 
@@ -26,3 +27,12 @@ export function buildFilterCriteriaQuery(filterCriteria: any) {
   });
   return criteria;
 }
+
+
+export const convertDate = (isoDate: string): string => {
+  return dayjs(isoDate).format("YYYY-MM-DD HH:mm:ss");
+};
+
+export const convertToISO = (simpleDate: string): string => {
+  return dayjs(simpleDate, "YYYY-MM-DD HH:mm:ss").toISOString();
+};

@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Rental } from './entities/rental.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
+import { buildFilterCriteriaQuery, convertDate } from '../../common/utils';
 import { CommonService } from '../common/common.service';
 import {
   generateHTMLFromTemplate,
@@ -101,37 +101,52 @@ export class RentalService {
   }
 
   async createInvoice(id: string, filterType?: string): Promise<any> {
-    // const rental = await this.rentalRepository.findOne({
-    //   where: { id, deleteFlag: false },
-    //   relations: ['buyer', 'product', 'paymentCollection'],
-    // });
-    // if (!rental) {
-    //   throw new NotFoundException(`Rental with id ${id} not found`);
-    // }
+    const rental = await this.rentalRepository.findOne({
+      where: { id, deleteFlag: false },
+      relations: ['buyer', 'rentalProduct', 'rentalProduct.product'],
+    });
+    if (!rental) {
+      throw new NotFoundException(`Rental with id ${id} not found`);
+    }
     const data = {
-      invoiceDate: new Date().toLocaleDateString(),
-      invoiceNumber: 'INV-12345',
-      client: {
-        name: 'John Doe',
-        email: 'john@example.com',
-        address: '123 Main St, Anytown, USA',
+      recipient: {
+        name: rental?.buyer?.fullName,
+        mobile: rental?.buyer?.phone,
+        address:
+          rental?.buyer?.address +
+          ', ' +
+          rental?.buyer?.city +
+          ', ' +
+          rental?.buyer?.state +
+          ', ' +
+          rental?.buyer?.pincode,
       },
-      items: [
-        {
-          description: 'Web Design',
-          quantity: 1,
-          unitPrice: 500,
-          totalAmount: 500,
-        },
-        {
-          description: 'Hosting',
-          quantity: 12,
-          unitPrice: 10,
-          totalAmount: 120,
-        },
-      ],
-      totalAmount: 620,
+      invoice: {
+        number: rental.invoicePrefix + ' ' + rental.invoiceId,
+        date: convertDate(rental.invoiceDate.toString()),
+        items:
+          rental?.rentalProduct?.map((rentalProduct: any, index: number) => {
+            return {
+              sr: index,
+              product: rentalProduct?.product?.name || 'Product',
+              description: rentalProduct?.product?.description || 'Description',
+              deliveryDate: convertDate(rentalProduct?.startDate),
+              returnDate: convertDate(rentalProduct?.endDate),
+              qty: rentalProduct?.quantity || 1,
+              rate: rentalProduct?.salesPrice || 0,
+              total: rentalProduct?.salesPrice * rentalProduct?.quantity || 0,
+            };
+          }) || [],
+        total: rental?.totalAmount || 0,
+        discount: rental?.discount || 0,
+        deposit: rental?.deposit || 0,
+        advance: rental?.advanceAmount || 0,
+        received: rental?.paidAmount || 0,
+        outstanding: rental?.pendingAmount || 0,
+        preparedBy: 'Rental Master',
+      },
     };
+
     return await generatePdfFromTemplate(data, 'invoice');
   }
 

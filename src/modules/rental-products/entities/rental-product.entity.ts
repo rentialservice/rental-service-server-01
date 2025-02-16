@@ -28,6 +28,9 @@ export class RentalProduct extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   salesPrice: number;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  quantity: number;
+
   @ManyToOne(() => Rental, (rental) => rental.rentalProduct)
   rental: Rental;
 }
