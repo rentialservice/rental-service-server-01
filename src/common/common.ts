@@ -1,8 +1,9 @@
 import handlebars from 'handlebars';
 import * as path from 'path';
 import * as fs from 'fs';
-import puppeteer from 'puppeteer';
 import { Readable } from 'stream';
+import puppeteer from 'puppeteer-core';
+const chromium = require('@sparticuz/chromium');
 
 export function extractUsername(email: string) {
   const parts = email.split('@');
@@ -58,7 +59,15 @@ export async function generatePdfFromTemplate(
     const htmlTemplate = fs.readFileSync(templatePath, 'utf8');
     const compiledTemplate = handlebars.compile(htmlTemplate);
     const html = compiledTemplate(data);
-    browser = await puppeteer.launch();
+    browser = await puppeteer.launch({
+      args: chromium.args,
+      executablePath:
+        process.env.CHROME_PATH ||
+        (await chromium.executablePath()) ||
+        '/usr/bin/google-chrome-stable',
+      headless: true,
+    });
+
     // browser = await puppeteer.launch({
     //   headless: true,
     //   args: [
