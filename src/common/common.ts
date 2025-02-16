@@ -58,15 +58,16 @@ export async function generatePdfFromTemplate(
     const htmlTemplate = fs.readFileSync(templatePath, 'utf8');
     const compiledTemplate = handlebars.compile(htmlTemplate);
     const html = compiledTemplate(data);
-    browser = await puppeteer.launch({
-      headless: true,
-      args: [
-        `--no-sandbox`,
-        `--headless`,
-        `--disable-gpu`,
-        `--disable-dev-shm-usage`,
-      ],
-    });
+    browser = await puppeteer.launch();
+    // browser = await puppeteer.launch({
+    //   headless: true,
+    //   args: [
+    //     `--no-sandbox`,
+    //     `--headless`,
+    //     `--disable-gpu`,
+    //     `--disable-dev-shm-usage`,
+    //   ],
+    // });
 
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(60000);
