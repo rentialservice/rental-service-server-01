@@ -9,12 +9,6 @@
   "env": {
     "PUPPETEER_SKIP_CHROMIUM_DOWNLOAD": "true"
   },
-  "functions": {
-    "api/**/*.js": {
-      "memory": 3008,
-      "maxDuration": 60
-    }
-  },
   "routes": [
     {
       "src": "/(.*)",
