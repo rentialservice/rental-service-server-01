@@ -68,6 +68,7 @@ export async function generatePdfFromTemplate(
       headless: true,
     });
 
+    
     // browser = await puppeteer.launch({
     //   headless: true,
     //   args: [
