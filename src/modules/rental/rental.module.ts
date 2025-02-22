@@ -5,12 +5,14 @@ import { RentalController } from './rental.controller';
 import { Rental } from './entities/rental.entity';
 import { CommonModule } from '../common/common.module';
 import { RentalProductModule } from '../rental-products/rental-product.module';
+import { PrefixModule } from '../prefix/prefix.module';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Rental]),
     CommonModule,
     RentalProductModule,
+    PrefixModule,
   ],
   providers: [RentalService],
   controllers: [RentalController],

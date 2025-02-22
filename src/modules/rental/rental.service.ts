@@ -10,6 +10,7 @@ import {
 } from '../../common/common';
 import { RentalProductService } from '../rental-products/rental-product.service';
 import { InvoiceStatus } from '../../enums/status.enum';
+import { PrefixService } from '../prefix/prefix.service';
 
 @Injectable()
 export class RentalService {
@@ -17,6 +18,7 @@ export class RentalService {
     @InjectRepository(Rental)
     private readonly rentalRepository: Repository<Rental>,
     private readonly commonService: CommonService,
+    private readonly prefixService: PrefixService,
     private readonly rentalProductService: RentalProductService,
   ) {}
 
@@ -216,7 +218,9 @@ export class RentalService {
         updateObject.firm = firm;
       }
     }
-    await this.rentalProductService.update(id, updateObject.rentalProduct);
+    if (updateObject?.rentalProduct?.length) {
+      await this.rentalProductService.update(id, updateObject.rentalProduct);
+    }
     if (updateObject?.buyer) {
       let [buyer] = await this.commonService.buyerFilter({
         id: updateObject.buyer,
@@ -263,7 +267,11 @@ export class RentalService {
   ): Promise<any> {
     delete filterCriteria.category;
     return await this.rentalRepository.find({
-      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      where: {
+        ...buildFilterCriteriaQuery(filterCriteria),
+        deleteFlag: false,
+        order: { createdAt: 'DESC' },
+      },
       relations: ['buyer'],
     });
   }

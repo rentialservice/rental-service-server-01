@@ -30,7 +30,7 @@ export function buildFilterCriteriaQuery(filterCriteria: any) {
 
 
 export const convertDate = (isoDate: string): string => {
-  return dayjs(isoDate).format("YYYY-MM-DD HH:mm:ss");
+  return dayjs(isoDate).format("YYYY-MM-DD");
 };
 
 export const convertToISO = (simpleDate: string): string => {

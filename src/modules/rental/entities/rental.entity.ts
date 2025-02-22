@@ -9,7 +9,10 @@ import { RentalProduct } from '../../rental-products/entities/rental-product.ent
 
 @Entity('rental')
 export class Rental extends BaseEntity {
-  @OneToMany(() => RentalProduct, (rentalProduct) => rentalProduct.rental)
+  @OneToMany(() => RentalProduct, (rentalProduct) => rentalProduct.rental, {
+    cascade: ['remove'],
+    onDelete: 'CASCADE',
+  })
   rentalProduct: RentalProduct[];
 
   @ManyToOne(() => Buyer, (buyer) => buyer.rental)
@@ -35,9 +38,6 @@ export class Rental extends BaseEntity {
   media: string[];
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  salesPrice: number;
-
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   discount: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
@@ -54,9 +54,6 @@ export class Rental extends BaseEntity {
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalAmount: number;
-
-  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
-  fine: number;
 
   @Column({
     type: 'enum',

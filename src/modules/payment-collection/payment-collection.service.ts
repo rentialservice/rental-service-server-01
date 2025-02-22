@@ -135,9 +135,11 @@ export class PaymentCollectionService {
     fields: string[] = [],
     filterType?: any,
   ): Promise<any> {
+    delete filterCriteria?.category;
     if (!filterCriteria?.firm) {
       throw new Error('Firm is required');
     }
+    let allRentals = await this.rentalService.filter(filterCriteria);
     filterCriteria = buildFilterCriteriaQuery(filterCriteria);
     let today = new Date();
     const startOfDay = new Date(
@@ -162,14 +164,26 @@ export class PaymentCollectionService {
       },
       relations: [...fields],
     });
-    let dailyTotal = dailyPayments.reduce(
-      (sum: any, payment: any) => sum + parseFloat(payment.amount),
+    let dailyTotal = 0;
+    let monthlyTotal = 0;
+    dailyPayments.map((item: any) => {
+      dailyTotal += item?.rental?.reduce(
+        (sum: any, payment: any) => sum + parseFloat(payment.amount),
+        0,
+      );
+    });
+    monthlyPayments.map((item: any) => {
+      monthlyTotal += item?.rental?.reduce(
+        (sum: any, payment: any) => sum + parseFloat(payment.amount),
+        0,
+      );
+    });
+
+    let dueTotal = allRentals?.reduce(
+      (sum: any, rental: any) => sum + parseFloat(rental?.pendingAmount),
       0,
     );
-    let monthlyTotal = monthlyPayments.reduce(
-      (sum: any, payment: any) => sum + parseFloat(payment.amount),
-      0,
-    );
-    return { dailyTotal, monthlyTotal };
+
+    return { dailyTotal, monthlyTotal, dueTotal };
   }
 }

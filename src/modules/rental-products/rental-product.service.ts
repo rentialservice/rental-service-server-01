@@ -60,8 +60,8 @@ export class RentalProductService {
   ): Promise<any> {
     const existingRentalProducts = await this.filter({ rental: id });
     const updateObjectIds = updateObjects
-      .map((obj) => obj?.id)
-      .filter((id) => id !== undefined);
+      ?.map((obj) => obj?.id)
+      ?.filter((id) => id !== undefined);
     const idsToDelete = existingRentalProducts
       .map((obj) => obj.id)
       .filter((id) => !updateObjectIds.includes(id));
