@@ -36,6 +36,16 @@ export class RentalService {
       throw new Error('Firm is required');
     }
 
+    let [prefix] = await this.prefixService.filter({
+      firm: queryData?.firm,
+      name: createObject?.invoicePrefix,
+    });
+
+    if (!prefix) throw new NotFoundException('Prefix not found');
+    await this.prefixService.update(prefix?.id, {
+      nextNumber: parseInt(createObject.invoiceId) + 1,
+    });
+
     let [firm] = await this.commonService.firmFilter({
       id: queryData.firm,
     });
@@ -86,6 +96,7 @@ export class RentalService {
     return await this.rentalRepository.findAndCount({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
       relations: ['buyer'],
+      order: { createdAt: 'DESC' },
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -219,7 +230,10 @@ export class RentalService {
       }
     }
     if (updateObject?.rentalProduct?.length) {
-      await this.rentalProductService.update(id, updateObject.rentalProduct);
+      updateObject.rentalProduct = await this.rentalProductService.update(
+        id,
+        updateObject.rentalProduct,
+      );
     }
     if (updateObject?.buyer) {
       let [buyer] = await this.commonService.buyerFilter({
@@ -249,6 +263,7 @@ export class RentalService {
       ? (updateObject.invoiceStatus = InvoiceStatus.PartiallyPaid)
       : (updateObject.invoiceStatus = InvoiceStatus.Paid);
     delete updateObject?.rentalProduct;
+    console.dir({ updateObject }, { depth: null });
     return await this.rentalRepository.update(id, updateObject);
   }
 
@@ -270,8 +285,8 @@ export class RentalService {
       where: {
         ...buildFilterCriteriaQuery(filterCriteria),
         deleteFlag: false,
-        order: { createdAt: 'DESC' },
       },
+      order: { createdAt: 'DESC' },
       relations: ['buyer'],
     });
   }

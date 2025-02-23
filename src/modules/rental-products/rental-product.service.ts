@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { RentalProduct } from './entities/rental-product.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
+import { RentalService } from '../rental/rental.service';
 
 @Injectable()
 export class RentalProductService {
@@ -13,7 +14,7 @@ export class RentalProductService {
     private readonly commonService: CommonService,
   ) {}
 
-  async create(createObjects: Partial<RentalProduct[]>): Promise<any> {
+  async create(createObjects: Partial<any[]>): Promise<any> {
     await Promise.all(
       createObjects.map(async (createObject: any) => {
         let [product] = await this.commonService.productFilter({
@@ -58,6 +59,8 @@ export class RentalProductService {
     id: string,
     updateObjects: Partial<RentalProduct>[],
   ): Promise<any> {
+    let allRentalProducts: any = [];
+    const [rental] = await this.commonService.rentalFilter({ id });
     const existingRentalProducts = await this.filter({ rental: id });
     const updateObjectIds = updateObjects
       ?.map((obj) => obj?.id)
@@ -65,24 +68,26 @@ export class RentalProductService {
     const idsToDelete = existingRentalProducts
       .map((obj) => obj.id)
       .filter((id) => !updateObjectIds.includes(id));
+
+    console.log({ rental });
     for (const updateObject of updateObjects) {
-      if (updateObject.id) {
+      if (updateObject?.id) {
         await this.rentalProductRepository.update(
           updateObject.id,
           updateObject,
         );
       } else {
-        const newRentalProduct =
-          this.rentalProductRepository.create(updateObject);
-        await this.rentalProductRepository.save(newRentalProduct);
+        updateObject.rental = rental;
+        allRentalProducts = await this.create([updateObject]);
       }
     }
     if (idsToDelete.length > 0) {
       await this.rentalProductRepository.delete(idsToDelete);
     }
-    return await this.filter({
+    let rentalProducts = await this.filter({
       rental: id,
     });
+    return [...allRentalProducts, ...rentalProducts];
   }
 
   async delete(id: string, filterType?: string): Promise<any> {
@@ -100,7 +105,7 @@ export class RentalProductService {
   ): Promise<any> {
     return await this.rentalProductRepository.find({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: ['rental'],
+      // relations: ['rental'],
     });
   }
 }
