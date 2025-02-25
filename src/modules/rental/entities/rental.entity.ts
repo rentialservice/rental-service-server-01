@@ -10,7 +10,6 @@ import { RentalProduct } from '../../rental-products/entities/rental-product.ent
 @Entity('rental')
 export class Rental extends BaseEntity {
   @OneToMany(() => RentalProduct, (rentalProduct) => rentalProduct.rental, {
-    cascade: ['remove'],
     onDelete: 'CASCADE',
   })
   rentalProduct: RentalProduct[];

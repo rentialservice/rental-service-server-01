@@ -4,8 +4,11 @@ import { Product } from '../../product/entities/product.entity';
 import { Status } from '../../../enums/status.enum';
 import { Rental } from '../../rental/entities/rental.entity';
 
-@Entity('rentalProduct')
+@Entity('rental_product')
 export class RentalProduct extends BaseEntity {
+  @ManyToOne(() => Rental, (rental) => rental.rentalProduct, { cascade: true })
+  rental: Rental;
+
   @ManyToOne(() => Product, (product) => product.rental)
   product: Product;
 
@@ -30,7 +33,4 @@ export class RentalProduct extends BaseEntity {
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   quantity: number;
-
-  @ManyToOne(() => Rental, (rental) => rental.rentalProduct)
-  rental: Rental;
 }

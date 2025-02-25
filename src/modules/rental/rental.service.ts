@@ -11,19 +11,22 @@ import {
 import { RentalProductService } from '../rental-products/rental-product.service';
 import { InvoiceStatus } from '../../enums/status.enum';
 import { PrefixService } from '../prefix/prefix.service';
+import { RentalProduct } from '../rental-products/entities/rental-product.entity';
 
 @Injectable()
 export class RentalService {
   constructor(
     @InjectRepository(Rental)
     private readonly rentalRepository: Repository<Rental>,
+    @InjectRepository(RentalProduct)
+    private readonly rentalProductRepository: Repository<RentalProduct>,
     private readonly commonService: CommonService,
     private readonly prefixService: PrefixService,
     private readonly rentalProductService: RentalProductService,
   ) {}
 
   async create(createObject: Partial<Rental>, queryData: any): Promise<any> {
-    if (!createObject?.rentalProduct) {
+    if (!createObject?.rentalProduct?.length) {
       throw new Error('Products are required');
     }
     if (!createObject?.buyer) {
@@ -82,6 +85,8 @@ export class RentalService {
     createObject.pendingAmount
       ? (createObject.invoiceStatus = InvoiceStatus.PartiallyPaid)
       : (createObject.invoiceStatus = InvoiceStatus.Paid);
+
+    console.dir({ createObject }, { depth: null });
     const result = this.rentalRepository.create(createObject);
     return await this.rentalRepository.save(result);
   }
@@ -268,11 +273,15 @@ export class RentalService {
   }
 
   async delete(id: string, filterType?: string): Promise<any> {
-    const result = await this.rentalRepository.delete(id);
-    if (result.affected === 0) {
-      throw new NotFoundException(`Rental with id ${id} not found`);
-    }
-    return result;
+    const rental = await this.rentalRepository.findOne({
+      where: { id },
+      relations: ['rentalProduct'],
+    });
+    console.dir({ rental }, { depth: null });
+    let res = await this.rentalProductRepository.remove(rental.rentalProduct);
+    console.log({ res });
+    let res2 = await this.rentalRepository.remove(rental);
+    console.log({ res2 });
   }
 
   async filter(
@@ -287,7 +296,7 @@ export class RentalService {
         deleteFlag: false,
       },
       order: { createdAt: 'DESC' },
-      relations: ['buyer'],
+      relations: ['buyer', 'rentalProduct'],
     });
   }
 }
