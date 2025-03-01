@@ -1,6 +1,7 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
 import { ILike, In } from 'typeorm';
 import { FilterConstants } from '../constants/filter.constants';
+import { FinePeriod } from '../enums/period.enum';
 
 export function buildFilterCriteriaQuery(filterCriteria: any) {
   // Create a deep copy of the filterCriteria object
@@ -28,11 +29,49 @@ export function buildFilterCriteriaQuery(filterCriteria: any) {
   return criteria;
 }
 
-
 export const convertDate = (isoDate: string): string => {
-  return dayjs(isoDate).format("YYYY-MM-DD");
+  return dayjs(isoDate).format('YYYY-MM-DD');
 };
 
 export const convertToISO = (simpleDate: string): string => {
-  return dayjs(simpleDate, "YYYY-MM-DD HH:mm:ss").toISOString();
+  return dayjs(simpleDate, 'YYYY-MM-DD HH:mm:ss').toISOString();
 };
+
+export function calculatePendingAmountWithFine(rental: any) {
+  const now = new Date();
+  let totalFines = 0;
+
+  for (const product of rental.rentalProduct) {
+    const endDate = new Date(product.endDate);
+    if (now <= endDate) continue;
+
+    const fineAmount = parseFloat(product.product.fine);
+    const timeDiffMs = now.getTime() - endDate.getTime();
+
+    let periods = 0;
+    switch (product.product.finePeriod) {
+      case FinePeriod.FinePerHour:
+        periods = Math.ceil(timeDiffMs / (1000 * 60 * 60));
+        break;
+      case FinePeriod.FinePerDay:
+        periods = Math.ceil(timeDiffMs / (1000 * 60 * 60 * 24));
+        break;
+      case FinePeriod.FinePerWeek:
+        periods = Math.ceil(timeDiffMs / (1000 * 60 * 60 * 24 * 7));
+        break;
+      case FinePeriod.FinePerMonth:
+        periods = Math.ceil(timeDiffMs / (1000 * 60 * 60 * 24 * 30));
+        break;
+      case FinePeriod.FinePerYear:
+        periods = Math.ceil(timeDiffMs / (1000 * 60 * 60 * 24 * 365));
+        break;
+    }
+    totalFines += periods * fineAmount;
+  }
+
+  const basePending =
+    parseFloat(rental.totalAmount) - parseFloat(rental.paidAmount);
+  const pendingAmount = (basePending + totalFines).toFixed(2);
+
+  return { totalFine: totalFines.toFixed(2), pendingAmount };
+}

@@ -110,6 +110,22 @@ export class RentalProductController {
     }
   }
 
+  @Put('update-by-id/:id')
+  async updateById(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Param(RoutesConstants.ID) id: string,
+    @Body() updateObject: Partial<RentalProduct>,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+  ): Promise<void> {
+    try {
+      let result = await this.rentalProductService.updateById(id, updateObject);
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
   @Delete(RoutesConstants.PARAM_ID)
   async delete(
     @Req() request: Request,

@@ -2,7 +2,11 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Rental } from './entities/rental.entity';
-import { buildFilterCriteriaQuery, convertDate } from '../../common/utils';
+import {
+  buildFilterCriteriaQuery,
+  calculatePendingAmountWithFine,
+  convertDate,
+} from '../../common/utils';
 import { CommonService } from '../common/common.service';
 import {
   generateHTMLFromTemplate,
@@ -115,7 +119,9 @@ export class RentalService {
     if (!rental) {
       throw new NotFoundException(`Rental with id ${id} not found`);
     }
-    return rental;
+    let result: any = calculatePendingAmountWithFine(rental);
+    await this.update(id, result);
+    return { ...rental, ...result };
   }
 
   async createInvoice(id: string, filterType?: string): Promise<any> {
@@ -268,7 +274,6 @@ export class RentalService {
       ? (updateObject.invoiceStatus = InvoiceStatus.PartiallyPaid)
       : (updateObject.invoiceStatus = InvoiceStatus.Paid);
     delete updateObject?.rentalProduct;
-    console.dir({ updateObject }, { depth: null });
     return await this.rentalRepository.update(id, updateObject);
   }
 

@@ -54,6 +54,9 @@ export class Rental extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalAmount: number;
 
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  totalFine: number;
+
   @Column({
     type: 'enum',
     enum: RentalPeriod,

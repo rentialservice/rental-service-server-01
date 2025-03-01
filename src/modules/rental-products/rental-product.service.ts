@@ -98,6 +98,14 @@ export class RentalProductService {
     return result;
   }
 
+  async updateById(id: string, updateObject?: any): Promise<any> {
+    const result = await this.rentalProductRepository.update(id, updateObject);
+    if (result.affected === 0) {
+      throw new NotFoundException(`RentalProduct with id ${id} not found`);
+    }
+    return result;
+  }
+
   async filter(
     filterCriteria: any,
     fields: string[] = [],
