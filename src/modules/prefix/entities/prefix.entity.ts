@@ -18,6 +18,6 @@ export class Prefix extends BaseEntity {
   @ManyToOne(() => Firm, (firm) => firm.prefix)
   firm: Firm;
 
-  @Column({ type: 'enum', enum: ModuleNameList })
+  @Column({ default: '' })
   module: string;
 }

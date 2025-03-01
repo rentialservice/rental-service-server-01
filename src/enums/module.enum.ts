@@ -4,4 +4,5 @@ export enum ModuleNameList {
   Product = 'Product',
   Invoice = 'Invoice',
   Subscription = 'Subscription',
+  Receipt = 'Receipt',
 }

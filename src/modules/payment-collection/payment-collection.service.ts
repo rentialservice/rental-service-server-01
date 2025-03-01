@@ -5,6 +5,7 @@ import { PaymentCollection } from './entities/payment-collection.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
 import { RentalService } from '../rental/rental.service';
+import { PrefixService } from '../prefix/prefix.service';
 
 @Injectable()
 export class PaymentCollectionService {
@@ -13,6 +14,7 @@ export class PaymentCollectionService {
     private readonly paymentCollectionRepository: Repository<PaymentCollection>,
     private readonly commonService: CommonService,
     private readonly rentalService: RentalService,
+    private readonly prefixService: PrefixService,
   ) {}
 
   async create(
@@ -28,6 +30,17 @@ export class PaymentCollectionService {
     if (!queryData?.firm) {
       throw new Error('Firm is required');
     }
+
+    let [prefix] = await this.prefixService.filter({
+      firm: queryData?.firm,
+      name: createObject?.receiptPrefix,
+    });
+
+    if (!prefix) throw new NotFoundException('Prefix not found');
+    await this.prefixService.update(prefix?.id, {
+      nextNumber: parseInt(createObject.receiptId) + 1,
+    });
+
     let [firm] = await this.commonService.firmFilter({
       id: queryData.firm,
     });

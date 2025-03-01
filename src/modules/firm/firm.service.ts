@@ -46,6 +46,10 @@ export class FirmService {
         { module: ModuleNameList.Invoice, name: 'INV' },
         { firm: response.id },
       ),
+      this.prefixService.create(
+        { module: ModuleNameList.Receipt, name: 'RECEIPT' },
+        { firm: response.id },
+      ),
     ]);
     return response;
   }
