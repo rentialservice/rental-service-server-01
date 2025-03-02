@@ -1,23 +1,34 @@
 import { DataSourceOptions } from 'typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { entities } from '../list/entities/entities';
+
 ConfigModule.forRoot();
-const { NODE_ENV, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, DB_TYPE } =
-  process.env;
+
+const {
+  NODE_ENV = 'development',
+  DB_HOST,
+  DB_PORT = '5432',
+  DB_USER,
+  DB_PASSWORD,
+  DB_NAME,
+  DB_TYPE = 'local',
+} = process.env;
+
+if (!DB_HOST || !DB_USER || !DB_PASSWORD || !DB_NAME) {
+  throw new Error('Missing required database environment variables');
+}
+
 const host = DB_HOST;
 const port = Number(DB_PORT);
 const username = DB_USER;
 const password = DB_PASSWORD;
 const database = DB_NAME;
 const type = DB_TYPE;
+
 const url =
   NODE_ENV === 'production'
     ? `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`
     : undefined;
-
-// console.log({
-//   NODE_ENV, host, port, username, password, database, url, type,
-// })
 
 export const databaseConfig: DataSourceOptions =
   type === 'local'
@@ -30,10 +41,8 @@ export const databaseConfig: DataSourceOptions =
         database,
         url,
         entities,
-        // ssl: {
-        //   rejectUnauthorized: false,
-        // },
-        synchronize: true,
+        synchronize: NODE_ENV !== 'production',
+        logging: NODE_ENV !== 'production',
       }
     : {
         type: 'postgres',
@@ -45,7 +54,8 @@ export const databaseConfig: DataSourceOptions =
         url,
         entities,
         ssl: {
-          rejectUnauthorized: false,
+          rejectUnauthorized: false, // Replace with a valid CA certificate in production
         },
-        synchronize: true,
+        synchronize: NODE_ENV !== 'production',
+        logging: NODE_ENV !== 'production',
       };

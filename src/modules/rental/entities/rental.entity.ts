@@ -3,8 +3,7 @@ import { BaseEntity } from '../../../base/base.entity';
 import { Buyer } from '../../users/buyer/entities/buyer.entity';
 import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
 import { Firm } from '../../firm/entities/firm.entity';
-import { RentalPeriod } from '../../../enums/period.enum';
-import { InvoiceStatus, Status } from '../../../enums/status.enum';
+import { InvoiceStatus } from '../../../enums/status.enum';
 import { RentalProduct } from '../../rental-products/entities/rental-product.entity';
 
 @Entity('rental')
@@ -56,13 +55,6 @@ export class Rental extends BaseEntity {
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   totalFine: number;
-
-  @Column({
-    type: 'enum',
-    enum: RentalPeriod,
-    default: RentalPeriod.RentPerHour,
-  })
-  rentalPeriod: string;
 
   @ManyToOne(() => PaymentMode, (paymentMode) => paymentMode.rental)
   paymentMode: PaymentMode;

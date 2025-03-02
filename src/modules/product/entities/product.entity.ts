@@ -4,8 +4,8 @@ import { CustomFieldsData } from '../../custom-fields/entities/custom-fields-dat
 import { Status } from '../../../enums/status.enum';
 import { Category } from '../../category/entities/category.entity';
 import { Firm } from '../../firm/entities/firm.entity';
-import { FinePeriod, RentalPeriod } from '../../../enums/period.enum';
 import { RentalProduct } from '../../rental-products/entities/rental-product.entity';
+import { Period } from '../../../enums/period.enum';
 
 @Entity('product')
 @Unique(['code', 'firm'])
@@ -33,15 +33,15 @@ export class Product extends BaseEntity {
 
   @Column({
     type: 'enum',
-    enum: RentalPeriod,
-    default: RentalPeriod.RentPerHour,
+    enum: Period,
+    default: Period.PerDay,
   })
   rentalPeriod: string;
 
   @Column({
     type: 'enum',
-    enum: FinePeriod,
-    default: FinePeriod.FinePerDay,
+    enum: Period,
+    default: Period.PerDay,
   })
   finePeriod: string;
 

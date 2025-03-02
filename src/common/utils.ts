@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
 import { ILike, In } from 'typeorm';
 import { FilterConstants } from '../constants/filter.constants';
-import { FinePeriod } from '../enums/period.enum';
+import { Period } from '../enums/period.enum';
 
 export function buildFilterCriteriaQuery(filterCriteria: any) {
   // Create a deep copy of the filterCriteria object
@@ -45,33 +45,28 @@ export function calculatePendingAmountWithFine(rental: any) {
     const endDate = new Date(product.endDate);
     if (now <= endDate) continue;
 
-    const fineAmount = parseFloat(product.product.fine);
+    const fineAmount = parseFloat(product.fine);
     const timeDiffMs = now.getTime() - endDate.getTime();
 
     let periods = 0;
-    switch (product.product.finePeriod) {
-      case FinePeriod.FinePerHour:
+    switch (product?.finePeriod) {
+      case Period.PerHour:
         periods = Math.ceil(timeDiffMs / (1000 * 60 * 60));
         break;
-      case FinePeriod.FinePerDay:
+      case Period.PerDay:
         periods = Math.ceil(timeDiffMs / (1000 * 60 * 60 * 24));
         break;
-      case FinePeriod.FinePerWeek:
+      case Period.PerWeek:
         periods = Math.ceil(timeDiffMs / (1000 * 60 * 60 * 24 * 7));
         break;
-      case FinePeriod.FinePerMonth:
+      case Period.PerMonth:
         periods = Math.ceil(timeDiffMs / (1000 * 60 * 60 * 24 * 30));
         break;
-      case FinePeriod.FinePerYear:
+      case Period.PerYear:
         periods = Math.ceil(timeDiffMs / (1000 * 60 * 60 * 24 * 365));
         break;
     }
     totalFines += periods * fineAmount;
   }
-
-  const basePending =
-    parseFloat(rental.totalAmount) - parseFloat(rental.paidAmount);
-  const pendingAmount = (basePending + totalFines).toFixed(2);
-
-  return { totalFine: totalFines.toFixed(2), pendingAmount };
+  return { totalFine: totalFines.toFixed(2) };
 }

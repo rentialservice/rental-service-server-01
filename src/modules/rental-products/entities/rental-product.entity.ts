@@ -3,6 +3,7 @@ import { Entity, Column, ManyToOne } from 'typeorm';
 import { Product } from '../../product/entities/product.entity';
 import { Status } from '../../../enums/status.enum';
 import { Rental } from '../../rental/entities/rental.entity';
+import { Period } from '../../../enums/period.enum';
 
 @Entity('rental_product')
 export class RentalProduct extends BaseEntity {
@@ -33,4 +34,21 @@ export class RentalProduct extends BaseEntity {
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   quantity: number;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  fine: number;
+
+  @Column({
+    type: 'enum',
+    enum: Period,
+    default: Period.PerDay,
+  })
+  finePeriod: string;
+
+  @Column({
+    type: 'enum',
+    enum: Period,
+    default: Period.PerHour,
+  })
+  rentalPeriod: string;
 }
