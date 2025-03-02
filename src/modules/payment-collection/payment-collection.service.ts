@@ -80,10 +80,6 @@ export class PaymentCollectionService {
             parseFloat(rentalResponse?.pendingAmount) - (rental?.amount || 0),
           paidAmount:
             parseFloat(rentalResponse?.paidAmount) + (rental?.amount || 0),
-          invoiceStatus:
-            parseFloat(rentalResponse?.pendingAmount) === rental?.amount
-              ? 'Paid'
-              : rentalResponse?.invoiceStatus,
         };
 
         await this.rentalService.update(rental?.id, updateObj);

@@ -274,6 +274,7 @@ export class RentalService {
       ? (updateObject.invoiceStatus = InvoiceStatus.PartiallyPaid)
       : (updateObject.invoiceStatus = InvoiceStatus.Paid);
     delete updateObject?.rentalProduct;
+    console.log({ updateObject });
     return await this.rentalRepository.update(id, updateObject);
   }
 

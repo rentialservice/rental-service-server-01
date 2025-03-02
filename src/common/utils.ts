@@ -68,5 +68,8 @@ export function calculatePendingAmountWithFine(rental: any) {
     }
     totalFines += periods * fineAmount;
   }
-  return { totalFine: totalFines.toFixed(2) };
+  return {
+    totalFine: totalFines.toFixed(2),
+    pendingAmount: rental?.pendingAmount,
+  };
 }
