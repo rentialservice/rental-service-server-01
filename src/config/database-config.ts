@@ -41,8 +41,8 @@ export const databaseConfig: DataSourceOptions =
         database,
         url,
         entities,
-        synchronize: NODE_ENV !== 'production',
-        logging: NODE_ENV !== 'production',
+        synchronize: true,
+        logging: true,
       }
     : {
         type: 'postgres',
@@ -56,6 +56,6 @@ export const databaseConfig: DataSourceOptions =
         ssl: {
           rejectUnauthorized: false, // Replace with a valid CA certificate in production
         },
-        synchronize: NODE_ENV !== 'production',
-        logging: NODE_ENV !== 'production',
+        synchronize: true,
+        logging: true,
       };
