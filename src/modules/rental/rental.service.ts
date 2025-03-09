@@ -127,15 +127,34 @@ export class RentalService {
   async createInvoice(id: string, filterType?: string): Promise<any> {
     const rental = await this.rentalRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['buyer', 'rentalProduct', 'rentalProduct.product'],
+      relations: [
+        'buyer',
+        'rentalProduct',
+        'rentalProduct.product',
+        'firm',
+        'paymentMode',
+      ],
     });
+    let transactions =
+      await this.commonService.getPaymentCollectionsByRentalId(id);
     if (!rental) {
       throw new NotFoundException(`Rental with id ${id} not found`);
     }
     const data = {
-      recipient: {
-        name: rental?.buyer?.fullName,
-        mobile: rental?.buyer?.phone,
+      company: {
+        name: rental.firm.name,
+        address:
+          rental?.firm?.address +
+          ', ' +
+          rental?.firm?.city +
+          ', ' +
+          rental?.firm?.state,
+        phone: rental.firm.phone,
+        email: rental.firm.email,
+      },
+      customer: {
+        name: rental.buyer.fullName,
+        mobile: rental.buyer.phone,
         address:
           rental?.buyer?.address +
           ', ' +
@@ -144,48 +163,77 @@ export class RentalService {
           rental?.buyer?.state +
           ', ' +
           rental?.buyer?.pincode,
+        delivery: 'Delivery Details Here',
       },
-      invoice: {
-        number: rental.invoicePrefix + ' ' + rental.invoiceId,
-        date: convertDate(rental.invoiceDate.toString()),
-        items:
-          rental?.rentalProduct?.map((rentalProduct: any, index: number) => {
-            return {
-              sr: index,
-              product: rentalProduct?.product?.name || 'Product',
-              description: rentalProduct?.product?.description || 'Description',
-              deliveryDate: convertDate(rentalProduct?.startDate),
-              returnDate: convertDate(rentalProduct?.endDate),
-              qty: rentalProduct?.quantity || 1,
-              rate: rentalProduct?.salesPrice || 0,
-              total: rentalProduct?.salesPrice * rentalProduct?.quantity || 0,
-            };
-          }) || [],
-        total: rental?.totalAmount || 0,
-        discount: rental?.discount || 0,
-        deposit: rental?.deposit || 0,
-        advance: rental?.advanceAmount || 0,
-        received: rental?.paidAmount || 0,
-        outstanding: rental?.pendingAmount || 0,
-        preparedBy: 'Rental Master',
-      },
+      invoiceNumber: rental.invoicePrefix + ' ' + rental.invoiceId,
+      invoiceDate: convertDate(rental.invoiceDate.toString()),
+      paymentMethod: rental.paymentMode.name,
+      received: rental.isDepositRefunded
+        ? rental.paidAmount
+        : parseFloat(rental.paidAmount.toString()) +
+          parseFloat(rental.deposit.toString()),
+      items:
+        rental?.rentalProduct?.map((rentalProduct: any, index: number) => {
+          return {
+            index: index + 1,
+            product: rentalProduct?.product?.name || 'Product',
+            photo: '',
+            description: rentalProduct?.product?.description || 'Description',
+            deliveryDate: convertDate(rentalProduct?.startDate),
+            returnDate: convertDate(rentalProduct?.endDate),
+            quantity: rentalProduct?.quantity || 1,
+            rate: rentalProduct?.salesPrice || 0,
+            total: rentalProduct?.salesPrice * rentalProduct?.quantity || 0,
+          };
+        }) || [],
+      total: rental?.totalAmount || 0,
+      discount: rental?.discount || 0,
+      deposit: rental?.deposit || 0,
+      advance: rental?.advanceAmount || 0,
+      outstanding: rental?.pendingAmount || 0,
+      transactions: transactions.map((transaction: any) => ({
+        type: 'Receipt',
+        number: transaction.receiptPrefix + ' ' + transaction.receiptId,
+        date: convertDate(transaction.receiptDate),
+        mode: transaction.paymentMode.name,
+        amount: transaction.rental[0].amount,
+      })),
+      preparedBy: rental.firm.name,
     };
-
     return await generatePdfFromTemplate(data, 'invoice');
   }
 
   async createInvoicePreview(id: string, filterType?: string): Promise<any> {
     const rental = await this.rentalRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['buyer', 'rentalProduct', 'rentalProduct.product'],
+      relations: [
+        'buyer',
+        'rentalProduct',
+        'rentalProduct.product',
+        'firm',
+        'paymentMode',
+      ],
     });
+    let transactions =
+      await this.commonService.getPaymentCollectionsByRentalId(id);
     if (!rental) {
       throw new NotFoundException(`Rental with id ${id} not found`);
     }
     const data = {
-      recipient: {
-        name: rental?.buyer?.fullName,
-        mobile: rental?.buyer?.phone,
+      company: {
+        name: rental.firm.name,
+        address:
+          rental?.firm?.address +
+          ', ' +
+          rental?.firm?.city +
+          ', ' +
+          rental?.firm?.state,
+        phone: rental.firm.phone,
+        email: rental.firm.email,
+      },
+      customer: {
+        name: rental.buyer.fullName,
+        mobile: rental.buyer.phone,
         address:
           rental?.buyer?.address +
           ', ' +
@@ -194,31 +242,42 @@ export class RentalService {
           rental?.buyer?.state +
           ', ' +
           rental?.buyer?.pincode,
+        delivery: 'Delivery Details Here',
       },
-      invoice: {
-        number: rental.invoicePrefix + ' ' + rental.invoiceId,
-        date: convertDate(rental.invoiceDate.toString()),
-        items:
-          rental?.rentalProduct?.map((rentalProduct: any, index: number) => {
-            return {
-              sr: index,
-              product: rentalProduct?.product?.name || 'Product',
-              description: rentalProduct?.product?.description || 'Description',
-              deliveryDate: convertDate(rentalProduct?.startDate),
-              returnDate: convertDate(rentalProduct?.endDate),
-              qty: rentalProduct?.quantity || 1,
-              rate: rentalProduct?.salesPrice || 0,
-              total: rentalProduct?.salesPrice * rentalProduct?.quantity || 0,
-            };
-          }) || [],
-        total: rental?.totalAmount || 0,
-        discount: rental?.discount || 0,
-        deposit: rental?.deposit || 0,
-        advance: rental?.advanceAmount || 0,
-        received: rental?.paidAmount || 0,
-        outstanding: rental?.pendingAmount || 0,
-        preparedBy: 'Rental Master',
-      },
+      invoiceNumber: rental.invoicePrefix + ' ' + rental.invoiceId,
+      invoiceDate: convertDate(rental.invoiceDate.toString()),
+      paymentMethod: rental.paymentMode.name,
+      received: rental.isDepositRefunded
+        ? rental.paidAmount
+        : parseFloat(rental.paidAmount.toString()) +
+          parseFloat(rental.deposit.toString()),
+      items:
+        rental?.rentalProduct?.map((rentalProduct: any, index: number) => {
+          return {
+            index: index + 1,
+            product: rentalProduct?.product?.name || 'Product',
+            photo: '',
+            description: rentalProduct?.product?.description || 'Description',
+            deliveryDate: convertDate(rentalProduct?.startDate),
+            returnDate: convertDate(rentalProduct?.endDate),
+            quantity: rentalProduct?.quantity || 1,
+            rate: rentalProduct?.salesPrice || 0,
+            total: rentalProduct?.salesPrice * rentalProduct?.quantity || 0,
+          };
+        }) || [],
+      total: rental?.totalAmount || 0,
+      discount: rental?.discount || 0,
+      deposit: rental?.deposit || 0,
+      advance: rental?.advanceAmount || 0,
+      outstanding: rental?.pendingAmount || 0,
+      transactions: transactions.map((transaction: any) => ({
+        type: 'Receipt',
+        number: transaction.receiptPrefix + ' ' + transaction.receiptId,
+        date: convertDate(transaction.receiptDate),
+        mode: transaction.paymentMode.name,
+        amount: transaction.rental[0].amount,
+      })),
+      preparedBy: rental.firm.name,
     };
     return await generateHTMLFromTemplate(data, 'invoice');
   }

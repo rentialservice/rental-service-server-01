@@ -1,0 +1,344 @@
+<!DOCTYPE html
+    PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>rpReceipt1</title>
+    <style type="text/css">
+        * {
+            margin: 0;
+            padding: 0;
+            text-indent: 0;
+        }
+
+        h1 {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 22pt;
+        }
+
+        .s1 {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 10pt;
+        }
+
+        .a {
+            color: black;
+            font-family: Verdana, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 10pt;
+        }
+
+        .s2 {
+            color: black;
+            font-family: Arial, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 10pt;
+        }
+
+        .s3 {
+            color: black;
+            font-family: Arial, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 10pt;
+        }
+
+        .s4 {
+            color: #FFF;
+            font-family: Arial, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 12pt;
+        }
+
+        .s5 {
+            color: #FFF;
+            font-family: Arial, sans-serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 10pt;
+        }
+
+        .s6 {
+            color: black;
+            font-family: Arial, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 8pt;
+        }
+
+        p {
+            color: black;
+            font-family: "Times New Roman", serif;
+            font-style: normal;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 8pt;
+            margin: 0pt;
+        }
+
+        .s7 {
+            color: black;
+            font-family: "Times New Roman", serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 12pt;
+            vertical-align: -3pt;
+        }
+
+        .s8 {
+            color: black;
+            font-family: "Times New Roman", serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 12pt;
+        }
+
+        .s9 {
+            color: black;
+            font-family: Arial, sans-serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 8pt;
+        }
+
+        .s10 {
+            color: black;
+            font-family: "Times New Roman", serif;
+            font-style: normal;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 8pt;
+        }
+
+        table,
+        tbody {
+            vertical-align: top;
+            overflow: visible;
+        }
+
+        .line {
+            border-bottom: 1px solid #000;
+            /* height: 30px; */
+        }
+
+        /* Footer / Notes */
+        .notes {
+            font-size: 12px;
+            margin-top: 20px;
+        }
+
+        .footer {
+            font-size: 12px;
+            /* margin-top: 20px; */
+            /* text-align: right; */
+        }
+    </style>
+</head>
+
+<body>
+    <p style="padding-left: 5pt;text-indent: 0pt;text-align: left;">
+        <span>
+            <table border="0" cellspacing="0" cellpadding="0" style="margin: 0 auto;">
+                <tr>
+                    <td>
+                        <img width="202" height="28"
+                            src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMoAAAAcCAMAAAAX3NCoAAAAnFBMVEX///8AdUniIxrf7ukghmC/3NHxkIzpWlNAmHf74+Pv9vOfy7rmPjf4yMV/uaNAl3f+8fHkMShvsZgQflTtdXAQfVSPwq/0rKkwj2uv1MbznppgqY7mPjZQoYLvg3785ONgqY34yMaAu6VfqIzP5dzP5d361tTnTEXraGL2urfraGHoTEWQw7DP5N32ubdAl3aQw6/qZ2Dv9/TnTEQuQeLiAAAAAWJLR0QAiAUdSAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAA8NJREFUWIXNmOly4jAMgG0SCoSFTTjKUVKGckyZMu0U3v/dNrZlWbJN2RBmZ/WjyLLs6LNlxalogQj15yCairTSeCYlo/mpjrshWXbMb1OY3SNJ1ETzGv5kU5RMHvB4KdOGs7i5xnUGKIDja1EAS6/2E3utVoGN5HGbIhosSm42qK6oQfl9T7whqezeO3RzN8rm3kc+VGj4d2XY/4WSE/0I+rc5Oyvqqc7Eu7HPjO24WqlWsVpBwSBnJdVK21SC38a2l7JPHi7l0KpDKH5ftNcdlcSWeRwgMrDsKcqa6KYeH1ooS+j8VemvWOpa38Jxtdwpcyiawb1pJHbTWG0rcX7IqvQF0b13VmhRQQyMusaAnmiI387RjzwwEJRScnm23W6p0ffEPFPX2w1JoJuZXIQTEiwyOZlFUVS2bXyU83UUyUkrGdvG3vMceSi8dxqa9CwDHdXx+Dkx8RwYEy3Qpr8nPAftMchzc976PoqLymXYC9mUDLvNIRlyV40y17azxVfKm7KYTPyyg181Cq7sBNPLLp3SPzB8OFVL4qFUrGClh1Ias96sxNuWrVW1p71uJWzhu8FWulWw52gE3ebyBeUKSpnSbCETM3YuKGAMxSxgggHSR+vao8tOG23tMNSUJqNCabs9sXJmI2CHzIYIm/wY3MHK5ipKHkExmXuKomydh1J2LJMSvuIZQUlZ3Fq6lSXdWYEp4cR2/Di5rOuhdKMoJtlwjdWvrmqZF6rdQTsTZhx38QRRWKCNUcY/oNhtcTmyj6CUHkpZA0W/E5fXUND6dyjuMEdQ4JS6lEsiKC8eivfdEpLsHAqNlMbs5FEo8B1CeiMoCw8lUsCCrzK+6gXalr7j41B0lVNnOY102gsPQSlDlFFooi8+dcfy35B3oKTJLRRMD9YWQcuixD4nI+cHUGYs1tyL+nATBS5xKu2H6gr5M8rUQznTltb7AQqO7pZoGoFpqAucidq85D+VdnF8RVW3egUC/ITSOnzq3KySQ0yfb6EITmLZ0kxkc9KFKHBtXpxF9gK9hl72K9MQ5obL/MULNlLArqIUxEvlsHpwUg8ldjmk18l52P3GTVu+K1dZXILhh5iPBe0UUPbCO5pKt7dIWFN2FYmQkHLNWcySnIIh+j7/DoP1yX/SKvligc41rQUr0ugRt1Kj4B0LvxgX4S4IJguMConbxIl8BuxCfP2YtYrwAyfsKAE9n1SpcxkIJ+z/KryBrX6FkoHO1t27D/KmlnIsp1/Xx1TdMu2zEe35VI63rr2+hLM2kCSJRPkP5A+AJC/canR+lgAAAABJRU5ErkJgggAA">
+                    </td>
+                </tr>
+            </table>
+        </span>
+    </p>
+    <table style="margin: 40px auto;">
+        <tr>
+            <td style="width:400pt" colspan="5">
+                <h2 style="padding-top: 1pt; text-align: left">{{companyName}}</h2>
+                <p class="s1" style="text-align: left; margin-top: 5px;">
+                    <a href="mailto:ankush60000@gmail.com" class="a" target="_blank">
+                        {{companyAddress}}
+                        <br>
+                        {{companyPhone}}
+                        <br>
+                    </a>
+                    {{companyEmail}}
+                    <br>
+                    {{termsAndConditions}}
+                </p>
+            </td>
+            <td colspan="7" style="width: 170pt"></td>
+        </tr>
+    </table>
+    <table style="border-collapse:collapse;margin: 0 auto" cellspacing="0">
+        <tr style="height:17pt">
+            <td style="width:349pt;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                colspan="4" rowspan="3">
+                <p class="s2" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">Received
+                    From,</p>
+                <p class="s3" style="padding-top: 5pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">PIYUSH THE
+                    TEST</p>
+            </td>
+            <td style="width:203pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                colspan="3" bgcolor="#000000">
+                <p class="s4" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">RECEIPT</p>
+            </td>
+        </tr>
+        <tr style="height:17pt">
+            <td style="width:203pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                colspan="3">
+                <p class="s2" style="padding-top: 3pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">ReceiptNo: 5
+                </p>
+            </td>
+        </tr>
+        <tr style="height:17pt">
+            <td style="width:203pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                colspan="3">
+                <p class="s2" style="padding-top: 2pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">Date:
+                    18/01/2025</p>
+            </td>
+        </tr>
+        <tr style="height:15pt">
+            <td style="width:21pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                bgcolor="#000000">
+                <p class="s5" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">SR</p>
+            </td>
+            <td style="width:91pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                bgcolor="#000000">
+                <p class="s5" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">VOUCHER</p>
+            </td>
+            <td style="width:72pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                bgcolor="#000000">
+                <p class="s5" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">ORDERNO.</p>
+            </td>
+            <td style="width:165pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                bgcolor="#000000">
+                <p class="s5" style="padding-top: 1pt;padding-left: 48pt;text-indent: 0pt;text-align: left;">DESCRIPTION
+                </p>
+            </td>
+            <td style="width:60pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                bgcolor="#000000">
+                <p class="s5" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">TOTAL</p>
+            </td>
+            <td style="width:78pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                bgcolor="#000000">
+                <p class="s5" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">PENDING
+                </p>
+            </td>
+            <td style="width:65pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                bgcolor="#000000">
+                <p class="s5" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">RECEIVED
+                </p>
+            </td>
+        </tr>
+        <tr style="height:15pt">
+            <td
+                style="width:21pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0">
+                <p class="s6" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">1</p>
+            </td>
+            <td
+                style="width:91pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0">
+                <p class="s6" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">Rent Invoice</p>
+            </td>
+            <td
+                style="width:72pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0">
+                <p class="s6" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">RNT#121</p>
+            </td>
+            <td
+                style="width:165pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br>
+                </p>
+            </td>
+            <td
+                style="width:60pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0">
+                <p class="s6" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">900</p>
+            </td>
+            <td
+                style="width:78pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0">
+                <p class="s6" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">900</p>
+            </td>
+            <td
+                style="width:65pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0">
+                <p class="s6" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">900</p>
+            </td>
+        </tr>
+        <tr style="height:15pt">
+            <td style="width:349pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                colspan="4" rowspan="2">
+                <p style="text-indent: 0pt;text-align: left;">
+                    <br>
+                </p>
+            </td>
+            <td style="width:138pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                colspan="2">
+                <p class="s3" style="padding-top: 1pt;padding-left: 87pt;text-indent: 0pt;text-align: left;">Sub Total
+                </p>
+            </td>
+            <td
+                style="width:65pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0">
+                <p class="s2" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">900.00</p>
+            </td>
+        </tr>
+        <tr style="height:15pt">
+            <td style="width:138pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                colspan="2" bgcolor="#000000">
+                <p style="text-indent: 0pt;text-align: left;" />
+                <p class="s5" style="padding-top: 1pt;padding-left: 18pt;text-indent: 0pt;text-align: left;">Total
+                    Amount (Received)</p>
+            </td>
+            <td style="width:65pt;border-top-style:solid;border-top-width:1pt;border-top-color:#C0C0C0;border-left-style:solid;border-left-width:1pt;border-left-color:#C0C0C0;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#C0C0C0;border-right-style:solid;border-right-width:1pt;border-right-color:#C0C0C0"
+                bgcolor="#000000">
+                <p class="s5" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">900.00</p>
+            </td>
+        </tr>
+        <tr style="height:35pt">
+            <td style="width:365pt" colspan="4">
+                <p style="text-indent: 0pt;text-align: left;">
+                    Received the above Amount under the terms &amp; conditions mentioned below.
+                </p>
+            </td>
+            <td style="text-align: end;margin: 10px 0" colspan="4">
+                <span class="s8">E. &amp; O. E</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="3">Receiver's Signature</td>
+            <td colspan="4" style="text-align: end">Authorized Signatory</td>
+        </tr>
+        <tr>
+            <td class="line" colspan="4" style="padding: 5px 0;"></td>
+            <td class="line" style="padding: 5px 0;" colspan="4"></td>
+        </tr>
+        <tr>
+            <td colspan="3" class="footer">
+                Received By :
+            </td>
+            <td colspan="4" class="footer" style="text-align: end;">
+                This is a Computer generated document and does not require any signature
+            </td>
+        </tr>
+    </table>
+
+</body>
+
+</html>

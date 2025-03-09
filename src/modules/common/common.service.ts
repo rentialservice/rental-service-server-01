@@ -14,6 +14,7 @@ import { PaymentMode } from '../payment-mode/entities/payment-mode.entity';
 import { TermsAndConditions } from '../terms-and-conditions/entities/terms-and-conditions.entity';
 import { Rental } from '../rental/entities/rental.entity';
 import { RentalProduct } from '../rental-products/entities/rental-product.entity';
+import { PaymentCollection } from '../payment-collection/entities/payment-collection.entity';
 
 @Injectable()
 export class CommonService {
@@ -40,6 +41,8 @@ export class CommonService {
     private readonly rentalRepository: Repository<Rental>,
     @InjectRepository(RentalProduct)
     private readonly rentalProductRepository: Repository<RentalProduct>,
+    @InjectRepository(PaymentCollection)
+    private readonly paymentCollectionRepository: Repository<PaymentCollection>,
   ) {}
 
   async prefixFilter(
@@ -172,5 +175,17 @@ export class CommonService {
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
       relations: [...fields],
     });
+  }
+
+  async getPaymentCollectionsByRentalId(
+    rentalId: string,
+  ): Promise<PaymentCollection[]> {
+    return await this.paymentCollectionRepository
+      .createQueryBuilder('paymentCollection')
+      .leftJoinAndSelect('paymentCollection.paymentMode', 'paymentMode')
+      .where('paymentCollection.rental @> :rentalId', {
+        rentalId: JSON.stringify([{ id: rentalId }]),
+      })
+      .getMany();
   }
 }

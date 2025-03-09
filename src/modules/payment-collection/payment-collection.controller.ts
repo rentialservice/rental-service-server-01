@@ -46,6 +46,21 @@ export class PaymentCollectionController {
     }
   }
 
+  @Get('/get-by-rental/:rental')
+  async getPaymentCollectionsByRentalId(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Param('rental') id: string,
+  ): Promise<void> {
+    try {
+      let result =
+        await this.paymentCollectionService.getPaymentCollectionsByRentalId(id);
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
   @Get('/filter')
   async getFilter(
     @Req() request: Request,

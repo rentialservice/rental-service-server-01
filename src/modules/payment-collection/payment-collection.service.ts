@@ -195,4 +195,16 @@ export class PaymentCollectionService {
 
     return { dailyTotal, monthlyTotal, dueTotal };
   }
+
+  async getPaymentCollectionsByRentalId(
+    rentalId: string,
+  ): Promise<PaymentCollection[]> {
+    return await this.paymentCollectionRepository
+      .createQueryBuilder('paymentCollection')
+      .leftJoinAndSelect('paymentCollection.paymentMode', 'paymentMode')
+      .where('paymentCollection.rental @> :rentalId', {
+        rentalId: JSON.stringify([{ id: rentalId }]),
+      })
+      .getMany();
+  }
 }

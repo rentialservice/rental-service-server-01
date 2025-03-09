@@ -29,8 +29,8 @@ export function buildFilterCriteriaQuery(filterCriteria: any) {
   return criteria;
 }
 
-export const convertDate = (isoDate: string): string => {
-  return dayjs(isoDate).format('YYYY-MM-DD');
+export const convertDate = (isoDate: string | Date): string => {
+  return dayjs(isoDate).format('DD-MM-YYYY');
 };
 
 export const convertToISO = (simpleDate: string): string => {

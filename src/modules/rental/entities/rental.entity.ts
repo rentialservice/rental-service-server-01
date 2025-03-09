@@ -62,6 +62,15 @@ export class Rental extends BaseEntity {
   @ManyToOne(() => Firm, (firm) => firm.rental)
   firm: Firm;
 
+  @Column('boolean', { default: false })
+  isDepositRefunded: boolean;
+
+  @Column('boolean', { default: false })
+  isDepositDeducted: boolean;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
+  deductedAmount: number;
+
   // @OneToMany(
   //   () => PaymentCollection,
   //   (paymentCollection) => paymentCollection.rental,
