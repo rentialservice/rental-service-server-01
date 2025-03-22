@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { MoreThanOrEqual, Repository } from 'typeorm';
 import { PaymentCollection } from './entities/payment-collection.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
+import { buildFilterCriteriaQuery, convertDate } from '../../common/utils';
 import { CommonService } from '../common/common.service';
 import { RentalService } from '../rental/rental.service';
 import { PrefixService } from '../prefix/prefix.service';
@@ -316,66 +316,63 @@ export class PaymentCollectionService {
     if (!receipt) {
       throw new NotFoundException(`Receipt with id ${id} not found`);
     }
-    // const data = {
-    //   company: {
-    //     name: rental.firm.name,
-    //     address:
-    //       rental?.firm?.address +
-    //       ', ' +
-    //       rental?.firm?.city +
-    //       ', ' +
-    //       rental?.firm?.state,
-    //     phone: rental.firm.phone,
-    //     email: rental.firm.email,
-    //   },
-    //   customer: {
-    //     name: rental.buyer.fullName,
-    //     mobile: rental.buyer.phone,
-    //     address:
-    //       rental?.buyer?.address +
-    //       ', ' +
-    //       rental?.buyer?.city +
-    //       ', ' +
-    //       rental?.buyer?.state +
-    //       ', ' +
-    //       rental?.buyer?.pincode,
-    //     delivery: 'Delivery Details Here',
-    //   },
-    //   invoiceNumber: rental.invoicePrefix + ' ' + rental.invoiceId,
-    //   invoiceDate: convertDate(rental.invoiceDate.toString()),
-    //   paymentMethod: rental.paymentMode.name,
-    //   received: rental.isDepositRefunded
-    //     ? rental.paidAmount
-    //     : parseFloat(rental.paidAmount.toString()) +
-    //       parseFloat(rental.deposit.toString()),
-    //   items:
-    //     rental?.rentalProduct?.map((rentalProduct: any, index: number) => {
-    //       return {
-    //         index: index + 1,
-    //         product: rentalProduct?.product?.name || 'Product',
-    //         photo: '',
-    //         description: rentalProduct?.product?.description || 'Description',
-    //         deliveryDate: convertDate(rentalProduct?.startDate),
-    //         returnDate: convertDate(rentalProduct?.endDate),
-    //         quantity: rentalProduct?.quantity || 1,
-    //         rate: rentalProduct?.salesPrice || 0,
-    //         total: rentalProduct?.salesPrice * rentalProduct?.quantity || 0,
-    //       };
-    //     }) || [],
-    //   total: rental?.totalAmount || 0,
-    //   discount: rental?.discount || 0,
-    //   deposit: rental?.deposit || 0,
-    //   advance: rental?.advanceAmount || 0,
-    //   outstanding: rental?.pendingAmount || 0,
-    //   transactions: transactions.map((transaction: any) => ({
-    //     type: 'Receipt',
-    //     number: transaction.receiptPrefix + ' ' + transaction.receiptId,
-    //     date: convertDate(transaction.receiptDate),
-    //     mode: transaction.paymentMode.name,
-    //     amount: transaction.rental[0].amount,
-    //   })),
-    //   preparedBy: rental.firm.name,
-    // };
-    return await generateHTMLFromTemplate('data', 'receipt');
+    let total = 0;
+    receipt?.rental?.map((rent: any) => {
+      total = total + parseFloat(rent?.amount);
+    });
+    receipt.rental = await Promise.all(
+      receipt?.rental?.map(async (rent: any) => {
+        return {
+          ...rent,
+          rental_data: await this.rentalService.getById(rent?.id),
+        };
+      }),
+    );
+    const data = {
+      company: {
+        name: receipt.firm?.name,
+        address:
+          receipt?.firm?.address +
+          ', ' +
+          receipt?.firm?.city +
+          ', ' +
+          receipt?.firm?.state,
+        phone: receipt.firm?.phone,
+        email: receipt.firm?.email,
+      },
+      customer: {
+        name: receipt.buyer?.fullName,
+        mobile: receipt.buyer?.phone,
+        address:
+          receipt?.buyer?.address +
+          ', ' +
+          receipt?.buyer?.city +
+          ', ' +
+          receipt?.buyer?.state +
+          ', ' +
+          receipt?.buyer?.pincode,
+      },
+      receiptNumber: receipt?.receiptPrefix + ' ' + receipt?.receiptId,
+      receiptDate: convertDate(receipt?.receiptDate),
+      paymentMode: receipt?.paymentMode?.name,
+      items:
+        receipt.rental?.map((rental: any, index: number) => {
+          return {
+            index: index + 1,
+            invoiceNumber:
+              rental?.rental_data?.invoicePrefix +
+              ' ' +
+              rental?.rental_data?.invoiceId,
+            pending: rental?.rental_data?.pendingAmount,
+            received: rental?.amount,
+            total: rental?.rental_data?.totalAmount,
+          };
+        }) || [],
+      total: total,
+      subTotal: total,
+      preparedBy: receipt.firm.name,
+    };
+    console.dir({ data }, { depth: null });
+    return await generateHTMLFromTemplate(data, 'receipt');
   }
 }
