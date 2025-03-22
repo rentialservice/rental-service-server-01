@@ -324,7 +324,7 @@ export class PaymentCollectionService {
       receipt?.rental?.map(async (rent: any) => {
         return {
           ...rent,
-          rental_data: await this.rentalService.getById(rent?.id),
+          rental_data: await this.rentalService.getByIdDirect(rent?.id),
         };
       }),
     );
@@ -372,7 +372,6 @@ export class PaymentCollectionService {
       subTotal: total,
       preparedBy: receipt.firm.name,
     };
-    console.dir({ data }, { depth: null });
     return await generateHTMLFromTemplate(data, 'receipt');
   }
 }

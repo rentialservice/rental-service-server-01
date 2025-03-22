@@ -124,6 +124,18 @@ export class RentalService {
     return { ...rental, ...result };
   }
 
+  async getByIdDirect(id: string, filterType?: string): Promise<any> {
+    const rental = await this.rentalRepository.findOne({
+      where: { id, deleteFlag: false },
+    });
+    if (!rental) {
+      throw new NotFoundException(`Rental with id ${id} not found`);
+    }
+    let result: any = calculatePendingAmountWithFine(rental);
+    await this.update(id, result);
+    return { ...rental, ...result };
+  }
+
   async createInvoice(id: string, filterType?: string): Promise<any> {
     const rental = await this.rentalRepository.findOne({
       where: { id, deleteFlag: false },
