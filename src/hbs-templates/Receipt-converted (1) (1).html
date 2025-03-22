@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="">
+        <style>
+            *{
+                font-family: "Roboto", sans-serif;
+            }
+            @page {
+  size: a4 ;
+}
+            .main-div {
+    /* text-align: center;  */
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+            .wrapper {
+    display: inline-block; /* Adjust width based on content */
+    padding: 10px 0;         /* Space between content and border */
+    border: 1px solid gray;
+    background-color: white;
+}
+.product-detail {
+            width: 100%;
+            border-collapse: collapse;
+            border-top: 1px solid grey;
+            border-bottom:none;
+            border-left: none;
+            border-right: none;
+        }
+        .product-detail th{
+            border: 1px solid white !important;
+            background-color: #000;
+             color: #fff;
+             font-weight: 600;
+        }
+
+        .product-detail th, .product-detail td{
+            border: 1px solid black; /* Borders for table cells */
+            padding: 5px ;
+            text-align: left;
+             font-size: 9px;
+           
+            /* border-left : none;
+            border-right: none */
+        }
+      
+        .product-detail th:first-child,
+        .product-detail td:first-child{
+            border-left: none;
+        }
+
+        /* Remove right border for last child of each row */
+        .product-detail th:last-child,
+        .product-detail td:last-child {
+            border-right: none;
+
+        }
+        
+        .line {
+      border-bottom: 1px solid #000;
+      /* height: 30px; */
+    }
+    
+    .footer {
+      font-size: 6px;
+
+    }
+        </style>
+    </head>
+    <body>
+        <div class="main-div">
+            <div style="margin : 0 auto; border: 1px solid grey" class="wrapper">
+                <table style="margin : 0 auto; width: 100%">
+                    <tr>
+                        <td style="text-align: left; width: 50%;padding-left: 6px">
+                            <div style="border-radius: 70px; padding: 12px 5px; background: grey;width: fit-content;display: inline-block; text-align: center; font-size: 10px">LOGO</div>
+                        </td>
+                        <td style="font-size: 18px; color: grey ; text-align: right;width: 50%; padding-right: 6px">Receipt</td>
+                    </tr>
+                    <tr>
+                        <td style="padding-left: 6px;">
+                            <div style="font-size: 14px; padding: 4px 0;font-weight: 600">Rental services</div>
+                            <div style="padding-bottom: 2px;font-size: 9px;font-weight: 300">123 street, paharganj,</div>
+                            <div style="padding-bottom: 2px;font-size: 9px;font-weight: 300">New Delhi, India, 492991</div>
+                            <div style="color: black; font-size: 9px;font-weight: 300">VAT : NDJF4HKJDNNKKK</div>
+                            <!-- <div style="padding-bottom: 2px;font-size: 9px;">7999800111</div>
+                            <div style="padding-bottom: 2px;font-size: 9px;">rentalsservices@gmail.com</div> -->
+                        </td>
+                        <td style="text-align: right; padding-right: 10px;">
+                            <div style="width: fit-content; display: inline-block; text-align: left;">
+                                <div style="font-size: 9px;">Payment Date : 20/03/2025</div>
+                                <hr style="margin: 3px 0">
+                                <div style="font-size: 9px;">Receipt No : #REC544</div>
+                                <div style="padding-top: 4px ; font-size: 9px;">Payment Mode : Bank</div>
+                                <!-- <hr> -->
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 15px 0 10px 6px; width: 50;">
+                            <div style="width: fit-content;">
+                                <div style="font-size: 10px; font-weight: 300">Received From,</div>
+                                <div style="padding-top: 4px;font-size: 10px;font-weight: 450">Ankush Soni</div>
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+                 
+                </table>
+                <table style="margin: 3px auto ;" class="product-detail">
+                    <tr>
+                        <th>Sr. no.</th>
+                        <th style="text-align: center;">Invoice No</th>
+                        <th style="text-align: right;">Total</th>
+                        <th style="text-align: right;">Pending</th>
+                        <th style="text-align: right;">Received</th>
+                    </tr>
+                    <tr>
+                        <td>1</td>
+                        <td style="font-size:8px; text-align: center;">Inv11</td>
+                        <td style="text-align: right;">
+                            <span style="font-size: 8px">Rs.</span>
+                            10000
+                        </td>
+    
+                        <td style="text-align: right;">
+                            <span style="font-size: 8px">Rs.</span>
+                            1000
+                        </td>
+                        <td style="text-align: right;">
+                            <span style="font-size: 8px">Rs.</span>
+                            1000
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="border : none;"></td>
+                        <td colspan="1" style="text-align: right; ">
+                            Sub Total
+                        </td>
+                        <td colspan="1" style="text-align: right;">
+                            <div>
+                                <span style="font-size: 8px">Rs.</span>
+                                10000.00
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3" style="border : none;"></td>
+                        <td colspan="1" style="text-align: right;">
+                            <div>Total Amount (Received) :</div>
+                        </td>
+                        <td colspan="1" style="text-align: right;">
+                            <div>
+                                <span style="font-size: 8px">Rs.</span>
+                                100
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                <table style="border-collapse:collapse;width: 100%;margin-top: 5px;">
+                    <tr>
+                        <td colspan="8" style="padding: 0 0 0 3px;font-size: 8px; font-weight: 500">
+                            Recived the above Amount under the terms & conditions mentioned below.
+                        </td>
+                        <td colspan="2" style="text-align: right;padding-right: 2px; width: 15%;font-size: 10px;">
+                            E. & O. E
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="font-size:7px; color: #6F6C62;padding-left: 3px;padding-bottom: 30px; font-weight: 400;" colspan="7">
+                            By renting from us, you agree to return the item in its original condition and on time. Late returns may incur additional fees, and damages will be charged accordingly. We reserve the right to refuse service or modify terms without prior notice.
+                        </td>
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="5" style="padding-left: 6px; font-size: 9px;">
+                            Receiver's signature
+                        </td>
+                        <td colspan="5" style="text-align: right;font-size: 9px;padding-right: 5px;font-weight: 600;">Authorised Signatory</td>
+                    </tr>
+                    <tr>
+                        <td class="line" colspan="2"></td>
+                        <td class="line" colspan="8"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="padding-left: 5px;width:25%" class="footer">Prepared By : Seller Name</td>
+                        <td colspan="8" class="footer" style="text-align: right;padding-right: 5px;width:75%">
+                            This is a Computer generated document and does not require any signature
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <script src="" async defer></script>
+    </body>
+</html>

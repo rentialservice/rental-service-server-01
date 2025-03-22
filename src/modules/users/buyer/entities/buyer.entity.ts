@@ -3,6 +3,7 @@ import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
 import { Firm } from '../../../firm/entities/firm.entity';
 import { Rental } from '../../../rental/entities/rental.entity';
+import { PaymentCollection } from '../../../payment-collection/entities/payment-collection.entity';
 
 @Entity('buyer')
 export class Buyer extends BaseEntity {
@@ -56,4 +57,10 @@ export class Buyer extends BaseEntity {
 
   @OneToMany(() => Rental, (rental) => rental.buyer)
   rental: Rental[];
+
+  @OneToMany(
+    () => PaymentCollection,
+    (paymentCollection) => paymentCollection.buyer,
+  )
+  paymentCollection: PaymentCollection[];
 }

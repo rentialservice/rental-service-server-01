@@ -46,6 +46,54 @@ export class PaymentCollectionController {
     }
   }
 
+  @Get('/receipt/download')
+  async createReceiptDownload(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Query(RoutesConstants.ID) id: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+  ): Promise<void> {
+    try {
+      const pdfStream = await this.paymentCollectionService.createReceipt(
+        id,
+        filterType,
+      );
+      response.setHeader('Content-Type', 'application/pdf');
+      response.setHeader(
+        'Content-Disposition',
+        `attachment; filename="Receipt-${id}.pdf"`,
+      );
+      pdfStream.pipe(response);
+      pdfStream.on('end', () => {
+        console.log('PDF stream finished');
+      });
+      pdfStream.on('error', (error) => {
+        console.error('PDF stream error:', error);
+        response.status(500).send('Error streaming PDF');
+      });
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Get('/receipt/preview')
+  async createReceiptPreview(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Query(RoutesConstants.ID) id: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+  ): Promise<void> {
+    try {
+      const result = await this.paymentCollectionService.createReceiptPreview(
+        id,
+        filterType,
+      );
+      response.send(result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
   @Get('/get-by-rental/:rental')
   async getPaymentCollectionsByRentalId(
     @Req() request: Request,
@@ -182,6 +230,54 @@ export class PaymentCollectionController {
         filterType,
       );
       successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Get('/receipt/download')
+  async createInvoiceDownload(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Query(RoutesConstants.ID) id: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+  ): Promise<void> {
+    try {
+      const pdfStream = await this.paymentCollectionService.createReceipt(
+        id,
+        filterType,
+      );
+      response.setHeader('Content-Type', 'application/pdf');
+      response.setHeader(
+        'Content-Disposition',
+        `attachment; filename="invoice-${id}.pdf"`,
+      );
+      pdfStream.pipe(response);
+      pdfStream.on('end', () => {
+        console.log('PDF stream finished');
+      });
+      pdfStream.on('error', (error) => {
+        console.error('PDF stream error:', error);
+        response.status(500).send('Error streaming PDF');
+      });
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Get('/receipt/preview')
+  async createInvoicePreview(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Query(RoutesConstants.ID) id: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+  ): Promise<void> {
+    try {
+      const result = await this.paymentCollectionService.createReceiptPreview(
+        id,
+        filterType,
+      );
+      response.send(result);
     } catch (error: any) {
       errorResponse(response, error);
     }

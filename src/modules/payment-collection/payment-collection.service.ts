@@ -6,6 +6,10 @@ import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
 import { RentalService } from '../rental/rental.service';
 import { PrefixService } from '../prefix/prefix.service';
+import {
+  generateHTMLFromTemplate,
+  generatePdfFromTemplate,
+} from '../../common/common';
 
 @Injectable()
 export class PaymentCollectionService {
@@ -30,6 +34,9 @@ export class PaymentCollectionService {
     if (!queryData?.firm) {
       throw new Error('Firm is required');
     }
+    if (!createObject?.buyer) {
+      throw new Error('Buyer is required');
+    }
 
     let [prefix] = await this.prefixService.filter({
       firm: queryData?.firm,
@@ -40,6 +47,17 @@ export class PaymentCollectionService {
     await this.prefixService.update(prefix?.id, {
       nextNumber: parseInt(createObject.receiptId) + 1,
     });
+
+    let [buyer] = await this.commonService.buyerFilter({
+      id: createObject.buyer,
+    });
+    if (!buyer) {
+      throw new NotFoundException(
+        `Buyer with id ${createObject.buyer} not found`,
+      );
+    } else {
+      createObject.buyer = buyer;
+    }
 
     let [firm] = await this.commonService.firmFilter({
       id: queryData.firm,
@@ -80,6 +98,9 @@ export class PaymentCollectionService {
             parseFloat(rentalResponse?.pendingAmount) - (rental?.amount || 0),
           paidAmount:
             parseFloat(rentalResponse?.paidAmount) + (rental?.amount || 0),
+          isDepositRefunded: rental?.isDepositRefunded || false,
+          isDepositDeducted: rental?.isDepositDeducted || false,
+          deductedAmount: rental?.deductedAmount || 0,
         };
 
         await this.rentalService.update(rental?.id, updateObj);
@@ -206,5 +227,155 @@ export class PaymentCollectionService {
         rentalId: JSON.stringify([{ id: rentalId }]),
       })
       .getMany();
+  }
+
+  async createReceipt(id: string, filterType?: string): Promise<any> {
+    // const rental = await this.rentalRepository.findOne({
+    //   where: { id, deleteFlag: false },
+    //   relations: [
+    //     'buyer',
+    //     'rentalProduct',
+    //     'rentalProduct.product',
+    //     'firm',
+    //     'paymentMode',
+    //   ],
+    // });
+    // let transactions =
+    //   await this.commonService.getPaymentCollectionsByRentalId(id);
+    // if (!rental) {
+    //   throw new NotFoundException(`Rental with id ${id} not found`);
+    // }
+    // const data = {
+    //   company: {
+    //     name: rental.firm.name,
+    //     address:
+    //       rental?.firm?.address +
+    //       ', ' +
+    //       rental?.firm?.city +
+    //       ', ' +
+    //       rental?.firm?.state,
+    //     phone: rental.firm.phone,
+    //     email: rental.firm.email,
+    //   },
+    //   customer: {
+    //     name: rental.buyer.fullName,
+    //     mobile: rental.buyer.phone,
+    //     address:
+    //       rental?.buyer?.address +
+    //       ', ' +
+    //       rental?.buyer?.city +
+    //       ', ' +
+    //       rental?.buyer?.state +
+    //       ', ' +
+    //       rental?.buyer?.pincode,
+    //     delivery: 'Delivery Details Here',
+    //   },
+    //   invoiceNumber: rental.invoicePrefix + ' ' + rental.invoiceId,
+    //   invoiceDate: convertDate(rental.invoiceDate.toString()),
+    //   paymentMethod: rental.paymentMode.name,
+    //   received: rental.isDepositRefunded
+    //     ? rental.paidAmount
+    //     : parseFloat(rental.paidAmount.toString()) +
+    //       parseFloat(rental.deposit.toString()),
+    //   items:
+    //     rental?.rentalProduct?.map((rentalProduct: any, index: number) => {
+    //       return {
+    //         index: index + 1,
+    //         product: rentalProduct?.product?.name || 'Product',
+    //         photo: '',
+    //         description: rentalProduct?.product?.description || 'Description',
+    //         deliveryDate: convertDate(rentalProduct?.startDate),
+    //         returnDate: convertDate(rentalProduct?.endDate),
+    //         quantity: rentalProduct?.quantity || 1,
+    //         rate: rentalProduct?.salesPrice || 0,
+    //         total: rentalProduct?.salesPrice * rentalProduct?.quantity || 0,
+    //       };
+    //     }) || [],
+    //   total: rental?.totalAmount || 0,
+    //   discount: rental?.discount || 0,
+    //   deposit: rental?.deposit || 0,
+    //   advance: rental?.advanceAmount || 0,
+    //   outstanding: rental?.pendingAmount || 0,
+    //   transactions: transactions.map((transaction: any) => ({
+    //     type: 'Receipt',
+    //     number: transaction.receiptPrefix + ' ' + transaction.receiptId,
+    //     date: convertDate(transaction.receiptDate),
+    //     mode: transaction.paymentMode.name,
+    //     amount: transaction.rental[0].amount,
+    //   })),
+    //   preparedBy: rental.firm.name,
+    // };
+    // return await generatePdfFromTemplate(data, 'receipt');
+  }
+
+  async createReceiptPreview(id: string, filterType?: string): Promise<any> {
+    const receipt = await this.paymentCollectionRepository.findOne({
+      where: { id, deleteFlag: false },
+      relations: ['buyer', 'firm', 'paymentMode'],
+    });
+    if (!receipt) {
+      throw new NotFoundException(`Receipt with id ${id} not found`);
+    }
+    // const data = {
+    //   company: {
+    //     name: rental.firm.name,
+    //     address:
+    //       rental?.firm?.address +
+    //       ', ' +
+    //       rental?.firm?.city +
+    //       ', ' +
+    //       rental?.firm?.state,
+    //     phone: rental.firm.phone,
+    //     email: rental.firm.email,
+    //   },
+    //   customer: {
+    //     name: rental.buyer.fullName,
+    //     mobile: rental.buyer.phone,
+    //     address:
+    //       rental?.buyer?.address +
+    //       ', ' +
+    //       rental?.buyer?.city +
+    //       ', ' +
+    //       rental?.buyer?.state +
+    //       ', ' +
+    //       rental?.buyer?.pincode,
+    //     delivery: 'Delivery Details Here',
+    //   },
+    //   invoiceNumber: rental.invoicePrefix + ' ' + rental.invoiceId,
+    //   invoiceDate: convertDate(rental.invoiceDate.toString()),
+    //   paymentMethod: rental.paymentMode.name,
+    //   received: rental.isDepositRefunded
+    //     ? rental.paidAmount
+    //     : parseFloat(rental.paidAmount.toString()) +
+    //       parseFloat(rental.deposit.toString()),
+    //   items:
+    //     rental?.rentalProduct?.map((rentalProduct: any, index: number) => {
+    //       return {
+    //         index: index + 1,
+    //         product: rentalProduct?.product?.name || 'Product',
+    //         photo: '',
+    //         description: rentalProduct?.product?.description || 'Description',
+    //         deliveryDate: convertDate(rentalProduct?.startDate),
+    //         returnDate: convertDate(rentalProduct?.endDate),
+    //         quantity: rentalProduct?.quantity || 1,
+    //         rate: rentalProduct?.salesPrice || 0,
+    //         total: rentalProduct?.salesPrice * rentalProduct?.quantity || 0,
+    //       };
+    //     }) || [],
+    //   total: rental?.totalAmount || 0,
+    //   discount: rental?.discount || 0,
+    //   deposit: rental?.deposit || 0,
+    //   advance: rental?.advanceAmount || 0,
+    //   outstanding: rental?.pendingAmount || 0,
+    //   transactions: transactions.map((transaction: any) => ({
+    //     type: 'Receipt',
+    //     number: transaction.receiptPrefix + ' ' + transaction.receiptId,
+    //     date: convertDate(transaction.receiptDate),
+    //     mode: transaction.paymentMode.name,
+    //     amount: transaction.rental[0].amount,
+    //   })),
+    //   preparedBy: rental.firm.name,
+    // };
+    return await generateHTMLFromTemplate('data', 'receipt');
   }
 }

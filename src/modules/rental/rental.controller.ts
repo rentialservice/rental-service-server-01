@@ -6,15 +6,13 @@ import {
   Param,
   Put,
   Delete,
-  UseGuards,
   Req,
   Res,
   Query,
+  UseGuards,
 } from '@nestjs/common';
-import * as fs from 'fs';
 import { RentalService } from './rental.service';
 import { Rental } from './entities/rental.entity';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { Request, Response } from 'express';
 import { RoutesConstants } from '../../constants/routes.constant';
 import {
@@ -22,8 +20,9 @@ import {
   successPaginatedResponse,
   successResponse,
 } from '../../base/response';
+import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 
-// @UseGuards(JwtAuthGuard)
+@UseGuards(JwtAuthGuard)
 @Controller('rental')
 export class RentalController {
   constructor(private readonly rentalService: RentalService) {}

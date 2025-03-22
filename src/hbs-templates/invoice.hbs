@@ -1,152 +1,96 @@
-<!DOCTYPE html
-  PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<!DOCTYPE html>
+<html>
 
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <title>Rental Master Invoice</title>
-  <style type="text/css">
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:ital,wght@0,100..900;1,100..900&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="">
+  <style>
     * {
-      margin: 0;
-      padding: 0;
-      text-indent: 0;
+      font-family: "Roboto", sans-serif;
     }
 
-    h1 {
-      color: black;
-      font-family: Verdana, sans-serif;
-      font-style: normal;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 22pt;
+    @page {
+      size: a4;
     }
 
-    .s1 {
-      color: black;
-      font-family: Verdana, sans-serif;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: none;
-      font-size: 10pt;
+    .main-div {
+      /* text-align: center;  */
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
     }
 
-    .a {
-      color: black;
-      font-family: Verdana, sans-serif;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: none;
-      font-size: 10pt;
+    .wrapper {
+      display: inline-block;
+      /* Adjust width based on content */
+      padding: 10px 0;
+      /* Space between content and border */
+      border: 1px solid gray;
+      background-color: white;
     }
 
-    .s2 {
-      color: black;
-      font-family: Arial, sans-serif;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: none;
-      font-size: 14pt;
-    }
-
-    .s3 {
-      color: black;
-      font-family: Arial, sans-serif;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: none;
-      font-size: 10pt;
-    }
-
-    .s4 {
-      color: black;
-      font-family: Arial, sans-serif;
-      font-style: normal;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 10pt;
-    }
-
-    .s5 {
-      color: black;
-      font-family: Arial, sans-serif;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: none;
-      font-size: 8pt;
-    }
-
-    .s6 {
-      color: black;
-      font-family: Arial, sans-serif;
-      font-style: normal;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 8pt;
-    }
-
-    .s7 {
-      color: black;
-      font-family: "Times New Roman", serif;
-      font-style: normal;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 10pt;
-    }
-
-    p {
-      color: black;
-      font-family: "Times New Roman", serif;
-      font-style: normal;
-      font-weight: bold;
-      text-decoration: none;
-      font-size: 8pt;
-      margin: 0pt;
-    }
-
-    .s8 {
-      color: black;
-      font-family: "Times New Roman", serif;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: none;
-      font-size: 12pt;
-      vertical-align: -3pt;
-    }
-
-    .s9 {
-      color: black;
-      font-family: "Times New Roman", serif;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: none;
-      font-size: 8pt;
-    }
-
-    .s10 {
-      color: black;
-      font-family: "Times New Roman", serif;
-      font-style: normal;
-      font-weight: normal;
-      text-decoration: none;
-      font-size: 12pt;
-    }
-
-    table,
-    tbody {
-      vertical-align: top;
-      overflow: visible;
-    }
-
-    table.signature-table {
-      /* width: 70%; */
+    .product-detail,
+    .payment-detail {
+      width: 100%;
       border-collapse: collapse;
-      margin-top: 30px;
+      border-top: 1px solid grey;
+      border-bottom: none;
+      border-left: none;
+      border-right: none;
     }
 
-    table.signature-table td {
-      text-align: center;
-      vertical-align: bottom;
+    .product-detail th {
+      border: 1px solid white !important;
+      background-color: #000;
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .product-detail th,
+    .product-detail td {
+      border: 1px solid black;
+      /* Borders for table cells */
       padding: 5px;
+      text-align: left;
+      font-size: 9px;
+      /* border-left : none;
+            border-right: none */
+    }
+
+    .payment-detail th,
+    .payment-detail td {
+      border: 1px solid black;
+      /* Borders for table cells */
+      padding: 3px;
+      text-align: left;
+      font-size: 9px;
+      /* border-left : none;
+            border-right: none */
+    }
+
+    .product-detail th:first-child,
+    .product-detail td:first-child,
+    .payment-detail th:first-child,
+    .payment-detail td:first-child {
+      border-left: none;
+    }
+
+    /* Remove right border for last child of each row */
+    .product-detail th:last-child,
+    .product-detail td:last-child,
+    .payment-detail th:last-child,
+    .payment-detail td:last-child {
+      border-right: none;
+
     }
 
     .line {
@@ -154,334 +98,205 @@
       /* height: 30px; */
     }
 
-    /* Footer / Notes */
-    .notes {
-      font-size: 12px;
-      margin-top: 20px;
-    }
-
     .footer {
-      font-size: 12px;
-      /* margin-top: 20px; */
-      /* text-align: right; */
+      font-size: 6px;
+
     }
   </style>
 </head>
 
 <body>
-  <p style="text-align: center; margin-bottom: 10px;">
-    <span>
-      <table border="0" cellspacing="0" cellpadding="0" style="margin: auto">
+  <div class="main-div">
+    <div style="margin : 0 auto; border: 1px solid grey" class="wrapper">
+      <table style="margin : 0 auto; width: 100%">
         <tr>
-          <td>
-            <img width="187" height="26"
-              src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALsAAAAaCAMAAADYDt0TAAAAnFBMVEX///8AdUniIxrf7ukghmC/3NHxkIzpWlNAmHf74+Pv9vOfy7rmPjf4yMV/uaNAl3f+8fHkMShvsZgQflTtdXAQfVSPwq/0rKkwj2uv1MbznppgqY7mPjZQoYLvg3785ONgqY34yMaAu6VfqIzP5dzP5d361tTnTEXraGL2urfraGHoTEWQw7DP5N32ubdAl3aQw6/qZ2Dv9/TnTEQuQeLiAAAAAWJLR0QAiAUdSAAAAAlwSFlzAAAOxAAADsQBlSsOGwAAAzNJREFUWIXVmFt32jAMgJ0LBcLoSbhDyzjcsrFyxmn4//9tkW3Jsh1SQujD9BBkWbE+y47iIEIlOVyGooUEWtqMAfIar+/2Vez6Z9siqEIftxgBZNZk/pJ5o9Mfvjwe9TlpXzcaRKY9TYcfagEaSTcMM2pA1EWz+305PjhIc/jms/02+e/YWXyOcir1bGPc8lxebavFDnsmUmqngOuuNFDRWPKYHaMO4LZBdZ8cIegVxlDEpeFcz/6JDy9yZrILreTN2wENWypLMdJFk0wRn6VuTLG0TllfwpKhRNMX2I5Vu1/FzrAmpmtjwW6ZUx9DLSjomAInmF3EO9J6BEx01k2d9ToHruFk2CmFIZe5O5sKL4o19aLqOJyddN+NsXt9B8/yU8dOX4hCmlLcKXwlQFuBsoI7rldQr9drilE504g0S9ErTza5AD3qJnZpGaO/ta4z1GT8H5jAk7V1hHi3kqxsZkLWs/pqsw9Mjgs78aBFOFm9kyPQD4y9YGMI6RRjPsxgCoqvPdSSLhJx9lSZ0mr2i83OonRQia1e+L3g3QttRfYp32TuoHIeO83ez5xc/z1pQWZOWc0eVLLHmL4IjTGfjYeG7NBMBBewLLXslLdk3/K8hq7MW7DDaszIuBPOk1rLbqEngSuadCJ+20CWDJ/C3lHWs55CU/bDLfZM/XYr2TOXso49ucku1ONo+pqxRz46FT/zjmLbx8i97Ifb7PJFCwiXO9nZWaBqNqxwU6GZc6Km7Pvb7O6nFahveHfPYa+vMy671Ki+Tx5gj9bsvVLBHit0/LRastzKcr4UTn23zm+BD2/YP1DJaJfLV+wX7Li9yvINh5gadvfTSrbk62ZEHfZ7lY5HZEnQcqYTlZmGmQ/KF+y6VdaB+C2oZ586ufMevpvnGRhi77qvGN+W0ngve25c4EgQV7Ob87az7FbNThz2yOu8cAtsti5bd4P6TuR/XF6p45lBfeRmOqmxqe90FPESLbg4WRfWQd90asvRdk8hPFVEAPlU6gl2fWb+9BjOTcR5bvR8hR2Lkl2rZ/OdIWaCyYB/IUkZ0aZHf1Ya5Slnz917tvuvjXiO7Fr/S9BI/gHccid4qnudCwAAAABJRU5ErkJgggAA">
+          <td style="text-align: left; width: 50%;padding-left: 6px">
+            <div
+              style="border-radius: 70px; padding: 12px 5px; background: grey;width: fit-content;display: inline-block; text-align: center; font-size: 10px">
+              LOGO</div>
+          </td>
+          <td style="font-size: 18px; color: grey ; text-align: right;width: 50%; padding-right: 6px">Invoice
+          </td>
+        </tr>
+        <tr>
+          <td style="padding-left: 6px;">
+            <div style="font-size: 14px; padding: 4px 0;font-weight: 600">{{company.name}}</div>
+            <div style="padding-bottom: 2px;font-size: 9px;font-weight: 300">{{company.address}}</div>
+            <div style="padding-bottom: 2px;font-size: 9px;font-weight: 300">Mob No. {{company.phone}}</div>
+            <div style="padding-bottom: 2px;font-size: 9px;font-weight: 300">Email: {{company.email}}</div>
+            <div style="color: black; font-size: 9px;font-weight: 300">VAT : {{company.gstn}}</div>
+            <!-- <div style="padding-bottom: 2px;font-size: 9px;">7999800111</div>
+                            <div style="padding-bottom: 2px;font-size: 9px;">rentalsservices@gmail.com</div> -->
+          </td>
+          <td style="text-align: right; padding-right: 10px;">
+            <div style="width: fit-content; display: inline-block; text-align: left;">
+              <div style="font-size: 9px;">Invoice Date : {{invoiceDate}}</div>
+              <hr style="margin: 3px 0">
+              <div style="font-size: 9px;">Invoice No. {{invoiceNumber}}</div>
+              <!-- <hr> -->
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding: 15px 0 10px 6px; width: 50%">
+            <div style="width: fit-content;">
+              <div style="font-size: 10px;"> To, {{customer.name}}</div>
+              <hr style="margin: 3px 0">
+              <div style="font-size: 9px;padding-bottom: 2px; color: black; font-weight: 300;">
+                {{customer.mobile}}
+              </div>
+              <div style="font-size: 9px;padding-bottom: 2px; color: black; font-weight: 300;">
+                {{customer.address}}</div>
+            </div>
+          </td>
+          <td></td>
+        </tr>
+      </table>
+      <table style="margin: 3px auto ;" class="product-detail">
+        <tr>
+          <th>Sr. no.</th>
+          <th>Product</th>
+          <th>Description</th>
+          <th>Delivery date</th>
+          <th>Return date</th>
+          <th style="text-align: right;">QTY</th>
+          <th style="text-align: right;">Rate</th>
+          <th style="text-align: right;">Total</th>
+        </tr>
+        {{#each items}}
+        <tr>
+          <td>{{index}}</td>
+          <td>{{product}}</td>
+          <td style="font-size:8px">{{description}}</td>
+          <td>{{deliveryDate}}</td>
+          <td>{{returnDate}}</td>
+          <td style="text-align: right;">{{quantity}}</td>
+          <td style="text-align: right;">
+            <span style="font-size: 8px">Rs.</span>
+            {{rate}}
+          </td>
+          <td style="text-align: right;">
+            <span style="font-size: 8px">Rs.</span>
+            {{total}}
+          </td>
+        </tr>
+        {{/each}}
+        <tr>
+          <td colspan="3" style="border : none;"></td>
+          <td colspan="3" style="text-align: right; ">
+            Total
+          </td>
+          <td colspan="3" style="text-align: right;">
+            <div>
+              <span style="font-size: 8px">Rs.</span>
+              {{total}}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" style="border : none;"></td>
+          <td colspan="3" style="text-align: right;">
+            <div>Discount :</div>
+          </td>
+          <td colspan="3" style="text-align: right;">
+            <div>
+              <span style="font-size: 8px">Rs.</span>
+              {{discount}}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" style="border : none"></td>
+          <td colspan="3" style="text-align: right">
+            <div style="font-size: 8px;">Deposit ({{paymentMethod}})</div>
+          </td>
+          <td colspan="3" style="text-align: right;">
+            <div>
+              <span style="font-size: 8px">Rs.</span>
+              {{deposit}}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" style="border : none"></td>
+          <td colspan="3" style="text-align: right;">
+            <div style="font-size: 8px;">Advance ({{paymentMethod}})</div>
+          </td>
+          <td colspan="3" style="text-align: right; font-weight: 400">
+            <div>
+              <span style="font-size: 8px">Rs.</span>
+              {{advance}}
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <td colspan="3" style="border : none; font-weight: bold ; font-size: 10px;">Received : <span
+              style="font-size:9px">Rs.</span> {{received}}</td>
+          <td colspan="3" style="text-align: right; font-weight: 600">
+            <div>Outstanding</div>
+          </td>
+          <td colspan="3" style="text-align: right; font-weight: 600">
+            <div>
+              <span style="font-size: 8px">Rs.</span>
+              {{outstanding}}
+            </div>
           </td>
         </tr>
       </table>
-    </span>
-  </p>
-  <table style="margin: 40px auto;">
-    <tr>
-      <td style="width:400pt" colspan="5">
-        <h2 style="padding-top: 1pt; text-align: left">{{company.name}}</h2>
-        <p class="s1" style="text-align: left; margin-top: 5px;">
-          <a href="mailto:ankush60000@gmail.com" class="a" target="_blank">
-            {{company.address}}
-            <br>
-            {{company.phone}}
-            <br>
-          </a>
-          {{company.email}}
-          <br>
-          renting
-        </p>
-      </td>
-      <td colspan="7" style="width: 170pt"></td>
-    </tr>
-  </table>
-  <table style="border-collapse:collapse;margin: auto ;" cellspacing="0">
-    <tr style="height:22pt">
-      <td
-        style="width:365pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="5" rowspan="2">
-        <p class="s2" style="text-indent: 0pt;text-align: left;">To, {{customer.name}}</p>
-        <p class="s3" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;line-height: 11pt;text-align: left;">
-          Mobile: {{customer.mobile}}</p>
-        <p class="s3" style="padding-left: 2pt;text-indent: 0pt;text-align: left;">Address:
-          {{customer.address}}
-        </p>
-        <p class="s3" style="padding-left: 2pt;text-indent: 0pt;text-align: left;">
-          Delivery: {{customer.delivery}}</p>
-      </td>
-      <td
-        style="width:198pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="4">
-        <p class="s4" style="padding-top: 4pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{invoiceNumber}}
-        </p>
-      </td>
-    </tr>
-    <tr style="height:27pt">
-      <td
-        style="width:198pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="4">
-        <p class="s3" style="padding-top: 7pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">Date:
-          {{invoiceDate}}</p>
-      </td>
-    </tr>
-    <tr style="height:15pt">
-      <td
-        style="width:19pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s4" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">SR</p>
-      </td>
-      <td
-        style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s4"
-          style="padding-top: 1pt;padding-left: 4pt;padding-right: 4pt;text-indent: 0pt;text-align: center;">
-          PRODUCT</p>
-      </td>
-      <td
-        style="width:41pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s4" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">PHOTO</p>
-      </td>
-      <td
-        style="width:145pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s4" style="padding-top: 1pt;padding-left: 38pt;text-indent: 0pt;text-align: left;">DESCRIPTION
-        </p>
-      </td>
-      <td
-        style="width:88pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s4" style="padding-top: 1pt;padding-left: 3pt;text-indent: 0pt;text-align: center;">DELIVERY
-          DATE</p>
-      </td>
-      <td
-        style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s4" style="padding-top: 1pt;padding-left: 3pt;text-indent: 0pt;text-align: left;">RETURN</p>
-      </td>
-      <td
-        style="width:56pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s4" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">QTY</p>
-      </td>
-      <td
-        style="width:45pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s4" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">RATE</p>
-      </td>
-      <td
-        style="width:48pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s4" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">TOTAL</p>
-      </td>
-    </tr>
-    {{#each items}}
-    <tr style="height:50pt">
-      <td
-        style="width:19pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s5" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">{{index}}</p>
-      </td>
-      <td
-        style="width:72pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s6" style="padding-top: 1pt;padding-right: 4pt;text-indent: 0pt;text-align: center;">{{product}}
-        </p>
-      </td>
-      <td
-        style="width:41pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p style="text-indent: 0pt;text-align: left;">{{photo}}
-          <br>
-        </p>
-      </td>
-      <td
-        style="width:145pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p style="text-indent: 0pt;text-align: left;">{{description}}
-          <br>
-        </p>
-      </td>
-      <td
-        style="width:88pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s5" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">{{deliveryDate}}</p>
-      </td>
-      <td
-        style="width:49pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s5" style="padding-top: 1pt;padding-left: 3pt;text-indent: 0pt;line-height: 9pt;text-align: left;">
-          {{returnDate}}</p>
-      </td>
-      <td
-        style="width:56pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s5" style="padding-top: 1pt;text-indent: 0pt;text-align: center;">{{quantity}}</p>
-      </td>
-      <td
-        style="width:45pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s5" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">{{rate}}
-        </p>
-      </td>
-      <td
-        style="width:48pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt">
-        <p class="s5" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">{{total}}
-        </p>
-      </td>
-    </tr>
-    {{/each}}
-    <tr style="height:15pt">
-      <td
-        style="width:277pt;border-top-style:solid;border-top-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="4" rowspan="5">
-        <p style="text-indent: 0pt;text-align: left;">
-          <br>
-        </p>
-        <p class="s7" style="padding-left: 2pt;text-indent: 0pt;text-align: left;">Received: {{received}}</p>
-      </td>
-      <td
-        style="width:193pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="3">
-        <p class="s3" style="padding-top: 1pt;padding-right: 4pt;text-indent: 0pt;text-align: right;">Total</p>
-      </td>
-      <td
-        style="width:93pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="2">
-        <p class="s3" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">{{total}}
-        </p>
-      </td>
-    </tr>
-    <tr style="height:15pt">
-      <td
-        style="width:193pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="3">
-        <p class="s3" style="padding-top: 1pt;padding-right: 4pt;text-indent: 0pt;text-align: right;">Discount
-        </p>
-      </td>
-      <td
-        style="width:93pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="2">
-        <p class="s3" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">{{discount}}</p>
-      </td>
-    </tr>
-    <tr style="height:15pt">
-      <td
-        style="width:193pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="3">
-        <p class="s3" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">
-          Paid Deposit ({{paymentMethod}})</p>
-      </td>
-      <td
-        style="width:93pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="2">
-        <p class="s3" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">{{deposit}}
-        </p>
-      </td>
-    </tr>
-    <tr style="height:15pt">
-      <td
-        style="width:193pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="3">
-        <p class="s3" style="padding-top: 1pt;text-indent: 0pt;text-align: right;">
-          Advance ({{paymentMethod}})</p>
-      </td>
-      <td
-        style="width:93pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="2">
-        <p class="s3" style="padding-top: 1pt;padding-right: 1pt;text-indent: 0pt;text-align: right;">{{advance}}</p>
-      </td>
-    </tr>
-    <tr style="height:16pt">
-      <td
-        style="width:193pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="3">
-        <p class="s3" style="padding-top: 1pt;padding-right: 4pt;text-indent: 0pt;text-align: right;">
-          Outstanding</p>
-      </td>
-      <td
-        style="width:93pt;border-top-style:solid;border-top-width:1pt;border-left-style:solid;border-left-width:1pt;border-bottom-style:solid;border-bottom-width:1pt;border-right-style:solid;border-right-width:1pt"
-        colspan="2">
-        <p class="s4" style="padding-top: 1pt;text-indent: 0pt;text-align:right;">{{outstanding}}
-        </p>
-      </td>
-    </tr>
-  </table>
-  <p style="text-indent: 0pt;text-align: left;">
-    <br>
-  </p>
-  <table style="border-collapse:collapse;margin: auto" cellspacing="0">
-    <tr style="height:13pt">
-      <td
-        style="width:92pt;border-top-style:solid;border-top-width:1pt;border-top-color:#D2D2D2;border-left-style:solid;border-left-width:1pt;border-left-color:#D2D2D2;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#D2D2D2;border-right-style:solid;border-right-width:1pt;border-right-color:#D2D2D2">
-        <p class="s5" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">Type</p>
-      </td>
-      <td
-        style="width:72pt;border-top-style:solid;border-top-width:1pt;border-top-color:#D2D2D2;border-left-style:solid;border-left-width:1pt;border-left-color:#D2D2D2;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#D2D2D2;border-right-style:solid;border-right-width:1pt;border-right-color:#D2D2D2">
-        <p class="s5" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">Receipt No.</p>
-      </td>
-      <td
-        style="width:111pt;border-top-style:solid;border-top-width:1pt;border-top-color:#D2D2D2;border-left-style:solid;border-left-width:1pt;border-left-color:#D2D2D2;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#D2D2D2;border-right-style:solid;border-right-width:1pt;border-right-color:#D2D2D2">
-        <p class="s5" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">Date</p>
-      </td>
-      <td
-        style="width:194pt;border-top-style:solid;border-top-width:1pt;border-top-color:#D2D2D2;border-left-style:solid;border-left-width:1pt;border-left-color:#D2D2D2;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#D2D2D2;border-right-style:solid;border-right-width:1pt;border-right-color:#D2D2D2">
-        <p class="s5" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">Mode</p>
-      </td>
-      <td
-        style="width:93pt;border-top-style:solid;border-top-width:1pt;border-top-color:#D2D2D2;border-left-style:solid;border-left-width:1pt;border-left-color:#D2D2D2;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#D2D2D2;border-right-style:solid;border-right-width:1pt;border-right-color:#D2D2D2">
-        <p class="s5" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">
-          Amount</p>
-      </td>
-    </tr>
-    {{#each transactions}}
-    <tr style="height:12pt">
-      <td
-        style="width:92pt;border-top-style:solid;border-top-width:1pt;border-top-color:#D2D2D2;border-left-style:solid;border-left-width:1pt;border-left-color:#D2D2D2;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#D2D2D2;border-right-style:solid;border-right-width:1pt;border-right-color:#D2D2D2">
-        <p class="s5" style="padding-top: 1pt;padding-left: 2pt;text-indent: 0pt;text-align: left;">{{type}}</p>
-      </td>
-      <td
-        style="width:72pt;border-top-style:solid;border-top-width:1pt;border-top-color:#D2D2D2;border-left-style:solid;border-left-width:1pt;border-left-color:#D2D2D2;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#D2D2D2;border-right-style:solid;border-right-width:1pt;border-right-color:#D2D2D2">
-        <p class="s5" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{number}}</p>
-      </td>
-      <td
-        style="width:111pt;border-top-style:solid;border-top-width:1pt;border-top-color:#D2D2D2;border-left-style:solid;border-left-width:1pt;border-left-color:#D2D2D2;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#D2D2D2;border-right-style:solid;border-right-width:1pt;border-right-color:#D2D2D2">
-        <p class="s5" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{date}}</p>
-      </td>
-      <td
-        style="width:194pt;border-top-style:solid;border-top-width:1pt;border-top-color:#D2D2D2;border-left-style:solid;border-left-width:1pt;border-left-color:#D2D2D2;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#D2D2D2;border-right-style:solid;border-right-width:1pt;border-right-color:#D2D2D2">
-        <p class="s5" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{mode}}</p>
-      </td>
-      <td
-        style="width:93pt;border-top-style:solid;border-top-width:1pt;border-top-color:#D2D2D2;border-left-style:solid;border-left-width:1pt;border-left-color:#D2D2D2;border-bottom-style:solid;border-bottom-width:1pt;border-bottom-color:#D2D2D2;border-right-style:solid;border-right-width:1pt;border-right-color:#D2D2D2">
-        <p class="s5" style="padding-top: 1pt;padding-left: 1pt;text-indent: 0pt;text-align: left;">{{amount}}</p>
-      </td>
-    </tr>
-    {{/each}}
-
-    <tr>
-      <td style="width:365pt" colspan="4">
-        <p style="text-indent: 0pt;text-align: left;">
-          Received the above goods under the terms &amp; conditions mentioned below.
-        </p>
-      </td>
-      <td style="text-align: end;">
-        <span class="s8">E. &amp; O. E</span>
-      </td>
-    </tr>
-    <tr>
-      <td colspan="4" style="padding: 10px 0;">renting</td>
-      <td></td>
-    </tr>
-    <tr>
-      <td colspan="4"></td>
-      <td style="text-align: end ;padding: 10px 0;">for {{preparedBy}}</td>
-    </tr>
-    <tr>
-      <td colspan="3">Receiver's Signature</td>
-      <td colspan="4" style="text-align: end">Authorized Signatory</td>
-    </tr>
-    <tr>
-      <td class="line" colspan="4" style="padding: 5px 0;"></td>
-      <td class="line" style="padding: 5px 0;"></td>
-    </tr>
-    <tr>
-      <td colspan="3" class="footer">
-        Prepared by: {{preparedBy}}
-      </td>
-      <td colspan="4" class="footer" style="text-align: end;">
-        This is a Computer generated document and does not require any signature
-      </td>
-    </tr>
-  </table>
+      <table class="payment-detail" style="margin-top: 10px; border-color: grey;">
+        <tr>
+          <th>Type</th>
+          <th>Receipt No.</th>
+          <th>Date</th>
+          <th>Mode</th>
+          <th>Received/Paid</th>
+        </tr>
+        <tr>
+          <td>{{type}}</td>
+          <td>{{number}}</td>
+          <td>{{date}}</td>
+          <td>{{mode}}</td>
+          <td>{{amount}}</td>
+        </tr>
+      </table>
+      <table style="border-collapse:collapse;width: 100%;margin-top: 5px;">
+        <tr>
+          <td colspan="8" style="padding: 0 0 0 3px;font-size: 8px; font-weight: 500">
+            Received the above goods under the terms & conditions mentioned below.
+          </td>
+          <td colspan="2" style="text-align: right;padding-right: 2px; width: 15%;font-size: 10px;">
+            E. & O. E
+          </td>
+        </tr>
+        <tr>
+          <td style="font-size:7px; color: grey;padding-left: 3px;padding-bottom: 30px;" colspan="7">
+            By renting from us, you agree to return the item in its original condition and on time. Late
+            returns may incur additional fees, and damages will be charged accordingly. We reserve the right
+            to refuse service or modify terms without prior notice.
+          </td>
+          <td colspan="3"></td>
+        </tr>
+        <tr>
+          <td colspan="5" style="padding-left: 6px; font-size: 9px;">
+            Receiver's signature
+          </td>
+          <td colspan="5" style="text-align: right;font-size: 9px;padding-right: 5px;font-weight: 600;">
+            Authorised Signatory</td>
+        </tr>
+        <tr>
+          <td class="line" colspan="2"></td>
+          <td class="line" colspan="8"></td>
+        </tr>
+        <tr>
+          <td colspan="2" style="padding-left: 5px;width:25%" class="footer">Prepared By : {{preparedBy}}</td>
+          <td colspan="8" class="footer" style="text-align: right;padding-right: 5px;width:75%">
+            This is a Computer generated document and does not require any signature
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+  <script src="" async defer></script>
 </body>
 
 </html>
