@@ -100,10 +100,19 @@ export class BuyerService {
         ];
       }
     });
+
+    const whereClause = newFilter?.length
+      ? [
+          { firm: { id: firm }, deleteFlag: false },
+          ...newFilter.map((condition) => ({
+            ...condition,
+            firm: { id: firm },
+            deleteFlag: false,
+          })),
+        ]
+      : { ...buildFilterCriteriaQuery(criteria), deleteFlag: false };
     return await this.repository.findAndCount({
-      where: newFilter?.length
-        ? { ...newFilter, firm: { id: firm }, deleteFlag: false }
-        : { ...buildFilterCriteriaQuery(criteria), deleteFlag: false },
+      where: whereClause,
       skip: (page - 1) * pageSize,
       take: pageSize,
       select: SelectConstants.BUYER_SELECT,
