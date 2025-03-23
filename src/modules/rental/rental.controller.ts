@@ -20,9 +20,7 @@ import {
   successPaginatedResponse,
   successResponse,
 } from '../../base/response';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 
-@UseGuards(JwtAuthGuard)
 @Controller('rental')
 export class RentalController {
   constructor(private readonly rentalService: RentalService) {}
