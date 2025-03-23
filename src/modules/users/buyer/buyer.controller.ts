@@ -50,6 +50,28 @@ export class BuyerController {
     }
   }
 
+  @Get('/filter')
+  async filterGet(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Query(RoutesConstants.PAGE) page: number = 1,
+    @Query(RoutesConstants.PAGESIZE) pageSize: number = 10,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+  ): Promise<void> {
+    try {
+      const [users, count]: any = await this.service.filter(
+        request.query,
+        [],
+        page,
+        pageSize,
+        filterType,
+      );
+      successPaginatedResponse(response, users, count, page, pageSize);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
   @Post()
   @UseInterceptors(FilesInterceptor('documents', 10))
   async create(
@@ -188,12 +210,16 @@ export class BuyerController {
     @Req() request: Request,
     @Res() response: Response,
     @Body() filterCriteria: any,
+    @Query(RoutesConstants.PAGE) page: number = 1,
+    @Query(RoutesConstants.PAGESIZE) pageSize: number = 10,
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
       const result: any = await this.service.filter(
         filterCriteria,
         [],
+        page,
+        pageSize,
         filterType,
       );
       successResponse(response, result);

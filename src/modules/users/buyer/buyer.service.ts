@@ -5,7 +5,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { ILike, Repository } from 'typeorm';
 import * as bcrypt from 'bcryptjs';
 import { NotificationService } from '../../supporting-modules/notification/notification.service';
 import { Buyer } from './entities/buyer.entity';
@@ -206,11 +206,30 @@ export class BuyerService {
   async filter(
     filterCriteria: any,
     fields: string[] = [],
+    page: number = 1,
+    pageSize: number = 10,
     filterType?: string,
   ): Promise<any> {
-    return await this.repository.find({
-      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: [...fields],
+    let criteria: any = JSON.parse(JSON.stringify(filterCriteria));
+    let newFilter = [];
+    Object.keys(criteria).forEach((key) => {
+      if (key === 'search') {
+        let search = criteria?.search;
+        newFilter = [
+          { fullName: ILike(`%${search}%`) },
+          { phone: ILike(`%${search}%`) },
+          { adhaarNo: ILike(`%${search}%`) },
+          { username: ILike(`%${search}%`) },
+        ];
+      }
+    });
+    return await this.repository.findAndCount({
+      where: newFilter?.length
+        ? newFilter
+        : { ...buildFilterCriteriaQuery(criteria), deleteFlag: false },
+      relations: [],
+      skip: (page - 1) * pageSize,
+      take: pageSize,
     });
   }
 

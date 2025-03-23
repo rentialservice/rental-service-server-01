@@ -16,8 +16,18 @@ export function buildFilterCriteriaQuery(filterCriteria: any) {
     }
 
     if (key === 'search') {
-      criteria.name = ILike(`%${criteria?.search}%`);
+      let search = criteria?.search;
       delete criteria?.search;
+      let value = search?.value;
+
+      if (search?.keys?.length) {
+        criteria = {
+          ...criteria,
+          where: search.keys.map((key: any) => ({
+            [key]: ILike(`%${value}%`),
+          })),
+        };
+      }
     } else {
       if (FilterConstants.FILTER_KEYS.includes(key)) {
         criteria[key] = { id: criteria[key] };
