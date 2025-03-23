@@ -60,6 +60,9 @@ export class Product extends BaseEntity {
   @Column({ type: 'text', default: '' })
   size: string;
 
+  @Column({ type: 'text', default: '' })
+  unit: string;
+
   @Column({ type: 'int', default: 0 })
   stock: number;
 

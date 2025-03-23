@@ -86,8 +86,24 @@ export class BuyerService {
       throw new Error('Firm is required');
     }
     delete filterCriteria?.category;
+    let criteria: any = JSON.parse(JSON.stringify(filterCriteria));
+    let firm = filterCriteria?.firm;
+    let newFilter = [];
+    Object.keys(criteria).forEach((key) => {
+      if (key === 'search') {
+        let search = criteria?.search;
+        newFilter = [
+          { fullName: ILike(`%${search}%`) },
+          { phone: ILike(`%${search}%`) },
+          { adhaarNo: ILike(`%${search}%`) },
+          { username: ILike(`%${search}%`) },
+        ];
+      }
+    });
     return await this.repository.findAndCount({
-      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+      where: newFilter?.length
+        ? { ...newFilter, firm: { id: firm }, deleteFlag: false }
+        : { ...buildFilterCriteriaQuery(criteria), deleteFlag: false },
       skip: (page - 1) * pageSize,
       take: pageSize,
       select: SelectConstants.BUYER_SELECT,
