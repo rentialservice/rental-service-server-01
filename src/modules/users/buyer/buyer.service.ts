@@ -103,7 +103,6 @@ export class BuyerService {
 
     const whereClause = newFilter?.length
       ? [
-          { firm: { id: firm }, deleteFlag: false },
           ...newFilter.map((condition) => ({
             ...condition,
             firm: { id: firm },
