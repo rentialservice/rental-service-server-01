@@ -4,7 +4,7 @@ import { Repository } from 'typeorm';
 import { Prefix } from '../prefix/entities/prefix.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { Firm } from '../firm/entities/firm.entity';
-import { Category } from '../category/entities/category.entity';
+// import { Category } from '../category/entities/category.entity';
 import { Permission } from '../permission/entities/permission.entity';
 import { Product } from '../product/entities/product.entity';
 import { Buyer } from '../users/buyer/entities/buyer.entity';
@@ -22,8 +22,8 @@ export class CommonService {
     @InjectRepository(Prefix)
     private readonly prefixRepository: Repository<Prefix>,
     @InjectRepository(Firm) private readonly firmRepository: Repository<Firm>,
-    @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>,
+    // @InjectRepository(Category)
+    // private readonly categoryRepository: Repository<Category>,
     @InjectRepository(Permission)
     private readonly permissionRepository: Repository<Permission>,
     @InjectRepository(Product)
@@ -67,16 +67,16 @@ export class CommonService {
     });
   }
 
-  async categoryFilter(
-    filterCriteria: any,
-    fields: string[] = [],
-    filterType?: string,
-  ): Promise<any> {
-    return await this.categoryRepository.find({
-      where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: [...fields],
-    });
-  }
+  // async categoryFilter(
+  //   filterCriteria: any,
+  //   fields: string[] = [],
+  //   filterType?: string,
+  // ): Promise<any> {
+  //   return await this.categoryRepository.find({
+  //     where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
+  //     relations: [...fields],
+  //   });
+  // }
 
   async permissionFilter(
     filterCriteria: any,

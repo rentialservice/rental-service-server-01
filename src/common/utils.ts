@@ -50,8 +50,8 @@ export const convertToISO = (simpleDate: string): string => {
 export function calculatePendingAmountWithFine(rental: any) {
   const now = new Date();
   let totalFines = 0;
-
-  for (const product of rental.rentalProduct) {
+  console.log({ rental });
+  for (const product of rental?.rentalProduct) {
     const endDate = new Date(product.endDate);
     if (now <= endDate) continue;
 

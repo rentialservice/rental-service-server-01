@@ -38,6 +38,9 @@ export class RentalProduct extends BaseEntity {
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   fine: number;
 
+  @Column({ type: 'text', default: '' })
+  unit: string;
+
   @Column({
     type: 'enum',
     enum: Period,

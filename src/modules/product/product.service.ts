@@ -53,25 +53,25 @@ export class ProductService {
         }),
       );
     }
-    if (!queryData?.category && !queryData?.firm) {
-      throw new Error('Category and Firm is required');
-    }
-    if (!queryData?.category) {
-      throw new Error('Category is required');
-    }
+    // if (!queryData?.category && !queryData?.firm) {
+    //   throw new Error('Category and Firm is required');
+    // }
+    // if (!queryData?.category) {
+    //   throw new Error('Category is required');
+    // }
     if (!queryData?.firm) {
       throw new Error('Firm is required');
     }
-    let [category] = await this.commonService.categoryFilter({
-      id: queryData.category,
-    });
-    if (!category) {
-      throw new NotFoundException(
-        `Category with id ${queryData.category} not found`,
-      );
-    } else {
-      createObject.category = category;
-    }
+    // let [category] = await this.commonService.categoryFilter({
+    //   id: queryData.category,
+    // });
+    // if (!category) {
+    //   throw new NotFoundException(
+    //     `Category with id ${queryData.category} not found`,
+    //   );
+    // } else {
+    //   createObject.category = category;
+    // }
     let [firm] = await this.commonService.firmFilter({
       id: queryData.firm,
     });
@@ -87,7 +87,7 @@ export class ProductService {
       const lastProduct = await this.productRepository.findOne({
         where: {
           code: Like(`PROD%`),
-          category: { id: queryData.category },
+          // category: { id: queryData.category },
           firm: { id: queryData.firm },
         },
         order: { code: 'DESC' },

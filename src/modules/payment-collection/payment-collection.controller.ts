@@ -6,12 +6,10 @@ import {
   Param,
   Put,
   Delete,
-  UseGuards,
   Req,
   Res,
   Query,
 } from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { Request, Response } from 'express';
 import { RoutesConstants } from '../../constants/routes.constant';
 import {
@@ -22,7 +20,6 @@ import {
 import { PaymentCollectionService } from './payment-collection.service';
 import { PaymentCollection } from './entities/payment-collection.entity';
 
-@UseGuards(JwtAuthGuard)
 @Controller('payment-collection')
 export class PaymentCollectionController {
   constructor(
@@ -158,7 +155,7 @@ export class PaymentCollectionController {
       const [result, count]: any = await this.paymentCollectionService.getAll(
         page,
         pageSize,
-        filterType,
+        request.query as any,
       );
       successPaginatedResponse(response, result, count, page, pageSize);
     } catch (error: any) {

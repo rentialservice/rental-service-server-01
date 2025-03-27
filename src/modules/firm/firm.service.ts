@@ -26,17 +26,17 @@ export class FirmService {
         (process.env.FIRM_MEDIA_FOLDER_NAME as string) || 'FirmMedia',
       );
     }
-    if (createObject?.category?.length) {
-      let category = await this.commonService.categoryFilter({
-        id: createObject.category,
-      });
-      if (!category?.length) {
-        throw new NotFoundException(
-          `Categories with id ${createObject.category} not found`,
-        );
-      }
-      createObject.category = category;
-    }
+    // if (createObject?.category?.length) {
+    //   let category = await this.commonService.categoryFilter({
+    //     id: createObject.category,
+    //   });
+    //   if (!category?.length) {
+    //     throw new NotFoundException(
+    //       `Categories with id ${createObject.category} not found`,
+    //     );
+    //   }
+    //   createObject.category = category;
+    // }
     const result: any = this.firmRepository.create(createObject);
     let response: any = await this.firmRepository.save(result);
     await Promise.all([
@@ -117,27 +117,27 @@ export class FirmService {
         `You are not allowed to modify subscription details, contact your administrator`,
       );
     }
-    if (updateObject?.category?.length) {
-      let category = await this.commonService.categoryFilter({
-        id: updateObject.category,
-      });
-      if (!category?.length) {
-        throw new NotFoundException(
-          `Categories with id ${updateObject.category} not found`,
-        );
-      }
-      const firm = await this.firmRepository.findOne({
-        where: { id },
-        relations: ['category'],
-      });
-      if (!firm) {
-        throw new NotFoundException(`Firm with id ${id} not found`);
-      }
-      firm.category = category;
-      return await this.firmRepository.save(firm);
-    } else {
-      return await this.firmRepository.update(id, updateObject);
-    }
+    // if (updateObject?.category?.length) {
+    //   let category = await this.commonService.categoryFilter({
+    //     id: updateObject.category,
+    //   });
+    //   if (!category?.length) {
+    //     throw new NotFoundException(D
+    //       `Categories with id ${updateObject.category} not found`,
+    //     );
+    //   }
+    //   const firm = await this.firmRepository.findOne({
+    //     where: { id },
+    //     relations: ['category'],
+    //   });
+    //   if (!firm) {
+    //     throw new NotFoundException(`Firm with id ${id} not found`);
+    //   }
+    //   firm.category = category;
+    //   return await this.firmRepository.save(firm);
+    // } else {
+    // }
+    return await this.firmRepository.update(id, updateObject);
   }
 
   async delete(id: string, filterType?: string): Promise<any> {

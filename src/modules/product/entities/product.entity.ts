@@ -2,7 +2,7 @@ import { Entity, Column, OneToMany, ManyToOne, Unique } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { CustomFieldsData } from '../../custom-fields/entities/custom-fields-data.entity';
 import { Status } from '../../../enums/status.enum';
-import { Category } from '../../category/entities/category.entity';
+// import { Category } from '../../category/entities/category.entity';
 import { Firm } from '../../firm/entities/firm.entity';
 import { RentalProduct } from '../../rental-products/entities/rental-product.entity';
 import { Period } from '../../../enums/period.enum';
@@ -89,8 +89,8 @@ export class Product extends BaseEntity {
   )
   customFieldsData: CustomFieldsData[];
 
-  @ManyToOne(() => Category, (category) => category.product)
-  category: Category;
+  // @ManyToOne(() => Category, (category) => category.product)
+  // category: Category;
 
   @ManyToOne(() => Firm, (firm) => firm.product)
   firm: Firm;

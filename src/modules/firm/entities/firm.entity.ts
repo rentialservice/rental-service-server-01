@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { BaseEntity } from '../../../base/base.entity';
 import { Subscription } from '../../subscription/entities/subscription.entity';
-import { Category } from '../../category/entities/category.entity';
+// import { Category } from '../../category/entities/category.entity';
 import { Product } from '../../product/entities/product.entity';
 import { CustomFields } from '../../custom-fields/entities/custom-fields.entity';
 import { Prefix } from '../../prefix/entities/prefix.entity';
@@ -48,9 +48,9 @@ export class Firm extends BaseEntity {
   @ManyToOne(() => Subscription)
   subscription: Subscription;
 
-  @ManyToMany(() => Category)
-  @JoinTable()
-  category: Category[];
+  // @ManyToMany(() => Category)
+  // @JoinTable()
+  // category: Category[];
 
   @OneToMany(() => Product, (product) => product.firm)
   product: Product[];

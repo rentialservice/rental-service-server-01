@@ -7,7 +7,7 @@ import { NotificationToken } from '../../modules/supporting-modules/notification
 import { Notification } from '../../modules/supporting-modules/notification/entities/notification.entity';
 import { Seller } from '../../modules/users/seller/entities/seller.entity';
 import { Admin } from '../../modules/users/admin/entities/admin.entity';
-import { Category } from '../../modules/category/entities/category.entity';
+// import { Category } from '../../modules/category/entities/category.entity';
 import { CustomFields } from 'src/modules/custom-fields/entities/custom-fields.entity';
 import { Role } from '../../modules/role/entities/role.entity';
 import { Permission } from '../../modules/permission/entities/permission.entity';
@@ -31,7 +31,7 @@ export const entities = [
   Firm,
   DynamicData,
   DynamicSchema,
-  Category,
+  // Category,
   CustomFields,
   CustomFieldsData,
   Role,

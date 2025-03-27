@@ -1,5 +1,5 @@
 import { AuthModule } from '../../modules/auth/auth.module';
-import { CategoryModule } from '../../modules/category/category.module';
+// import { CategoryModule } from '../../modules/category/category.module';
 import { CommonModule } from '../../modules/common/common.module';
 import { CustomFieldsModule } from '../../modules/custom-fields/custom-fields.module';
 import { DynamicModule } from '../../modules/dynamic/dynamic.module';
@@ -31,7 +31,7 @@ export const modules = [
   NotificationModule,
   FirmModule,
   DynamicModule,
-  CategoryModule,
+  // CategoryModule,
   CustomFieldsModule,
   ProductModule,
   PermissionModule,

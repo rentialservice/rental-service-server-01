@@ -127,6 +127,7 @@ export class RentalService {
   async getByIdDirect(id: string, filterType?: string): Promise<any> {
     const rental = await this.rentalRepository.findOne({
       where: { id, deleteFlag: false },
+      relations: ['buyer', 'rentalProduct.product', 'firm'],
     });
     if (!rental) {
       throw new NotFoundException(`Rental with id ${id} not found`);
@@ -231,6 +232,7 @@ export class RentalService {
     if (!rental) {
       throw new NotFoundException(`Rental with id ${id} not found`);
     }
+    let isUnitAvailable = false;
     const data = {
       company: {
         name: rental.firm.name,
@@ -265,6 +267,7 @@ export class RentalService {
           parseFloat(rental.deposit.toString()),
       items:
         rental?.rentalProduct?.map((rentalProduct: any, index: number) => {
+          isUnitAvailable = isUnitAvailable || !!rentalProduct?.unit;
           return {
             index: index + 1,
             product: rentalProduct?.product?.name || 'Product',
@@ -274,6 +277,7 @@ export class RentalService {
             returnDate: convertDate(rentalProduct?.endDate),
             quantity: rentalProduct?.quantity || 1,
             rate: rentalProduct?.salesPrice || 0,
+            unit: rentalProduct?.unit,
             total: rentalProduct?.salesPrice * rentalProduct?.quantity || 0,
           };
         }) || [],
@@ -290,6 +294,7 @@ export class RentalService {
         amount: transaction.rental[0].amount,
       })),
       preparedBy: rental.firm.name,
+      isUnitAvailable,
     };
     return await generateHTMLFromTemplate(data, 'invoice');
   }

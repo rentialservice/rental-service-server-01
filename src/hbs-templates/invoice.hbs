@@ -159,6 +159,9 @@
           <th>Description</th>
           <th>Delivery date</th>
           <th>Return date</th>
+          {{#if isUnitAvailable}}
+          <th>Unit</th>
+          {{/if}}
           <th style="text-align: right;">QTY</th>
           <th style="text-align: right;">Rate</th>
           <th style="text-align: right;">Total</th>
@@ -170,6 +173,9 @@
           <td style="font-size:8px">{{description}}</td>
           <td>{{deliveryDate}}</td>
           <td>{{returnDate}}</td>
+          {{#if ../isUnitAvailable}}
+          <td>{{unit}}</td>
+          {{/if}}
           <td style="text-align: right;">{{quantity}}</td>
           <td style="text-align: right;">
             <span style="font-size: 8px">Rs.</span>
