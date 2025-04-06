@@ -24,14 +24,14 @@ export class PrefixService {
     if (!queryData?.firm) {
       throw new Error('Firm is required');
     }
-    if (
-      createObject?.module === ModuleNameList.Product &&
-      !queryData?.category
-    ) {
-      throw new Error(
-        'Category is also required for adding any prefix for Product module',
-      );
-    }
+    // if (
+    //   createObject?.module === ModuleNameList.Product &&
+    //   !queryData?.category
+    // ) {
+    //   throw new Error(
+    //     'Category is also required for adding any prefix for Product module',
+    //   );
+    // }
     let [firm] = await this.commonService.firmFilter({
       id: queryData.firm,
     });

@@ -175,12 +175,12 @@ export class AuthService {
       if (authType === 'email') {
         userDetails = await this.buyerRepository.findOne({
           where: { email: verify?.email, deleteFlag: false },
-          relations: ['firm.category'],
+          relations: ['firm'],
         });
       } else if (authType === 'phone') {
         userDetails = await this.buyerRepository.findOne({
           where: { phone: verify?.phone, deleteFlag: false },
-          relations: ['firm.category'],
+          relations: ['firm'],
         });
       } else {
         throw new Error('Invalid auth type...!');
@@ -189,12 +189,12 @@ export class AuthService {
       if (authType === 'email') {
         userDetails = await this.sellerRepository.findOne({
           where: { email: verify?.email, deleteFlag: false },
-          relations: ['firm.category'],
+          relations: ['firm'],
         });
       } else if (authType === 'phone') {
         userDetails = await this.sellerRepository.findOne({
           where: { phone: verify?.phone, deleteFlag: false },
-          relations: ['firm.category'],
+          relations: ['firm'],
         });
       } else {
         throw new Error('Invalid auth type...!');
@@ -216,7 +216,6 @@ export class AuthService {
         userDetails = await this.buyerRepository.save(user);
       } else if (type === 'seller') {
         let firm: any = await this.firmService.create({ name: 'Firm ABC' });
-        firm.category = [];
         user.firm = firm;
         userDetails = await this.sellerRepository.save(user);
       } else {
@@ -418,7 +417,7 @@ export class AuthService {
     if (type === 'buyer') {
       let userDetails = await this.buyerRepository.findOne({
         where: { email: ssoLoginDto.email, deleteFlag: false },
-        relations: ['firm.category'],
+        relations: ['firm'],
       });
       if (userDetails) {
         let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
@@ -459,7 +458,7 @@ export class AuthService {
     } else if (type === 'seller') {
       let userDetails = await this.sellerRepository.findOne({
         where: { email: ssoLoginDto.email, deleteFlag: false },
-        relations: ['firm.category'],
+        relations: ['firm'],
       });
       if (userDetails) {
         let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
@@ -480,7 +479,6 @@ export class AuthService {
           ? `${username}${sixDigitGenerator()}`
           : username;
         let firm: any = await this.firmService.create({ name: 'Firm ABC' });
-        firm.category = [];
         let user: any = {
           email: ssoLoginDto.email,
           fullName: ssoLoginDto.fullName,

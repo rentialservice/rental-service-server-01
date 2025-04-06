@@ -101,7 +101,7 @@ export class RentalService {
     filterType?: string,
     filterCriteria?: any,
   ): Promise<any> {
-    delete filterCriteria.category;
+    delete filterCriteria?.category;
     return await this.rentalRepository.findAndCount({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
       relations: ['buyer'],
@@ -371,7 +371,7 @@ export class RentalService {
     fields: string[] = [],
     filterType?: string,
   ): Promise<any> {
-    delete filterCriteria.category;
+    delete filterCriteria?.category;
     return await this.rentalRepository.find({
       where: {
         ...buildFilterCriteriaQuery(filterCriteria),
