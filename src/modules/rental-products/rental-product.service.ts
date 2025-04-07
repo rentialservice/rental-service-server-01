@@ -4,7 +4,8 @@ import { Repository } from 'typeorm';
 import { RentalProduct } from './entities/rental-product.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 import { CommonService } from '../common/common.service';
-import { RentalService } from '../rental/rental.service';
+import { Product } from '../product/entities/product.entity';
+import { Status } from '../../enums/status.enum';
 
 @Injectable()
 export class RentalProductService {
@@ -12,6 +13,8 @@ export class RentalProductService {
     @InjectRepository(RentalProduct)
     private readonly rentalProductRepository: Repository<RentalProduct>,
     private readonly commonService: CommonService,
+    @InjectRepository(Product)
+    private readonly productRepository: Repository<Product>,
   ) {}
 
   async create(createObjects: Partial<any[]>): Promise<any> {
@@ -25,6 +28,9 @@ export class RentalProductService {
             `Product with id ${createObject.product} not found`,
           );
         } else {
+          await this.productRepository.update(product?.id, {
+            status: Status.Rented,
+          });
           createObject.product = product;
         }
       }),

@@ -10,6 +10,7 @@ import {
   generateHTMLFromTemplate,
   generatePdfFromTemplate,
 } from '../../common/common';
+import { InvoiceStatus } from '../../enums/status.enum';
 
 @Injectable()
 export class PaymentCollectionService {
@@ -93,14 +94,18 @@ export class PaymentCollectionService {
           );
         }
 
+        let pendingAmount =
+          parseFloat(rentalResponse?.pendingAmount) - (rental?.amount || 0);
         let updateObj = {
-          pendingAmount:
-            parseFloat(rentalResponse?.pendingAmount) - (rental?.amount || 0),
+          pendingAmount,
           paidAmount:
             parseFloat(rentalResponse?.paidAmount) + (rental?.amount || 0),
           isDepositRefunded: rental?.isDepositRefunded || false,
           isDepositDeducted: rental?.isDepositDeducted || false,
           deductedAmount: rental?.deductedAmount || 0,
+          invoiceStatus: pendingAmount
+            ? InvoiceStatus.PartiallyPaid
+            : InvoiceStatus.Paid,
         };
 
         await this.rentalService.update(rental?.id, updateObj);
