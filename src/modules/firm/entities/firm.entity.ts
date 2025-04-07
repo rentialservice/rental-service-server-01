@@ -43,6 +43,9 @@ export class Firm extends BaseEntity {
   email: string;
 
   @Column({ default: '' })
+  signature: string;
+
+  @Column({ default: '' })
   description: string;
 
   @ManyToOne(() => Subscription)

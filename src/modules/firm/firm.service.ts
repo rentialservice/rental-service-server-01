@@ -19,11 +19,21 @@ export class FirmService {
     private readonly s3Service: S3Service,
   ) {}
 
-  async create(createObject: Partial<Firm>, media?: any): Promise<any> {
+  async create(
+    createObject: Partial<Firm>,
+    media?: any,
+    signature?: any,
+  ): Promise<any> {
     if (media) {
       createObject.media = await this.s3Service.uploadImageS3(
         media,
         (process.env.FIRM_MEDIA_FOLDER_NAME as string) || 'FirmMedia',
+      );
+    }
+    if (signature) {
+      createObject.signature = await this.s3Service.uploadImageS3(
+        signature,
+        (process.env.FIRM_SIGNATURE_FOLDER_NAME as string) || 'FirmSignature',
       );
     }
     // if (createObject?.category?.length) {
@@ -105,11 +115,18 @@ export class FirmService {
     updateObject: Partial<Firm>,
     filterType?: string,
     media?: any,
+    signature?: any,
   ): Promise<any> {
     if (media) {
       updateObject.media = await this.s3Service.uploadImageS3(
         media,
         (process.env.FIRM_MEDIA_FOLDER_NAME as string) || 'FirmMedia',
+      );
+    }
+    if (signature) {
+      updateObject.signature = await this.s3Service.uploadImageS3(
+        signature,
+        (process.env.FIRM_SIGNATURE_FOLDER_NAME as string) || 'FirmSignature',
       );
     }
     if (updateObject?.subscription) {

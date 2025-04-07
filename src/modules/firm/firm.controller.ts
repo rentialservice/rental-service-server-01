@@ -12,6 +12,7 @@ import {
   Query,
   UseInterceptors,
   UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
 import { FirmService } from './firm.service';
 import { Firm } from './entities/firm.entity';
@@ -23,7 +24,10 @@ import {
   successPaginatedResponse,
   successResponse,
 } from '../../base/response';
-import { FilesInterceptor } from '@nestjs/platform-express';
+import {
+  FileFieldsInterceptor,
+  FilesInterceptor,
+} from '@nestjs/platform-express';
 
 @UseGuards(JwtAuthGuard)
 @Controller('firm')
@@ -31,15 +35,31 @@ export class FirmController {
   constructor(private readonly firmService: FirmService) {}
 
   @Post()
-  @UseInterceptors(FilesInterceptor('media', 1))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'media', maxCount: 1 },
+      { name: 'signature', maxCount: 1 },
+    ]),
+  )
   async create(
     @Req() request: Request,
     @Res() response: Response,
     @Body() createObject: Partial<Firm>,
-    @UploadedFile() media: Express.Multer.File,
+    @UploadedFiles()
+    files: {
+      media?: Express.Multer.File[];
+      signature?: Express.Multer.File[];
+    },
   ): Promise<void> {
     try {
-      let result = await this.firmService.create(createObject, media);
+      const media = files.media?.[0];
+      const signature = files.signature?.[0];
+
+      const result = await this.firmService.create(
+        createObject,
+        media,
+        signature,
+      );
       successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);
@@ -82,21 +102,34 @@ export class FirmController {
   }
 
   @Put(RoutesConstants.PARAM_ID)
-  @UseInterceptors(FilesInterceptor('media', 1))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'media', maxCount: 1 },
+      { name: 'signature', maxCount: 1 },
+    ]),
+  )
   async update(
     @Req() request: Request,
     @Res() response: Response,
     @Param(RoutesConstants.ID) id: string,
     @Body() updateObject: Partial<Firm>,
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
-    @UploadedFile() media: Express.Multer.File,
+    @UploadedFiles()
+    files: {
+      media?: Express.Multer.File[];
+      signature?: Express.Multer.File[];
+    },
   ): Promise<void> {
     try {
-      let result = await this.firmService.update(
+      const media = files.media?.[0];
+      const signature = files.signature?.[0];
+
+      const result = await this.firmService.update(
         id,
         updateObject,
         filterType,
         media,
+        signature,
       );
       successResponse(response, result);
     } catch (error: any) {
