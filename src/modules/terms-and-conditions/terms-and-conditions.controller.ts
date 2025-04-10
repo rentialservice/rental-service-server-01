@@ -22,7 +22,7 @@ import {
   successResponse,
 } from '../../base/response';
 
-@UseGuards(JwtAuthGuard)
+// @UseGuards(JwtAuthGuard)
 @Controller('terms-and-conditions')
 export class TermsAndConditionsController {
   constructor(
@@ -77,6 +77,7 @@ export class TermsAndConditionsController {
         page,
         pageSize,
         filterType,
+        request.query,
       );
       successPaginatedResponse(response, result, count, page, pageSize);
     } catch (error: any) {
