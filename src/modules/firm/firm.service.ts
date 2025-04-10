@@ -71,7 +71,7 @@ export class FirmService {
   ): Promise<any> {
     return await this.firmRepository.findAndCount({
       where: { deleteFlag: false },
-      relations: ['subscription', 'category'],
+      relations: ['subscription'],
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -80,7 +80,7 @@ export class FirmService {
   async getById(id: string, filterType?: string): Promise<any> {
     const firm = await this.firmRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['subscription', 'category'],
+      relations: ['subscription'],
     });
     if (!firm) {
       throw new NotFoundException(`Firm with id ${id} not found`);
