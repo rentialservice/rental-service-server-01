@@ -8,6 +8,7 @@ import { PaymentModeService } from '../payment-mode/payment-mode.service';
 import { S3Service } from '../supporting-modules/s3/s3.service';
 import { PrefixService } from '../prefix/prefix.service';
 import { ModuleNameList } from '../../enums/module.enum';
+import { TermsAndConditionsService } from '../terms-and-conditions/terms-and-conditions.service';
 
 @Injectable()
 export class FirmService {
@@ -16,6 +17,7 @@ export class FirmService {
     private readonly commonService: CommonService,
     private readonly paymentModeService: PaymentModeService,
     private readonly prefixService: PrefixService,
+    private readonly termsAndConditionsService: TermsAndConditionsService,
     private readonly s3Service: S3Service,
   ) {}
 
@@ -50,8 +52,24 @@ export class FirmService {
     const result: any = this.firmRepository.create(createObject);
     let response: any = await this.firmRepository.save(result);
     await Promise.all([
+      this.termsAndConditionsService.create(
+        {
+          default: true,
+          value: `<!DOCTYPE html>
+        <html>
+        <body>
+        <ul>
+        <li>Renter must return items on time and in good condition; damages or loss incur charges.</li>
+        <li>Full payment upfront; late returns and unreturned items may incur extra costs.</li>
+        <li>Renter assumes all risks; company is not liable for misuse or injuries.</li>
+        </ul>
+        </body>
+        </html>`,
+        },
+        { firm: response.id },
+      ),
       this.paymentModeService.create({ firm: response.id, name: 'CASH' }),
-      this.paymentModeService.create({ firm: response.id, name: 'BANK' }),
+      this.paymentModeService.create({ firm: response.id, value: 'BANK' }),
       this.prefixService.create(
         { module: ModuleNameList.Invoice, name: 'INV' },
         { firm: response.id },
