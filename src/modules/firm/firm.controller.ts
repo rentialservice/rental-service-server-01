@@ -121,8 +121,8 @@ export class FirmController {
     },
   ): Promise<void> {
     try {
-      const media = files.media?.[0];
-      const signature = files.signature?.[0];
+      const media = files?.media?.[0];
+      const signature = files?.signature?.[0];
 
       const result = await this.firmService.update(
         id,
