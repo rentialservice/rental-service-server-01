@@ -3,7 +3,7 @@ import { Entity, Column } from 'typeorm';
 
 @Entity('subscription')
 export class Subscription extends BaseEntity {
-  @Con({ unique: true })
+  @Column({ unique: true })
   name: string;
 
   @Column({ default: '' })

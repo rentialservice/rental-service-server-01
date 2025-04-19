@@ -346,11 +346,17 @@ export class RentalService {
         updateObject.paymentMode = paymentMode;
       }
     }
-    updateObject.pendingAmount
+    parseInt((updateObject?.pendingAmount as any) || '0')
       ? (updateObject.invoiceStatus = InvoiceStatus.PartiallyPaid)
       : (updateObject.invoiceStatus = InvoiceStatus.Paid);
+    if (updateObject?.rentalProduct?.length) {
+      if (updateObject.invoiceStatus === InvoiceStatus.Paid) {
+        await this.rentalProductService.updateStatusAndRentedStock(
+          updateObject?.rentalProduct,
+        );
+      }
+    }
     delete updateObject?.rentalProduct;
-    console.log({ updateObject });
     return await this.rentalRepository.update(id, updateObject);
   }
 

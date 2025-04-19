@@ -30,12 +30,43 @@ export class RentalProductService {
         } else {
           await this.productRepository.update(product?.id, {
             status: Status.Rented,
+            currentRentedStock: product?.currentRentedStock + 1,
           });
           createObject.product = product;
         }
       }),
     );
     const result = this.rentalProductRepository.create(createObjects);
+    return await this.rentalProductRepository.save(result);
+  }
+
+  async updateStatusAndRentedStock(
+    updateObjects: Partial<any[]>,
+  ): Promise<any> {
+    for (const updateObject of updateObjects) {
+      let [product] = await this.commonService.productFilter({
+        id: updateObject.product,
+      });
+      if (!product) {
+        throw new NotFoundException(
+          `Product with id ${updateObject.product} not found`,
+        );
+      } else {
+        if (parseInt(product?.currentRentedStock) === 1) {
+          await this.productRepository.update(product?.id, {
+            status: Status.Available,
+            currentRentedStock: parseInt(product?.currentRentedStock) - 1,
+          });
+        } else {
+          await this.productRepository.update(product?.id, {
+            status: Status.Rented,
+            currentRentedStock: parseInt(product?.currentRentedStock) - 1,
+          });
+        }
+        updateObject.product = product;
+      }
+    }
+    const result = this.rentalProductRepository.create(updateObjects);
     return await this.rentalProductRepository.save(result);
   }
 
@@ -75,8 +106,8 @@ export class RentalProductService {
       .map((obj) => obj.id)
       .filter((id) => !updateObjectIds.includes(id));
 
-    console.log({ rental });
     for (const updateObject of updateObjects) {
+      // console.log({ updateObject });
       if (updateObject?.id) {
         await this.rentalProductRepository.update(
           updateObject.id,
@@ -105,6 +136,7 @@ export class RentalProductService {
   }
 
   async updateById(id: string, updateObject?: any): Promise<any> {
+    console.log({ updateObject });
     const result = await this.rentalProductRepository.update(id, updateObject);
     if (result.affected === 0) {
       throw new NotFoundException(`RentalProduct with id ${id} not found`);
