@@ -42,7 +42,7 @@ export class Firm extends BaseEntity {
   @Column({ default: '' })
   email: string;
 
-  @Column({ default: '' })
+  @Column({ default: null })
   signature: string;
 
   @Column({ default: '' })
