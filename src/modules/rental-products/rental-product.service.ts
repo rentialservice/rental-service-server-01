@@ -57,6 +57,10 @@ export class RentalProductService {
             status: Status.Available,
             currentRentedStock: parseInt(product?.currentRentedStock) - 1,
           });
+        } else if (!parseInt(product?.currentRentedStock)) {
+          await this.productRepository.update(product?.id, {
+            status: Status.Available,
+          });
         } else {
           await this.productRepository.update(product?.id, {
             status: Status.Rented,
