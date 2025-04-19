@@ -69,7 +69,7 @@ export class FirmService {
         { firm: response.id },
       ),
       this.paymentModeService.create({ firm: response.id, name: 'CASH' }),
-      this.paymentModeService.create({ firm: response.id, value: 'BANK' }),
+      this.paymentModeService.create({ firm: response.id, name: 'BANK' }),
       this.prefixService.create(
         { module: ModuleNameList.Invoice, name: 'INV' },
         { firm: response.id },
