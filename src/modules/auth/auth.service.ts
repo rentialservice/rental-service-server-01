@@ -215,7 +215,11 @@ export class AuthService {
       if (type === 'buyer') {
         userDetails = await this.buyerRepository.save(user);
       } else if (type === 'seller') {
-        let firm: any = await this.firmService.create({ name: 'Firm ABC' });
+        let firm: any = await this.firmService.create({
+          name: 'Firm ABC',
+          email: verify?.email,
+          phone: verify?.phone,
+        });
         user.firm = firm;
         userDetails = await this.sellerRepository.save(user);
       } else {
@@ -478,7 +482,10 @@ export class AuthService {
         username = userWithUsername
           ? `${username}${sixDigitGenerator()}`
           : username;
-        let firm: any = await this.firmService.create({ name: 'Firm ABC' });
+        let firm: any = await this.firmService.create({
+          name: 'Firm ABC',
+          email: ssoLoginDto.email,
+        });
         let user: any = {
           email: ssoLoginDto.email,
           fullName: ssoLoginDto.fullName,
