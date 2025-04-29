@@ -21,6 +21,7 @@ import {
   successPaginatedResponse,
   successResponse,
 } from '../../base/response';
+import { AllowWithoutSubscription } from '../auth/allow-without-subscription.decorator';
 
 // @UseGuards(JwtAuthGuard)
 @Controller('terms-and-conditions')
@@ -136,6 +137,7 @@ export class TermsAndConditionsController {
   }
 
   @Post('/filter')
+  @AllowWithoutSubscription()
   async filter(
     @Req() request: Request,
     @Res() response: Response,

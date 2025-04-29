@@ -1,0 +1,47 @@
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { SubscriptionService } from '../subscription/subscription.service';
+
+@Injectable()
+export class SubscriptionGuard implements CanActivate {
+  constructor(
+    private readonly reflector: Reflector,
+    private readonly subscriptionService: SubscriptionService,
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const request = context.switchToHttp().getRequest();
+    const method = request.method;
+
+    // Allow all GET requests without subscription check
+    if (method === 'GET') {
+      return true;
+    }
+
+    // Check if the route is marked with @AllowWithoutSubscription
+    const allowWithoutSubscription = this.reflector.get<boolean>(
+      'allowWithoutSubscription',
+      context.getHandler(),
+    );
+    if (allowWithoutSubscription) {
+      return true;
+    }
+
+    // For other requests, check subscription
+    const user = request.user; // Set by AuthGuard('jwt') via JwtStrategy
+    const userId = user.id; // Assuming all user entities have an 'id' field
+    const hasSubscription =
+      await this.subscriptionService.hasActiveSubscription(userId);
+
+    if (!hasSubscription) {
+      throw new ForbiddenException('No active subscription');
+    }
+
+    return true;
+  }
+}

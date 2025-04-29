@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { Subscription } from './entities/subscription.entity';
 import { buildFilterCriteriaQuery } from '../../common/utils';
 
@@ -10,6 +10,18 @@ export class SubscriptionService {
     @InjectRepository(Subscription)
     private readonly subscriptionRepository: Repository<Subscription>,
   ) {}
+
+  async hasActiveSubscription(userId: string): Promise<boolean> {
+    const currentDate = new Date();
+    const activeSubscription = await this.subscriptionRepository.findOne({
+      where: {
+        userId,
+        startDate: LessThanOrEqual(currentDate),
+        endDate: MoreThanOrEqual(currentDate),
+      },
+    });
+    return !!activeSubscription;
+  }
 
   async create(createObject: Partial<Subscription>): Promise<any> {
     const result = this.subscriptionRepository.create(createObject);

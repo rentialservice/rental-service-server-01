@@ -10,7 +10,13 @@ export class Subscription extends BaseEntity {
   description: string;
 
   @Column({ default: '' })
-  validity: string;
+  userId: string;
+
+  @Column({ default: new Date() })
+  startDate: Date;
+
+  @Column({ default: new Date() })
+  endDate: Date;
 
   @Column({ type: 'decimal', precision: 10, scale: 2 })
   price: number;
