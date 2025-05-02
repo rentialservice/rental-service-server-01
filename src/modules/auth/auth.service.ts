@@ -617,4 +617,140 @@ export class AuthService {
     delete userDetails.password;
     return { ...userDetails, accessToken, refreshToken };
   }
+
+  async verifiedPhoneLogin(data: any): Promise<any> {
+    let type = data.type;
+    if (!type) {
+      throw new Error('Invalid type');
+    }
+    if (type === 'buyer') {
+      let userDetails = await this.buyerRepository.findOne({
+        where: { phone: data.phone, deleteFlag: false },
+        relations: ['firm'],
+      });
+      if (userDetails) {
+        let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
+        let refreshToken = this.#createJwtRefreshToken({
+          ...userDetails,
+          type,
+        });
+        delete userDetails.password;
+        delete userDetails.activeFlag;
+        delete userDetails.deleteFlag;
+        return { ...userDetails, accessToken, refreshToken, isNewUser: false };
+      } else {
+        let username = extractUsername(data.phone);
+        let userWithUsername = await this.buyerRepository.findOne({
+          where: { username, deleteFlag: false },
+        });
+        username = userWithUsername
+          ? `${username}${sixDigitGenerator()}`
+          : username;
+        let user: any = {
+          phone: data.phone,
+          username,
+        };
+        let userDetails = await this.buyerRepository.save(user);
+        let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
+        let refreshToken = this.#createJwtRefreshToken({
+          ...userDetails,
+          type,
+        });
+        delete userDetails.password;
+        delete userDetails.activeFlag;
+        delete userDetails.deleteFlag;
+        return { ...userDetails, accessToken, refreshToken, isNewUser: true };
+      }
+    } else if (type === 'seller') {
+      let userDetails = await this.sellerRepository.findOne({
+        where: { phone: data.phone, deleteFlag: false },
+        relations: ['firm'],
+      });
+      if (userDetails) {
+        let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
+        let refreshToken = this.#createJwtRefreshToken({
+          ...userDetails,
+          type,
+        });
+        delete userDetails.password;
+        delete userDetails.activeFlag;
+        delete userDetails.deleteFlag;
+        return { ...userDetails, accessToken, refreshToken, isNewUser: false };
+      } else {
+        let username = extractUsername(data.phone);
+        let userWithUsername = await this.sellerRepository.findOne({
+          where: { username, deleteFlag: false },
+        });
+        username = userWithUsername
+          ? `${username}${sixDigitGenerator()}`
+          : username;
+        let firm: any = await this.firmService.create({
+          name: 'Firm ABC',
+          phone: data.phone,
+        });
+        let user: any = {
+          phone: data.phone,
+          username,
+          firm,
+        };
+        let userDetails = await this.sellerRepository.save(user);
+        let accessToken = this.#createJwtAccessToken({ ...userDetails, type });
+        let refreshToken = this.#createJwtRefreshToken({
+          ...userDetails,
+          type,
+        });
+        delete userDetails.password;
+        delete userDetails.activeFlag;
+        delete userDetails.deleteFlag;
+        return { ...userDetails, accessToken, refreshToken, isNewUser: true };
+      }
+    } else {
+      throw new Error('Invalid user type...!');
+    }
+  }
+
+  async verifiedPhoneLoginAdmin(data: any): Promise<any> {
+    let userDetails = await this.adminRepository.findOne({
+      where: { phone: data.phone, deleteFlag: false },
+    });
+    if (userDetails) {
+      let accessToken = this.#createJwtAccessToken({
+        ...userDetails,
+        type: 'admin',
+      });
+      let refreshToken = this.#createJwtRefreshToken({
+        ...userDetails,
+        type: 'admin',
+      });
+      delete userDetails.password;
+      delete userDetails.activeFlag;
+      delete userDetails.deleteFlag;
+      return { ...userDetails, accessToken, refreshToken, isNewUser: false };
+    } else {
+      let username = extractUsername(data.phone);
+      let userWithUsername = await this.adminRepository.findOne({
+        where: { username, deleteFlag: false },
+      });
+      username = userWithUsername
+        ? `${username}${sixDigitGenerator()}`
+        : username;
+      let user: any = {
+        phone: data.phone,
+        username,
+      };
+      let userDetails = await this.adminRepository.save(user);
+      let accessToken = this.#createJwtAccessToken({
+        ...userDetails,
+        type: 'admin',
+      });
+      let refreshToken = this.#createJwtRefreshToken({
+        ...userDetails,
+        type: 'admin',
+      });
+      delete userDetails.password;
+      delete userDetails.activeFlag;
+      delete userDetails.deleteFlag;
+      return { ...userDetails, accessToken, refreshToken, isNewUser: true };
+    }
+  }
 }

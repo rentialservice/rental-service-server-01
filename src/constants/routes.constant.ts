@@ -19,6 +19,8 @@ export const RoutesConstants = {
   LOGIN_ADMIN: 'login-admin',
   SSO_LOGIN: 'sso-login',
   SSO_LOGIN_ADMIN: 'sso-login-admin',
+  VERIFIED_PHONE_LOGIN: 'verified-phone-login',
+  VERIFIED_PHONE_LOGIN_ADMIN: 'verified-phone-login-admin',
   NEW_ACCESS_TOKEN: 'new-access-token',
   FORGOT_PASSWORD_SEND_OTP: 'forgot-password/send-otp',
   FORGOT_PASSWORD: 'forgot-password',

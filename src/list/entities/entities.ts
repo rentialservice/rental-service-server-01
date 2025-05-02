@@ -20,6 +20,7 @@ import { PaymentMode } from '../../modules/payment-mode/entities/payment-mode.en
 import { Prefix } from '../../modules/prefix/entities/prefix.entity';
 import { TermsAndConditions } from '../../modules/terms-and-conditions/entities/terms-and-conditions.entity';
 import { RentalProduct } from '../../modules/rental-products/entities/rental-product.entity';
+import { Payment } from '../../modules/payment/entities/payment.entity';
 
 export const entities = [
   Admin,
@@ -44,4 +45,5 @@ export const entities = [
   Prefix,
   TermsAndConditions,
   RentalProduct,
+  Payment,
 ];

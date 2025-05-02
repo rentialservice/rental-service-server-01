@@ -6,6 +6,7 @@ import { DynamicModule } from '../../modules/dynamic/dynamic.module';
 import { FirmModule } from '../../modules/firm/firm.module';
 import { PaymentCollectionModule } from '../../modules/payment-collection/payment-collection.module';
 import { PaymentModeModule } from '../../modules/payment-mode/payment-mode.module';
+import { PaymentModule } from '../../modules/payment/payment.module';
 import { PermissionModule } from '../../modules/permission/permission.module';
 import { PrefixModule } from '../../modules/prefix/prefix.module';
 import { ProductModule } from '../../modules/product/product.module';
@@ -44,4 +45,5 @@ export const modules = [
   CommonModule,
   TermsAndConditionsModule,
   RentalProductModule,
+  PaymentModule,
 ];

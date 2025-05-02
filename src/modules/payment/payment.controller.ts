@@ -10,9 +10,8 @@ import {
   Req,
   Res,
   Query,
+  Headers,
 } from '@nestjs/common';
-import { SubscriptionService } from './subscription.service';
-import { Subscription } from './entities/subscription.entity';
 import { JwtAuthGuard } from '../auth/jwt.auth.guard';
 import { Request, Response } from 'express';
 import { RoutesConstants } from '../../constants/routes.constant';
@@ -21,22 +20,22 @@ import {
   successPaginatedResponse,
   successResponse,
 } from '../../base/response';
-import { AllowWithoutSubscription } from '../auth/allow-without-subscription.decorator';
+import { PaymentService } from './payment.service';
+import { Payment } from './entities/payment.entity';
 
 @UseGuards(JwtAuthGuard)
-@Controller('subscription')
-export class SubscriptionController {
-  constructor(private readonly subscriptionService: SubscriptionService) {}
+@Controller('payment')
+export class PaymentController {
+  constructor(private readonly paymentService: PaymentService) {}
 
   @Post()
-  @AllowWithoutSubscription()
   async create(
     @Req() request: Request,
     @Res() response: Response,
-    @Body() createObject: Partial<Subscription>,
+    @Body() createObject: Partial<Payment>,
   ): Promise<void> {
     try {
-      let result = await this.subscriptionService.create(createObject);
+      let result = await this.paymentService.create(createObject);
       successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);
@@ -44,14 +43,13 @@ export class SubscriptionController {
   }
 
   @Get('/filter')
-  @AllowWithoutSubscription()
   async getFilter(
     @Req() request: Request,
     @Res() response: Response,
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
-      const result: any = await this.subscriptionService.filter(
+      const result: any = await this.paymentService.filter(
         request.query,
         [],
         filterType,
@@ -63,7 +61,6 @@ export class SubscriptionController {
   }
 
   @Get()
-  @AllowWithoutSubscription()
   async getAll(
     @Req() request: Request,
     @Res() response: Response,
@@ -72,7 +69,7 @@ export class SubscriptionController {
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
-      const [result, count]: any = await this.subscriptionService.getAll(
+      const [result, count]: any = await this.paymentService.getAll(
         page,
         pageSize,
         filterType,
@@ -84,7 +81,6 @@ export class SubscriptionController {
   }
 
   @Get(RoutesConstants.PARAM_ID)
-  @AllowWithoutSubscription()
   async getById(
     @Req() request: Request,
     @Res() response: Response,
@@ -92,7 +88,7 @@ export class SubscriptionController {
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
-      let result = await this.subscriptionService.getById(id, filterType);
+      let result = await this.paymentService.getById(id, filterType);
       successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);
@@ -100,16 +96,15 @@ export class SubscriptionController {
   }
 
   @Put(RoutesConstants.PARAM_ID)
-  @AllowWithoutSubscription()
   async update(
     @Req() request: Request,
     @Res() response: Response,
     @Param(RoutesConstants.ID) id: string,
-    @Body() updateObject: Partial<Subscription>,
+    @Body() updateObject: Partial<Payment>,
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
-      let result = await this.subscriptionService.update(
+      let result = await this.paymentService.update(
         id,
         updateObject,
         filterType,
@@ -121,7 +116,6 @@ export class SubscriptionController {
   }
 
   @Delete(RoutesConstants.PARAM_ID)
-  @AllowWithoutSubscription()
   async delete(
     @Req() request: Request,
     @Res() response: Response,
@@ -129,7 +123,7 @@ export class SubscriptionController {
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
-      let result = await this.subscriptionService.delete(id, filterType);
+      let result = await this.paymentService.delete(id, filterType);
       successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);
@@ -137,7 +131,6 @@ export class SubscriptionController {
   }
 
   @Post('/filter')
-  @AllowWithoutSubscription()
   async filter(
     @Req() request: Request,
     @Res() response: Response,
@@ -145,11 +138,88 @@ export class SubscriptionController {
     @Query(RoutesConstants.FILTERTYPE) filterType: string,
   ): Promise<void> {
     try {
-      const result: any = await this.subscriptionService.filter(
+      const result: any = await this.paymentService.filter(
         filterCriteria,
         [],
         filterType,
       );
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Post('create-order')
+  async createOrder(
+    @Body()
+    body: {
+      userId: string;
+      amount: number;
+      currency?: string;
+      receipt?: string;
+    },
+    @Res() response: any,
+  ) {
+    try {
+      const result = await this.paymentService.createOrder(
+        body.userId,
+        body.amount,
+        body.currency,
+        body.receipt,
+      );
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Post('verify')
+  async verifyPayment(
+    @Body() body: { order_id: string; payment_id: string; signature: string },
+    @Res() response: any,
+  ) {
+    try {
+      const result = await this.paymentService.verifyPayment(body);
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Post('refund')
+  async processRefund(
+    @Body() body: { paymentId: string; amount: number },
+    @Res() response: any,
+  ) {
+    try {
+      const result = await this.paymentService.processRefund(
+        body.paymentId,
+        body.amount,
+      );
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Post('webhook')
+  async handleWebhook(
+    @Body() body: any,
+    @Headers('x-razorpay-signature') signature: string,
+    @Res() response: any,
+  ) {
+    try {
+      const result = await this.paymentService.handleWebhook(body, signature);
+      successResponse(response, result);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Post('verify-refund')
+  async verifyRefund(@Body() body: any, @Res() response: any) {
+    try {
+      const result = await this.paymentService.verifyRefund(body);
       successResponse(response, result);
     } catch (error: any) {
       errorResponse(response, error);
