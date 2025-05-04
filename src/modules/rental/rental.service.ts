@@ -104,7 +104,7 @@ export class RentalService {
     delete filterCriteria?.category;
     return await this.rentalRepository.findAndCount({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: ['buyer'],
+      relations: ['buyer', 'firm'],
       order: { createdAt: 'DESC' },
       skip: (page - 1) * pageSize,
       take: pageSize,
@@ -153,8 +153,11 @@ export class RentalService {
     if (!rental) {
       throw new NotFoundException(`Rental with id ${id} not found`);
     }
+
     const data = {
       company: {
+        logo: rental.firm.media,
+        signature: rental.firm.signature,
         name: rental.firm.name,
         address:
           rental?.firm?.address +
@@ -213,6 +216,7 @@ export class RentalService {
       })),
       preparedBy: rental.firm.name,
     };
+    console.log({ data });
     return await generatePdfFromTemplate(data, 'invoice');
   }
 
@@ -235,6 +239,8 @@ export class RentalService {
     let isUnitAvailable = false;
     const data = {
       company: {
+        logo: rental.firm.media,
+        signature: rental.firm.signature,
         name: rental.firm.name,
         address:
           rental?.firm?.address +
@@ -296,6 +302,7 @@ export class RentalService {
       preparedBy: rental.firm.name,
       isUnitAvailable,
     };
+    console.log({ data });
     return await generateHTMLFromTemplate(data, 'invoice');
   }
 

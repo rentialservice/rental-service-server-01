@@ -283,6 +283,8 @@ export class PaymentCollectionService {
     );
     const data = {
       company: {
+        logo: receipt.firm.media,
+        signature: receipt.firm.signature,
         name: receipt.firm?.name,
         address:
           receipt?.firm?.address +
@@ -350,6 +352,8 @@ export class PaymentCollectionService {
     );
     const data = {
       company: {
+        logo: receipt.firm.media,
+        signature: receipt.firm.signature,
         name: receipt.firm?.name,
         address:
           receipt?.firm?.address +
