@@ -7,14 +7,14 @@
   "license": "MIT",
   "main": "dist/main.js",
   "engines": {
-    "node": ">=8.0.0"
+    "node": ">=20.0.0"
   },
   "scripts": {
     "build": "rm -rf dist && tsc -p tsconfig.build.json && npx puppeteer browsers install",
     "gcp-build": "npm run build",
     "format": "prettier --write \"src/**/*.ts\"",
     "dev": "nest start --watch",
-    "start": "npm run start:prod",
+    "start": "node dist/main",
     "start:dev": "nodemon",
     "postinstall": "npx puppeteer browsers install",
     "start:test": "NODE_ENV=test nodemon",
