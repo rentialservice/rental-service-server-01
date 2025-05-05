@@ -1,21 +1,21 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Rental } from './entities/rental.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Rental } from "./entities/rental.entity";
 import {
   buildFilterCriteriaQuery,
   calculatePendingAmountWithFine,
   convertDate,
-} from '../../common/utils';
-import { CommonService } from '../common/common.service';
+} from "../../common/utils";
+import { CommonService } from "../common/common.service";
 import {
   generateHTMLFromTemplate,
   generatePdfFromTemplate,
-} from '../../common/common';
-import { RentalProductService } from '../rental-products/rental-product.service';
-import { InvoiceStatus } from '../../enums/status.enum';
-import { PrefixService } from '../prefix/prefix.service';
-import { RentalProduct } from '../rental-products/entities/rental-product.entity';
+} from "../../common/common";
+import { RentalProductService } from "../rental-products/rental-product.service";
+import { InvoiceStatus } from "../../enums/status.enum";
+import { PrefixService } from "../prefix/prefix.service";
+import { RentalProduct } from "../rental-products/entities/rental-product.entity";
 
 @Injectable()
 export class RentalService {
@@ -31,16 +31,16 @@ export class RentalService {
 
   async create(createObject: Partial<Rental>, queryData: any): Promise<any> {
     if (!createObject?.rentalProduct?.length) {
-      throw new Error('Products are required');
+      throw new Error("Products are required");
     }
     if (!createObject?.buyer) {
-      throw new Error('Buyer is required');
+      throw new Error("Buyer is required");
     }
     if (!createObject?.paymentMode) {
-      throw new Error('Payment Mode is required');
+      throw new Error("Payment Mode is required");
     }
     if (!queryData?.firm) {
-      throw new Error('Firm is required');
+      throw new Error("Firm is required");
     }
 
     let [prefix] = await this.prefixService.filter({
@@ -48,7 +48,7 @@ export class RentalService {
       name: createObject?.invoicePrefix,
     });
 
-    if (!prefix) throw new NotFoundException('Prefix not found');
+    if (!prefix) throw new NotFoundException("Prefix not found");
     await this.prefixService.update(prefix?.id, {
       nextNumber: parseInt(createObject.invoiceId) + 1,
     });
@@ -104,8 +104,8 @@ export class RentalService {
     delete filterCriteria?.category;
     return await this.rentalRepository.findAndCount({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: ['buyer', 'firm'],
-      order: { createdAt: 'DESC' },
+      relations: ["buyer", "firm"],
+      order: { createdAt: "DESC" },
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -114,7 +114,7 @@ export class RentalService {
   async getById(id: string, filterType?: string): Promise<any> {
     const rental = await this.rentalRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['buyer', 'rentalProduct.product', 'firm'],
+      relations: ["buyer", "rentalProduct.product", "firm"],
     });
     if (!rental) {
       throw new NotFoundException(`Rental with id ${id} not found`);
@@ -127,7 +127,7 @@ export class RentalService {
   async getByIdDirect(id: string, filterType?: string): Promise<any> {
     const rental = await this.rentalRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['buyer', 'rentalProduct.product', 'firm'],
+      relations: ["buyer", "rentalProduct.product", "firm"],
     });
     if (!rental) {
       throw new NotFoundException(`Rental with id ${id} not found`);
@@ -141,11 +141,11 @@ export class RentalService {
     const rental = await this.rentalRepository.findOne({
       where: { id, deleteFlag: false },
       relations: [
-        'buyer',
-        'rentalProduct',
-        'rentalProduct.product',
-        'firm',
-        'paymentMode',
+        "buyer",
+        "rentalProduct",
+        "rentalProduct.product",
+        "firm",
+        "paymentMode",
       ],
     });
     let transactions =
@@ -161,9 +161,9 @@ export class RentalService {
         name: rental.firm.name,
         address:
           rental?.firm?.address +
-          ', ' +
+          ", " +
           rental?.firm?.city +
-          ', ' +
+          ", " +
           rental?.firm?.state,
         phone: rental.firm.phone,
         email: rental.firm.email,
@@ -173,15 +173,15 @@ export class RentalService {
         mobile: rental.buyer.phone,
         address:
           rental?.buyer?.address +
-          ', ' +
+          ", " +
           rental?.buyer?.city +
-          ', ' +
+          ", " +
           rental?.buyer?.state +
-          ', ' +
+          ", " +
           rental?.buyer?.pincode,
-        delivery: 'Delivery Details Here',
+        delivery: "Delivery Details Here",
       },
-      invoiceNumber: rental.invoicePrefix + ' ' + rental.invoiceId,
+      invoiceNumber: rental.invoicePrefix + " " + rental.invoiceId,
       invoiceDate: convertDate(rental.invoiceDate.toString()),
       paymentMethod: rental.paymentMode.name,
       received: rental.isDepositRefunded
@@ -192,9 +192,9 @@ export class RentalService {
         rental?.rentalProduct?.map((rentalProduct: any, index: number) => {
           return {
             index: index + 1,
-            product: rentalProduct?.product?.name || 'Product',
-            photo: '',
-            description: rentalProduct?.product?.description || 'Description',
+            product: rentalProduct?.product?.name || "Product",
+            photo: "",
+            description: rentalProduct?.product?.description || "Description",
             deliveryDate: convertDate(rentalProduct?.startDate),
             returnDate: convertDate(rentalProduct?.endDate),
             quantity: rentalProduct?.quantity || 1,
@@ -208,8 +208,8 @@ export class RentalService {
       advance: rental?.advanceAmount || 0,
       outstanding: rental?.pendingAmount || 0,
       transactions: transactions.map((transaction: any) => ({
-        type: 'Receipt',
-        number: transaction.receiptPrefix + ' ' + transaction.receiptId,
+        type: "Receipt",
+        number: transaction.receiptPrefix + " " + transaction.receiptId,
         date: convertDate(transaction.receiptDate),
         mode: transaction.paymentMode.name,
         amount: transaction.rental[0].amount,
@@ -217,18 +217,18 @@ export class RentalService {
       preparedBy: rental.firm.name,
     };
     console.log({ data });
-    return await generatePdfFromTemplate(data, 'invoice');
+    return await generatePdfFromTemplate(data, "invoice");
   }
 
   async createInvoicePreview(id: string, filterType?: string): Promise<any> {
     const rental = await this.rentalRepository.findOne({
       where: { id, deleteFlag: false },
       relations: [
-        'buyer',
-        'rentalProduct',
-        'rentalProduct.product',
-        'firm',
-        'paymentMode',
+        "buyer",
+        "rentalProduct",
+        "rentalProduct.product",
+        "firm",
+        "paymentMode",
       ],
     });
     let transactions =
@@ -244,9 +244,9 @@ export class RentalService {
         name: rental.firm.name,
         address:
           rental?.firm?.address +
-          ', ' +
+          ", " +
           rental?.firm?.city +
-          ', ' +
+          ", " +
           rental?.firm?.state,
         phone: rental.firm.phone,
         email: rental.firm.email,
@@ -256,15 +256,15 @@ export class RentalService {
         mobile: rental.buyer.phone,
         address:
           rental?.buyer?.address +
-          ', ' +
+          ", " +
           rental?.buyer?.city +
-          ', ' +
+          ", " +
           rental?.buyer?.state +
-          ', ' +
+          ", " +
           rental?.buyer?.pincode,
-        delivery: 'Delivery Details Here',
+        delivery: "Delivery Details Here",
       },
-      invoiceNumber: rental.invoicePrefix + ' ' + rental.invoiceId,
+      invoiceNumber: rental.invoicePrefix + " " + rental.invoiceId,
       invoiceDate: convertDate(rental.invoiceDate.toString()),
       paymentMethod: rental.paymentMode.name,
       received: rental.isDepositRefunded
@@ -276,9 +276,9 @@ export class RentalService {
           isUnitAvailable = isUnitAvailable || !!rentalProduct?.unit;
           return {
             index: index + 1,
-            product: rentalProduct?.product?.name || 'Product',
-            photo: '',
-            description: rentalProduct?.product?.description || 'Description',
+            product: rentalProduct?.product?.name || "Product",
+            photo: "",
+            description: rentalProduct?.product?.description || "Description",
             deliveryDate: convertDate(rentalProduct?.startDate),
             returnDate: convertDate(rentalProduct?.endDate),
             quantity: rentalProduct?.quantity || 1,
@@ -293,8 +293,8 @@ export class RentalService {
       advance: rental?.advanceAmount || 0,
       outstanding: rental?.pendingAmount || 0,
       transactions: transactions.map((transaction: any) => ({
-        type: 'Receipt',
-        number: transaction.receiptPrefix + ' ' + transaction.receiptId,
+        type: "Receipt",
+        number: transaction.receiptPrefix + " " + transaction.receiptId,
         date: convertDate(transaction.receiptDate),
         mode: transaction.paymentMode.name,
         amount: transaction.rental[0].amount,
@@ -303,7 +303,7 @@ export class RentalService {
       isUnitAvailable,
     };
     console.log({ data });
-    return await generateHTMLFromTemplate(data, 'invoice');
+    return await generateHTMLFromTemplate(data, "invoice");
   }
 
   async update(
@@ -353,7 +353,7 @@ export class RentalService {
         updateObject.paymentMode = paymentMode;
       }
     }
-    parseInt((updateObject?.pendingAmount as any) || '0')
+    parseInt((updateObject?.pendingAmount as any) || "0")
       ? (updateObject.invoiceStatus = InvoiceStatus.PartiallyPaid)
       : (updateObject.invoiceStatus = InvoiceStatus.Paid);
     if (updateObject?.rentalProduct?.length) {
@@ -370,7 +370,7 @@ export class RentalService {
   async delete(id: string, filterType?: string): Promise<any> {
     const rental = await this.rentalRepository.findOne({
       where: { id },
-      relations: ['rentalProduct'],
+      relations: ["rentalProduct"],
     });
     console.dir({ rental }, { depth: null });
     let res = await this.rentalProductRepository.remove(rental.rentalProduct);
@@ -390,8 +390,8 @@ export class RentalService {
         ...buildFilterCriteriaQuery(filterCriteria),
         deleteFlag: false,
       },
-      order: { createdAt: 'DESC' },
-      relations: ['buyer', 'rentalProduct'],
+      order: { createdAt: "DESC" },
+      relations: ["buyer", "rentalProduct"],
     });
   }
 }

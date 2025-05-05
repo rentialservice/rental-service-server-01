@@ -10,20 +10,20 @@ import {
   Req,
   Res,
   Query,
-} from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
-import { PermissionService } from './permission.service';
-import { Permission } from './entities/permission.entity';
+} from "../../base/response";
+import { PermissionService } from "./permission.service";
+import { Permission } from "./entities/permission.entity";
 
 @UseGuards(JwtAuthGuard)
-@Controller('permission')
+@Controller("permission")
 export class PermissionController {
   constructor(private readonly permissionService: PermissionService) {}
 
@@ -111,7 +111,7 @@ export class PermissionController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async filter(
     @Req() request: Request,
     @Res() response: Response,

@@ -1,21 +1,21 @@
-import { DataSourceOptions } from 'typeorm';
-import { ConfigModule } from '@nestjs/config';
-import { entities } from '../list/entities/entities';
+import { DataSourceOptions } from "typeorm";
+import { ConfigModule } from "@nestjs/config";
+import { entities } from "../list/entities/entities";
 
 ConfigModule.forRoot();
 
 const {
-  NODE_ENV = 'development',
+  NODE_ENV = "development",
   DB_HOST,
-  DB_PORT = '5432',
+  DB_PORT = "5432",
   DB_USER,
   DB_PASSWORD,
   DB_NAME,
-  DB_TYPE = 'local',
+  DB_TYPE = "local",
 } = process.env;
 
 if (!DB_HOST || !DB_USER || !DB_PASSWORD || !DB_NAME) {
-  throw new Error('Missing required database environment variables');
+  throw new Error("Missing required database environment variables");
 }
 
 const host = DB_HOST;
@@ -26,14 +26,14 @@ const database = DB_NAME;
 const type = DB_TYPE;
 
 const url =
-  NODE_ENV === 'production'
+  NODE_ENV === "production"
     ? `postgresql://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}`
     : undefined;
 
 export const databaseConfig: DataSourceOptions =
-  type === 'local'
+  type === "local"
     ? {
-        type: 'postgres',
+        type: "postgres",
         host,
         port,
         username,
@@ -45,7 +45,7 @@ export const databaseConfig: DataSourceOptions =
         logging: true,
       }
     : {
-        type: 'postgres',
+        type: "postgres",
         host,
         port,
         username,

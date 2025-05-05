@@ -4,14 +4,14 @@ import {
   Injectable,
   NotAcceptableException,
   NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
-import { Admin } from './entities/admin.entity';
-import { NotificationService } from '../../supporting-modules/notification/notification.service';
-import { SelectConstants } from '../../../constants/select.constant';
-import { RoleService } from '../../role/role.service';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import * as bcrypt from "bcryptjs";
+import { Admin } from "./entities/admin.entity";
+import { NotificationService } from "../../supporting-modules/notification/notification.service";
+import { SelectConstants } from "../../../constants/select.constant";
+import { RoleService } from "../../role/role.service";
 
 @Injectable()
 export class AdminService {
@@ -37,7 +37,7 @@ export class AdminService {
         data,
       );
     } catch (e) {
-      console.log('Error sending push notification', e);
+      console.log("Error sending push notification", e);
       throw e;
     }
   }
@@ -45,7 +45,7 @@ export class AdminService {
   async getAll(page: number = 1, pageSize: number = 10): Promise<any> {
     return await this.repository.findAndCount({
       where: { deleteFlag: false },
-      relations: ['role'],
+      relations: ["role"],
       skip: (page - 1) * pageSize,
       take: pageSize,
       select: SelectConstants.ADMIN_SELECT,
@@ -55,7 +55,7 @@ export class AdminService {
   async getById(id: string, selfId: string) {
     return await this.repository.findOne({
       where: { id },
-      relations: ['role'],
+      relations: ["role"],
       select: SelectConstants.ADMIN_SELECT,
     });
   }
@@ -63,7 +63,7 @@ export class AdminService {
   async getByUsername(username: string, selfId: string) {
     return await this.repository.findOne({
       where: { username },
-      relations: ['role'],
+      relations: ["role"],
       select: SelectConstants.ADMIN_SELECT,
     });
   }
@@ -72,7 +72,7 @@ export class AdminService {
     if (user?.role) {
       let [role] = await this.roleService.filter({ name: user?.role });
       if (!role) {
-        throw new NotFoundException('Given Role is not exist');
+        throw new NotFoundException("Given Role is not exist");
       }
       user.role = role;
     }
@@ -80,9 +80,9 @@ export class AdminService {
     if (result) {
       this.sendPushNotification(
         id,
-        'update',
-        'Profile update',
-        'Your Profile have been updated successfully',
+        "update",
+        "Profile update",
+        "Your Profile have been updated successfully",
       );
     }
     return result;
@@ -97,9 +97,9 @@ export class AdminService {
     if (result) {
       this.sendPushNotification(
         id,
-        'update',
-        'Password setting',
-        'Your Password have been set successfully',
+        "update",
+        "Password setting",
+        "Your Password have been set successfully",
       );
     }
     return result;
@@ -128,7 +128,7 @@ export class AdminService {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
-          error: 'Tweet with such id not found',
+          error: "Tweet with such id not found",
         },
         HttpStatus.NOT_FOUND,
       );
@@ -137,15 +137,15 @@ export class AdminService {
       changePasswordDto.password,
       userDetails.password,
     );
-    if (!match) throw new Error('Incorrect password');
+    if (!match) throw new Error("Incorrect password");
     let password = await bcrypt.hash(changePasswordDto.password, 8);
     let result = await this.repository.update(userDetails.id, { password });
     if (result) {
       this.sendPushNotification(
         id,
-        'update',
-        'Password change',
-        'Your Password have been updated successfully',
+        "update",
+        "Password change",
+        "Your Password have been updated successfully",
       );
     }
     return true;

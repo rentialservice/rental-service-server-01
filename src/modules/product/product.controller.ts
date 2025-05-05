@@ -12,26 +12,26 @@ import {
   Query,
   UseInterceptors,
   UploadedFiles,
-} from '@nestjs/common';
-import { ProductService } from './product.service';
-import { Product } from './entities/product.entity';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { ProductService } from "./product.service";
+import { Product } from "./entities/product.entity";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
-import { FilesInterceptor } from '@nestjs/platform-express';
+} from "../../base/response";
+import { FilesInterceptor } from "@nestjs/platform-express";
 
 @UseGuards(JwtAuthGuard)
-@Controller('product')
+@Controller("product")
 export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Post()
-  @UseInterceptors(FilesInterceptor('media', 10))
+  @UseInterceptors(FilesInterceptor("media", 10))
   async create(
     @Req() request: Request,
     @Res() response: Response,
@@ -50,7 +50,7 @@ export class ProductController {
     }
   }
 
-  @Get('/filter')
+  @Get("/filter")
   async getFilter(
     @Req() request: Request,
     @Res() response: Response,
@@ -105,7 +105,7 @@ export class ProductController {
   }
 
   @Put(RoutesConstants.PARAM_ID)
-  @UseInterceptors(FilesInterceptor('media', 10))
+  @UseInterceptors(FilesInterceptor("media", 10))
   async update(
     @Req() request: Request,
     @Res() response: Response,
@@ -142,7 +142,7 @@ export class ProductController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async filter(
     @Req() request: Request,
     @Res() response: Response,

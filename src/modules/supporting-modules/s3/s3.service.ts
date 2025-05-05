@@ -2,12 +2,12 @@ import {
   DeleteObjectCommand,
   PutObjectCommand,
   S3Client,
-} from '@aws-sdk/client-s3';
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { v4 as uuidv4 } from 'uuid';
-import { Repository } from 'typeorm';
-import { Buyer } from '../../users/buyer/entities/buyer.entity';
+} from "@aws-sdk/client-s3";
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { v4 as uuidv4 } from "uuid";
+import { Repository } from "typeorm";
+import { Buyer } from "../../users/buyer/entities/buyer.entity";
 
 @Injectable()
 export class S3Service {
@@ -26,16 +26,16 @@ export class S3Service {
 
   // let folderPath = 'ProfileImages/';     // for sample
   async uploadImageS3(file: any, folderPath: string) {
-    const originalFilename = file.originalname.replace(/\s+/g, '');
-    const fileExtension = originalFilename.split('.').pop();
-    const baseFilename = originalFilename.replace(`.${fileExtension}`, '');
+    const originalFilename = file.originalname.replace(/\s+/g, "");
+    const fileExtension = originalFilename.split(".").pop();
+    const baseFilename = originalFilename.replace(`.${fileExtension}`, "");
     const uniqueFilename = `${baseFilename}_${uuidv4()}.${fileExtension}`;
     const command = new PutObjectCommand({
       Bucket: this.bucketName,
       Body: file.buffer,
       Key: folderPath + uniqueFilename,
-      ACL: 'public-read',
-      ContentDisposition: 'inline',
+      ACL: "public-read",
+      ContentDisposition: "inline",
     });
     await this.s3.send(command);
     const fileURL = `https://s3.${process.env.S3_REGION}.amazonaws.com/${process.env.S3_BUCKET_NAME}/${folderPath}${uniqueFilename}`;
@@ -49,6 +49,6 @@ export class S3Service {
       Key: folderPath + uniqueFilename,
     });
     await this.s3.send(command);
-    return { message: 'Media deleted successfully' };
+    return { message: "Media deleted successfully" };
   }
 }

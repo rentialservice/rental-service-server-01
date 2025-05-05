@@ -3,9 +3,9 @@ import {
   CanActivate,
   ExecutionContext,
   ForbiddenException,
-} from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
-import { SubscriptionService } from '../subscription/subscription.service';
+} from "@nestjs/common";
+import { Reflector } from "@nestjs/core";
+import { SubscriptionService } from "../subscription/subscription.service";
 
 @Injectable()
 export class SubscriptionGuard implements CanActivate {
@@ -19,13 +19,13 @@ export class SubscriptionGuard implements CanActivate {
     const method = request.method;
 
     // Allow all GET requests without subscription check
-    if (method === 'GET') {
+    if (method === "GET") {
       return true;
     }
 
     // Check if the route is marked with @AllowWithoutSubscription
     const allowWithoutSubscription = this.reflector.get<boolean>(
-      'allowWithoutSubscription',
+      "allowWithoutSubscription",
       context.getHandler(),
     );
     if (allowWithoutSubscription) {
@@ -39,7 +39,7 @@ export class SubscriptionGuard implements CanActivate {
       await this.subscriptionService.hasActiveSubscription(userId);
 
     if (!hasSubscription) {
-      throw new ForbiddenException('No active subscription');
+      throw new ForbiddenException("No active subscription");
     }
 
     return true;

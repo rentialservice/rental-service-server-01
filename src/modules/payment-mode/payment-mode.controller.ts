@@ -10,20 +10,20 @@ import {
   Req,
   Res,
   Query,
-} from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
-import { PaymentModeService } from './payment-mode.service';
-import { PaymentMode } from './entities/payment-mode.entity';
+} from "../../base/response";
+import { PaymentModeService } from "./payment-mode.service";
+import { PaymentMode } from "./entities/payment-mode.entity";
 
 @UseGuards(JwtAuthGuard)
-@Controller('payment-mode')
+@Controller("payment-mode")
 export class PaymentModeController {
   constructor(private readonly paymentModeService: PaymentModeService) {}
 
@@ -41,7 +41,7 @@ export class PaymentModeController {
     }
   }
 
-  @Get('/filter')
+  @Get("/filter")
   async getFilter(
     @Req() request: Request,
     @Res() response: Response,
@@ -129,7 +129,7 @@ export class PaymentModeController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async filter(
     @Req() request: Request,
     @Res() response: Response,

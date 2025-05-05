@@ -1,13 +1,13 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
-import { BaseEntity } from '../../../base/base.entity';
-import { Role } from '../../role/entities/role.entity';
+import { Entity, Column, ManyToOne } from "typeorm";
+import { BaseEntity } from "../../../base/base.entity";
+import { Role } from "../../role/entities/role.entity";
 
-@Entity('permission')
+@Entity("permission")
 export class Permission extends BaseEntity {
   @Column({ unique: true })
   name: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   description: string;
 
   @ManyToOne(() => Role, (role) => role.permissions)

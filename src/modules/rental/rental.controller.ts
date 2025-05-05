@@ -10,18 +10,18 @@ import {
   Res,
   Query,
   UseGuards,
-} from '@nestjs/common';
-import { RentalService } from './rental.service';
-import { Rental } from './entities/rental.entity';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { RentalService } from "./rental.service";
+import { Rental } from "./entities/rental.entity";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
+} from "../../base/response";
 
-@Controller('rental')
+@Controller("rental")
 export class RentalController {
   constructor(private readonly rentalService: RentalService) {}
 
@@ -39,7 +39,7 @@ export class RentalController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async getFilter(
     @Req() request: Request,
     @Res() response: Response,
@@ -58,7 +58,7 @@ export class RentalController {
     }
   }
 
-  @Get('/invoice/download')
+  @Get("/invoice/download")
   async createInvoiceDownload(
     @Req() request: Request,
     @Res() response: Response,
@@ -67,25 +67,25 @@ export class RentalController {
   ): Promise<void> {
     try {
       const pdfStream = await this.rentalService.createInvoice(id, filterType);
-      response.setHeader('Content-Type', 'application/pdf');
+      response.setHeader("Content-Type", "application/pdf");
       response.setHeader(
-        'Content-Disposition',
+        "Content-Disposition",
         `attachment; filename="invoice-${id}.pdf"`,
       );
       pdfStream.pipe(response);
-      pdfStream.on('end', () => {
-        console.log('PDF stream finished');
+      pdfStream.on("end", () => {
+        console.log("PDF stream finished");
       });
-      pdfStream.on('error', (error) => {
-        console.error('PDF stream error:', error);
-        response.status(500).send('Error streaming PDF');
+      pdfStream.on("error", (error) => {
+        console.error("PDF stream error:", error);
+        response.status(500).send("Error streaming PDF");
       });
     } catch (error: any) {
       errorResponse(response, error);
     }
   }
 
-  @Get('/invoice/preview')
+  @Get("/invoice/preview")
   async createInvoicePreview(
     @Req() request: Request,
     @Res() response: Response,
@@ -174,7 +174,7 @@ export class RentalController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async filter(
     @Req() request: Request,
     @Res() response: Response,

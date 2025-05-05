@@ -13,32 +13,32 @@ import {
   UseInterceptors,
   UploadedFile,
   UploadedFiles,
-} from '@nestjs/common';
-import { FirmService } from './firm.service';
-import { Firm } from './entities/firm.entity';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { FirmService } from "./firm.service";
+import { Firm } from "./entities/firm.entity";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
+} from "../../base/response";
 import {
   FileFieldsInterceptor,
   FilesInterceptor,
-} from '@nestjs/platform-express';
+} from "@nestjs/platform-express";
 
 @UseGuards(JwtAuthGuard)
-@Controller('firm')
+@Controller("firm")
 export class FirmController {
   constructor(private readonly firmService: FirmService) {}
 
   @Post()
   @UseInterceptors(
     FileFieldsInterceptor([
-      { name: 'media', maxCount: 1 },
-      { name: 'signature', maxCount: 1 },
+      { name: "media", maxCount: 1 },
+      { name: "signature", maxCount: 1 },
     ]),
   )
   async create(
@@ -104,8 +104,8 @@ export class FirmController {
   @Put(RoutesConstants.PARAM_ID)
   @UseInterceptors(
     FileFieldsInterceptor([
-      { name: 'media', maxCount: 1 },
-      { name: 'signature', maxCount: 1 },
+      { name: "media", maxCount: 1 },
+      { name: "signature", maxCount: 1 },
     ]),
   )
   async update(
@@ -137,7 +137,7 @@ export class FirmController {
     }
   }
 
-  @Put('/update-subscription/:id')
+  @Put("/update-subscription/:id")
   async updateSubscription(
     @Req() request: Request,
     @Res() response: Response,
@@ -172,7 +172,7 @@ export class FirmController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async filter(
     @Req() request: Request,
     @Res() response: Response,

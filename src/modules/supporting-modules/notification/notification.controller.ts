@@ -9,22 +9,22 @@ import {
   Req,
   Res,
   UseGuards,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
-import { JwtAuthGuard } from '../../auth/jwt.auth.guard';
-import { RoutesConstants } from '../../../constants/routes.constant';
+} from "@nestjs/common";
+import { Request, Response } from "express";
+import { JwtAuthGuard } from "../../auth/jwt.auth.guard";
+import { RoutesConstants } from "../../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../../base/response';
-import { NotificationService } from './notification.service';
+} from "../../../base/response";
+import { NotificationService } from "./notification.service";
 
-@Controller('notification')
+@Controller("notification")
 export class UserController {
   constructor(private readonly notificationService: NotificationService) {}
 
-  @Put('push/enable')
+  @Put("push/enable")
   @UseGuards(JwtAuthGuard)
   async enablePush(
     @Body() update_dto: any,
@@ -42,7 +42,7 @@ export class UserController {
     }
   }
 
-  @Put('push/disable')
+  @Put("push/disable")
   @UseGuards(JwtAuthGuard)
   async disablePush(
     @Body() update_dto: any,
@@ -60,12 +60,12 @@ export class UserController {
     }
   }
 
-  @Get('push/notifications')
+  @Get("push/notifications")
   @UseGuards(JwtAuthGuard)
   async fetchPushNotifications(
     @Req() request: Request,
     @Res() response: Response,
-    @Query('notificationType') notificationType: string,
+    @Query("notificationType") notificationType: string,
     @Query(RoutesConstants.PAGE) page: number = 1,
     @Query(RoutesConstants.PAGESIZE) pageSize: number = 10,
   ) {

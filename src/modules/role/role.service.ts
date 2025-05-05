@@ -2,12 +2,12 @@ import {
   Injectable,
   NotAcceptableException,
   NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Role } from './entities/role.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
-import { CommonService } from '../common/common.service';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Role } from "./entities/role.entity";
+import { buildFilterCriteriaQuery } from "../../common/utils";
+import { CommonService } from "../common/common.service";
 
 @Injectable()
 export class RoleService {
@@ -18,13 +18,13 @@ export class RoleService {
 
   async create(createObject: any): Promise<any> {
     if (!createObject?.permissions?.length) {
-      throw new NotAcceptableException('At least one permission is required');
+      throw new NotAcceptableException("At least one permission is required");
     }
     createObject.permissions = await this.commonService.permissionFilter({
       name: createObject.permissions,
     });
     if (!createObject?.permissions?.length) {
-      throw new NotFoundException('Given permission is not exist');
+      throw new NotFoundException("Given permission is not exist");
     }
     const result = this.roleRepository.create(createObject);
     return await this.roleRepository.save(result);
@@ -37,7 +37,7 @@ export class RoleService {
   ): Promise<any> {
     return await this.roleRepository.findAndCount({
       where: { deleteFlag: false },
-      relations: ['permissions'],
+      relations: ["permissions"],
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -46,7 +46,7 @@ export class RoleService {
   async getById(id: string, filterType?: string): Promise<any> {
     const role = await this.roleRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['permissions'],
+      relations: ["permissions"],
     });
     if (!role) {
       throw new NotFoundException(`Role with id ${id} not found`);

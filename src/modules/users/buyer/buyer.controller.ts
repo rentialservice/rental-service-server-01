@@ -12,19 +12,19 @@ import {
   UploadedFiles,
   UseGuards,
   UseInterceptors,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
-import { JwtAuthGuard } from '../../auth/jwt.auth.guard';
-import { RoutesConstants } from '../../../constants/routes.constant';
+} from "@nestjs/common";
+import { Request, Response } from "express";
+import { JwtAuthGuard } from "../../auth/jwt.auth.guard";
+import { RoutesConstants } from "../../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../../base/response';
-import { BuyerService } from './buyer.service';
-import { FilesInterceptor } from '@nestjs/platform-express';
+} from "../../../base/response";
+import { BuyerService } from "./buyer.service";
+import { FilesInterceptor } from "@nestjs/platform-express";
 
-@Controller('buyer')
+@Controller("buyer")
 export class BuyerController {
   constructor(private readonly service: BuyerService) {}
 
@@ -50,7 +50,7 @@ export class BuyerController {
     }
   }
 
-  @Get('/filter')
+  @Get("/filter")
   async filterGet(
     @Req() request: Request,
     @Res() response: Response,
@@ -73,7 +73,7 @@ export class BuyerController {
   }
 
   @Post()
-  @UseInterceptors(FilesInterceptor('documents', 10))
+  @UseInterceptors(FilesInterceptor("documents", 10))
   async create(
     @Req() request: Request,
     @Res() response: Response,
@@ -130,7 +130,7 @@ export class BuyerController {
 
   @UseGuards(JwtAuthGuard)
   @Put(RoutesConstants.UPDATE_USER_DETAILS)
-  @UseInterceptors(FilesInterceptor('documents', 10))
+  @UseInterceptors(FilesInterceptor("documents", 10))
   async updateById(
     @Req() request: Request,
     @Res() response: Response,
@@ -205,7 +205,7 @@ export class BuyerController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async filter(
     @Req() request: Request,
     @Res() response: Response,

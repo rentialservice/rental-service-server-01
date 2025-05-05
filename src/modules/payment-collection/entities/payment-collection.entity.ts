@@ -1,24 +1,24 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
-import { BaseEntity } from '../../../base/base.entity';
-import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
-import { Firm } from '../../firm/entities/firm.entity';
-import { Buyer } from '../../users/buyer/entities/buyer.entity';
+import { Entity, Column, ManyToOne } from "typeorm";
+import { BaseEntity } from "../../../base/base.entity";
+import { PaymentMode } from "../../payment-mode/entities/payment-mode.entity";
+import { Firm } from "../../firm/entities/firm.entity";
+import { Buyer } from "../../users/buyer/entities/buyer.entity";
 
-@Entity('payment_collection')
+@Entity("payment_collection")
 export class PaymentCollection extends BaseEntity {
-  @Column({ default: '' })
+  @Column({ default: "" })
   description: string;
 
   @Column({ default: new Date() })
   receiptDate: Date;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   receiptPrefix: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   receiptId: string;
 
-  @Column('jsonb', { default: () => "'[]'" })
+  @Column("jsonb", { default: () => "'[]'" })
   rental: any[];
 
   @ManyToOne(() => Firm, (firm) => firm.paymentCollection)

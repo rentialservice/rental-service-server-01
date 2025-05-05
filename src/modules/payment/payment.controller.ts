@@ -11,20 +11,20 @@ import {
   Res,
   Query,
   Headers,
-} from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
-import { PaymentService } from './payment.service';
-import { Payment } from './entities/payment.entity';
+} from "../../base/response";
+import { PaymentService } from "./payment.service";
+import { Payment } from "./entities/payment.entity";
 
 @UseGuards(JwtAuthGuard)
-@Controller('payment')
+@Controller("payment")
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
 
@@ -42,7 +42,7 @@ export class PaymentController {
     }
   }
 
-  @Get('/filter')
+  @Get("/filter")
   async getFilter(
     @Req() request: Request,
     @Res() response: Response,
@@ -130,7 +130,7 @@ export class PaymentController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async filter(
     @Req() request: Request,
     @Res() response: Response,
@@ -149,7 +149,7 @@ export class PaymentController {
     }
   }
 
-  @Post('create-order')
+  @Post("create-order")
   async createOrder(
     @Body()
     body: {
@@ -173,7 +173,7 @@ export class PaymentController {
     }
   }
 
-  @Post('verify')
+  @Post("verify")
   async verifyPayment(
     @Body() body: { order_id: string; payment_id: string; signature: string },
     @Res() response: any,
@@ -186,7 +186,7 @@ export class PaymentController {
     }
   }
 
-  @Post('refund')
+  @Post("refund")
   async processRefund(
     @Body() body: { paymentId: string; amount: number },
     @Res() response: any,
@@ -202,10 +202,10 @@ export class PaymentController {
     }
   }
 
-  @Post('webhook')
+  @Post("webhook")
   async handleWebhook(
     @Body() body: any,
-    @Headers('x-razorpay-signature') signature: string,
+    @Headers("x-razorpay-signature") signature: string,
     @Res() response: any,
   ) {
     try {
@@ -216,7 +216,7 @@ export class PaymentController {
     }
   }
 
-  @Post('verify-refund')
+  @Post("verify-refund")
   async verifyRefund(@Body() body: any, @Res() response: any) {
     try {
       const result = await this.paymentService.verifyRefund(body);

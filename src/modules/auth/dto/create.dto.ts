@@ -3,7 +3,7 @@ import {
   IsOptional,
   IsString,
   IsStrongPassword,
-} from 'class-validator';
+} from "class-validator";
 
 export class VerifyOtpDto {
   @IsString()

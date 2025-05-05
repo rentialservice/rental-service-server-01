@@ -3,16 +3,16 @@ import {
   HttpStatus,
   Injectable,
   NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { ILike, Repository } from 'typeorm';
-import * as bcrypt from 'bcryptjs';
-import { NotificationService } from '../../supporting-modules/notification/notification.service';
-import { Buyer } from './entities/buyer.entity';
-import { SelectConstants } from '../../../constants/select.constant';
-import { buildFilterCriteriaQuery } from '../../../common/utils';
-import { CommonService } from '../../common/common.service';
-import { S3Service } from '../../supporting-modules/s3/s3.service';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { ILike, Repository } from "typeorm";
+import * as bcrypt from "bcryptjs";
+import { NotificationService } from "../../supporting-modules/notification/notification.service";
+import { Buyer } from "./entities/buyer.entity";
+import { SelectConstants } from "../../../constants/select.constant";
+import { buildFilterCriteriaQuery } from "../../../common/utils";
+import { CommonService } from "../../common/common.service";
+import { S3Service } from "../../supporting-modules/s3/s3.service";
 
 @Injectable()
 export class BuyerService {
@@ -39,7 +39,7 @@ export class BuyerService {
         data,
       );
     } catch (e) {
-      console.log('Error sending push notification', e);
+      console.log("Error sending push notification", e);
       throw e;
     }
   }
@@ -62,7 +62,7 @@ export class BuyerService {
       );
     }
     if (!queryData?.firm) {
-      throw new Error('Firm is required');
+      throw new Error("Firm is required");
     }
     let [firm] = await this.commonService.firmFilter({
       id: queryData.firm,
@@ -83,14 +83,14 @@ export class BuyerService {
     filterCriteria?: any,
   ): Promise<any> {
     if (!filterCriteria?.firm) {
-      throw new Error('Firm is required');
+      throw new Error("Firm is required");
     }
     delete filterCriteria?.category;
     let criteria: any = JSON.parse(JSON.stringify(filterCriteria));
     let firm = filterCriteria?.firm;
     let newFilter = [];
     Object.keys(criteria).forEach((key) => {
-      if (key === 'search') {
+      if (key === "search") {
         let search = criteria?.search;
         newFilter = [
           { fullName: ILike(`%${search}%`) },
@@ -148,7 +148,7 @@ export class BuyerService {
     if (user?.role) {
       let [role] = await this.commonService.roleFilter({ name: user?.role });
       if (!role) {
-        throw new NotFoundException('Given Role is not exist');
+        throw new NotFoundException("Given Role is not exist");
       }
       user.role = role;
     }
@@ -156,9 +156,9 @@ export class BuyerService {
     if (result) {
       this.sendPushNotification(
         id,
-        'update',
-        'Profile update',
-        'Your Profile have been updated successfully',
+        "update",
+        "Profile update",
+        "Your Profile have been updated successfully",
       );
     }
     return result;
@@ -173,9 +173,9 @@ export class BuyerService {
     if (result) {
       this.sendPushNotification(
         id,
-        'update',
-        'Password setting',
-        'Your Password have been set successfully',
+        "update",
+        "Password setting",
+        "Your Password have been set successfully",
       );
     }
     return result;
@@ -204,7 +204,7 @@ export class BuyerService {
       throw new HttpException(
         {
           status: HttpStatus.NOT_FOUND,
-          error: 'User with such id not found',
+          error: "User with such id not found",
         },
         HttpStatus.NOT_FOUND,
       );
@@ -213,15 +213,15 @@ export class BuyerService {
       changePasswordDto.password,
       userDetails.password,
     );
-    if (!match) throw new Error('Incorrect password');
+    if (!match) throw new Error("Incorrect password");
     let password = await bcrypt.hash(changePasswordDto.password, 8);
     let result = await this.repository.update(userDetails.id, { password });
     if (result) {
       this.sendPushNotification(
         id,
-        'update',
-        'Password change',
-        'Your Password have been updated successfully',
+        "update",
+        "Password change",
+        "Your Password have been updated successfully",
       );
     }
     return true;
@@ -237,7 +237,7 @@ export class BuyerService {
     let criteria: any = JSON.parse(JSON.stringify(filterCriteria));
     let newFilter = [];
     Object.keys(criteria).forEach((key) => {
-      if (key === 'search') {
+      if (key === "search") {
         let search = criteria?.search;
         newFilter = [
           { fullName: ILike(`%${search}%`) },

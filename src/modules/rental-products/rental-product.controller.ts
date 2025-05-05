@@ -10,20 +10,20 @@ import {
   Req,
   Res,
   Query,
-} from '@nestjs/common';
-import { RentalProductService } from './rental-product.service';
-import { RentalProduct } from './entities/rental-product.entity';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { RentalProductService } from "./rental-product.service";
+import { RentalProduct } from "./entities/rental-product.entity";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
+} from "../../base/response";
 
 @UseGuards(JwtAuthGuard)
-@Controller('rental-product')
+@Controller("rental-product")
 export class RentalProductController {
   constructor(private readonly rentalProductService: RentalProductService) {}
 
@@ -41,7 +41,7 @@ export class RentalProductController {
     }
   }
 
-  @Get('/filter')
+  @Get("/filter")
   async getFilter(
     @Req() request: Request,
     @Res() response: Response,
@@ -110,7 +110,7 @@ export class RentalProductController {
     }
   }
 
-  @Put('update-by-id/:id')
+  @Put("update-by-id/:id")
   async updateById(
     @Req() request: Request,
     @Res() response: Response,
@@ -141,7 +141,7 @@ export class RentalProductController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async filter(
     @Req() request: Request,
     @Res() response: Response,

@@ -1,15 +1,17 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Notification } from './entities/notification.entity';
-import { Repository } from 'typeorm';
-import * as firebase from 'firebase-admin';
-import { NotificationToken } from './entities/notification-token.entity';
-import { ConfigModule } from '@nestjs/config';
-import admin from 'firebase-admin';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Notification } from "./entities/notification.entity";
+import { Repository } from "typeorm";
+import * as firebase from "firebase-admin";
+import { NotificationToken } from "./entities/notification-token.entity";
+import { ConfigModule } from "@nestjs/config";
+import admin from "firebase-admin";
 ConfigModule.forRoot();
 
 const { FIREBASE_CREDENTIALS } = process.env;
+console.log({ FIREBASE_CREDENTIALS });
 const serviceAccount = JSON.parse(FIREBASE_CREDENTIALS);
+console.log({ serviceAccount });
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
 });
@@ -20,12 +22,12 @@ export class NotificationService {
     @InjectRepository(Notification)
     private readonly notificationsRepo: Repository<Notification>,
     @InjectRepository(NotificationToken)
-    private readonly notificationTokenRepo: Repository<NotificationToken>,
+    private readonly notificationTokenRepo: Repository<NotificationToken>
   ) {}
 
   acceptPushNotification = async (
     user: any,
-    notification_dto: any,
+    notification_dto: any
   ): Promise<NotificationToken> => {
     const existingToken = await this.notificationTokenRepo.findOne({
       where: {
@@ -36,7 +38,7 @@ export class NotificationService {
 
     if (existingToken) {
       existingToken.notification_token = notification_dto.notification_token;
-      existingToken.status = 'ACTIVE';
+      existingToken.status = "ACTIVE";
       await this.notificationTokenRepo.save(existingToken);
       return existingToken;
     } else {
@@ -44,7 +46,7 @@ export class NotificationService {
         user: user,
         device_type: notification_dto.device_type,
         notification_token: notification_dto.notification_token,
-        status: 'ACTIVE',
+        status: "ACTIVE",
       });
       await this.notificationTokenRepo.save(newToken);
       return newToken;
@@ -53,14 +55,14 @@ export class NotificationService {
 
   disablePushNotification = async (
     user: any,
-    update_dto: any,
+    update_dto: any
   ): Promise<void> => {
     try {
       await this.notificationTokenRepo.update(
         { user: { id: user.id }, device_type: update_dto.device_type },
         {
-          status: 'INACTIVE',
-        },
+          status: "INACTIVE",
+        }
       );
     } catch (error) {
       return error;
@@ -71,11 +73,11 @@ export class NotificationService {
     id: string,
     notificationType: string,
     page: number = 1,
-    pageSize: number = 10,
+    pageSize: number = 10
   ): Promise<any> => {
     let [result, count] = await this.notificationsRepo.findAndCount({
       where: { created_by: id, notificationType },
-      order: { createdAt: 'DESC' },
+      order: { createdAt: "DESC" },
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -93,8 +95,8 @@ export class NotificationService {
         body: r.body,
         created_by: r.created_by,
         id: r.additionalData?.id,
-        text: r.additionalData?.text || '',
-        media: r.additionalData?.media || '',
+        text: r.additionalData?.text || "",
+        media: r.additionalData?.media || "",
       };
       return { notificationType: r.notificationType, ...notification };
     });
@@ -107,10 +109,10 @@ export class NotificationService {
     notificationType: string,
     title: string,
     body: string,
-    additionalData: any = {},
+    additionalData: any = {}
   ): Promise<void> => {
     const notification = await this.notificationTokenRepo.findOne({
-      where: { user: { id }, status: 'ACTIVE' },
+      where: { user: { id }, status: "ACTIVE" },
     });
     if (notification) {
       await this.notificationsRepo.save({
@@ -118,7 +120,7 @@ export class NotificationService {
         title,
         body,
         notificationType,
-        status: 'ACTIVE',
+        status: "ACTIVE",
         created_by: id,
         additionalData: additionalData.notificationData,
       });
@@ -127,7 +129,7 @@ export class NotificationService {
         .send({
           notification: { title, body },
           token: notification.notification_token,
-          android: { priority: 'high' },
+          android: { priority: "high" },
           data: additionalData,
         })
         .catch((error: any) => {

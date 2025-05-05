@@ -1,23 +1,23 @@
-import { Entity, Column, Index } from 'typeorm';
-import { BaseEntity } from '../../../base/base.entity';
+import { Entity, Column, Index } from "typeorm";
+import { BaseEntity } from "../../../base/base.entity";
 
 export enum PaymentStatus {
-  CREATED = 'created',
-  AUTHORIZED = 'authorized',
-  CAPTURED = 'captured',
-  REFUNDED = 'refunded',
-  FAILED = 'failed',
+  CREATED = "created",
+  AUTHORIZED = "authorized",
+  CAPTURED = "captured",
+  REFUNDED = "refunded",
+  FAILED = "failed",
 }
 
 export enum RefundStatus {
-  PENDING = 'pending',
-  PROCESSED = 'processed',
-  FAILED = 'failed',
+  PENDING = "pending",
+  PROCESSED = "processed",
+  FAILED = "failed",
 }
 
-@Entity('payment')
+@Entity("payment")
 export class Payment extends BaseEntity {
-  @Column({ default: 'razorpay' })
+  @Column({ default: "razorpay" })
   provider_name: string;
 
   @Index()
@@ -39,33 +39,33 @@ export class Payment extends BaseEntity {
   @Column({ nullable: true })
   signature: string;
 
-  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  @Column({ type: "decimal", precision: 10, scale: 2 })
   amount: number;
 
-  @Column({ default: 'INR' })
+  @Column({ default: "INR" })
   currency: string;
 
-  @Column({ type: 'enum', enum: PaymentStatus, default: PaymentStatus.CREATED })
+  @Column({ type: "enum", enum: PaymentStatus, default: PaymentStatus.CREATED })
   status: PaymentStatus;
 
   @Column({ nullable: true })
   refund_id: string;
 
-  @Column({ type: 'enum', enum: RefundStatus, nullable: true })
+  @Column({ type: "enum", enum: RefundStatus, nullable: true })
   refund_status: RefundStatus;
 
   @Column({ nullable: true })
   receipt: string;
 
-  @Column({ type: 'json', nullable: true })
+  @Column({ type: "json", nullable: true })
   metadata: Record<string, any>;
 
   @Column({ nullable: true })
   webhook_signature: string;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: "timestamp", nullable: true })
   captured_at: Date;
 
-  @Column({ type: 'timestamp', nullable: true })
+  @Column({ type: "timestamp", nullable: true })
   refunded_at: Date;
 }

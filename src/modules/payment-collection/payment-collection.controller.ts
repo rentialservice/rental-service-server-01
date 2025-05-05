@@ -9,18 +9,18 @@ import {
   Req,
   Res,
   Query,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
-import { PaymentCollectionService } from './payment-collection.service';
-import { PaymentCollection } from './entities/payment-collection.entity';
+} from "../../base/response";
+import { PaymentCollectionService } from "./payment-collection.service";
+import { PaymentCollection } from "./entities/payment-collection.entity";
 
-@Controller('payment-collection')
+@Controller("payment-collection")
 export class PaymentCollectionController {
   constructor(
     private readonly paymentCollectionService: PaymentCollectionService,
@@ -43,7 +43,7 @@ export class PaymentCollectionController {
     }
   }
 
-  @Get('/receipt/download')
+  @Get("/receipt/download")
   async createReceiptDownload(
     @Req() request: Request,
     @Res() response: Response,
@@ -55,25 +55,25 @@ export class PaymentCollectionController {
         id,
         filterType,
       );
-      response.setHeader('Content-Type', 'application/pdf');
+      response.setHeader("Content-Type", "application/pdf");
       response.setHeader(
-        'Content-Disposition',
+        "Content-Disposition",
         `attachment; filename="Receipt-${id}.pdf"`,
       );
       pdfStream.pipe(response);
-      pdfStream.on('end', () => {
-        console.log('PDF stream finished');
+      pdfStream.on("end", () => {
+        console.log("PDF stream finished");
       });
-      pdfStream.on('error', (error) => {
-        console.error('PDF stream error:', error);
-        response.status(500).send('Error streaming PDF');
+      pdfStream.on("error", (error) => {
+        console.error("PDF stream error:", error);
+        response.status(500).send("Error streaming PDF");
       });
     } catch (error: any) {
       errorResponse(response, error);
     }
   }
 
-  @Get('/receipt/preview')
+  @Get("/receipt/preview")
   async createReceiptPreview(
     @Req() request: Request,
     @Res() response: Response,
@@ -91,11 +91,11 @@ export class PaymentCollectionController {
     }
   }
 
-  @Get('/get-by-rental/:rental')
+  @Get("/get-by-rental/:rental")
   async getPaymentCollectionsByRentalId(
     @Req() request: Request,
     @Res() response: Response,
-    @Param('rental') id: string,
+    @Param("rental") id: string,
   ): Promise<void> {
     try {
       let result =
@@ -106,7 +106,7 @@ export class PaymentCollectionController {
     }
   }
 
-  @Get('/filter')
+  @Get("/filter")
   async getFilter(
     @Req() request: Request,
     @Res() response: Response,
@@ -124,7 +124,7 @@ export class PaymentCollectionController {
     }
   }
 
-  @Get('/get-amount-statistics')
+  @Get("/get-amount-statistics")
   async getAmountStatistics(
     @Req() request: Request,
     @Res() response: Response,
@@ -213,7 +213,7 @@ export class PaymentCollectionController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async filter(
     @Req() request: Request,
     @Res() response: Response,
@@ -232,7 +232,7 @@ export class PaymentCollectionController {
     }
   }
 
-  @Get('/receipt/download')
+  @Get("/receipt/download")
   async createInvoiceDownload(
     @Req() request: Request,
     @Res() response: Response,
@@ -244,25 +244,25 @@ export class PaymentCollectionController {
         id,
         filterType,
       );
-      response.setHeader('Content-Type', 'application/pdf');
+      response.setHeader("Content-Type", "application/pdf");
       response.setHeader(
-        'Content-Disposition',
+        "Content-Disposition",
         `attachment; filename="invoice-${id}.pdf"`,
       );
       pdfStream.pipe(response);
-      pdfStream.on('end', () => {
-        console.log('PDF stream finished');
+      pdfStream.on("end", () => {
+        console.log("PDF stream finished");
       });
-      pdfStream.on('error', (error) => {
-        console.error('PDF stream error:', error);
-        response.status(500).send('Error streaming PDF');
+      pdfStream.on("error", (error) => {
+        console.error("PDF stream error:", error);
+        response.status(500).send("Error streaming PDF");
       });
     } catch (error: any) {
       errorResponse(response, error);
     }
   }
 
-  @Get('/receipt/preview')
+  @Get("/receipt/preview")
   async createInvoicePreview(
     @Req() request: Request,
     @Res() response: Response,

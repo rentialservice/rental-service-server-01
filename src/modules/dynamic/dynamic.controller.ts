@@ -8,16 +8,16 @@ import {
   Delete,
   Res,
   Req,
-} from '@nestjs/common';
-import { DynamicService } from './dynamic.service';
-import { Request, Response } from 'express';
-import { errorResponse, successResponse } from '../../base/response';
+} from "@nestjs/common";
+import { DynamicService } from "./dynamic.service";
+import { Request, Response } from "express";
+import { errorResponse, successResponse } from "../../base/response";
 
-@Controller('dynamic')
+@Controller("dynamic")
 export class DynamicController {
   constructor(private dynamicService: DynamicService) {}
 
-  @Post('create-schema')
+  @Post("create-schema")
   async createSchema(
     @Req() request: Request,
     @Res() response: Response,
@@ -34,11 +34,11 @@ export class DynamicController {
     }
   }
 
-  @Post('store-data/:schemaId')
+  @Post("store-data/:schemaId")
   async storeData(
     @Req() request: Request,
     @Res() response: Response,
-    @Param('schemaId') schemaId: string,
+    @Param("schemaId") schemaId: string,
     @Body() data: object,
   ): Promise<void> {
     try {
@@ -49,11 +49,11 @@ export class DynamicController {
     }
   }
 
-  @Get('get-data/:schemaId')
+  @Get("get-data/:schemaId")
   async getData(
     @Req() request: Request,
     @Res() response: Response,
-    @Param('schemaId') schemaId: string,
+    @Param("schemaId") schemaId: string,
   ): Promise<void> {
     try {
       let result = await this.dynamicService.getData(schemaId);
@@ -63,11 +63,11 @@ export class DynamicController {
     }
   }
 
-  @Put('update-schema/:schemaId')
+  @Put("update-schema/:schemaId")
   async updateSchema(
     @Req() request: Request,
     @Res() response: Response,
-    @Param('schemaId') schemaId: string,
+    @Param("schemaId") schemaId: string,
     @Body() updateSchemaDto: { entityName?: string; schemaDefinition?: object },
   ): Promise<void> {
     try {
@@ -81,11 +81,11 @@ export class DynamicController {
     }
   }
 
-  @Put('update-data/:dataId')
+  @Put("update-data/:dataId")
   async updateData(
     @Req() request: Request,
     @Res() response: Response,
-    @Param('dataId') dataId: string,
+    @Param("dataId") dataId: string,
     @Body() data: object,
   ): Promise<void> {
     try {
@@ -96,11 +96,11 @@ export class DynamicController {
     }
   }
 
-  @Delete('delete-schema/:schemaId')
+  @Delete("delete-schema/:schemaId")
   async deleteSchema(
     @Req() request: Request,
     @Res() response: Response,
-    @Param('schemaId') schemaId: string,
+    @Param("schemaId") schemaId: string,
   ): Promise<void> {
     try {
       let result = await this.dynamicService.deleteSchema(schemaId);
@@ -110,11 +110,11 @@ export class DynamicController {
     }
   }
 
-  @Delete('delete-data/:dataId')
+  @Delete("delete-data/:dataId")
   async deleteData(
     @Req() request: Request,
     @Res() response: Response,
-    @Param('dataId') dataId: string,
+    @Param("dataId") dataId: string,
   ): Promise<void> {
     try {
       let result = await this.dynamicService.deleteData(dataId);

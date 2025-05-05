@@ -3,17 +3,17 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
-} from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+} from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
 import {
   Payment,
   PaymentStatus,
   RefundStatus,
-} from './entities/payment.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
-import Razorpay from 'razorpay';
-import * as crypto from 'crypto';
+} from "./entities/payment.entity";
+import { buildFilterCriteriaQuery } from "../../common/utils";
+import Razorpay from "razorpay";
+import * as crypto from "crypto";
 
 @Injectable()
 export class PaymentService {
@@ -88,7 +88,7 @@ export class PaymentService {
   async createOrder(
     userId: string,
     amount: number,
-    currency = 'INR',
+    currency = "INR",
     receipt?: string,
   ) {
     try {
@@ -112,7 +112,7 @@ export class PaymentService {
       return { orderId: order.id, payment };
     } catch (error) {
       throw new InternalServerErrorException(
-        'Failed to create order: ' + error.message,
+        "Failed to create order: " + error.message,
       );
     }
   }
@@ -127,7 +127,7 @@ export class PaymentService {
         where: { order_id: paymentData.order_id },
       });
       if (!payment) {
-        throw new BadRequestException('Payment not found');
+        throw new BadRequestException("Payment not found");
       }
 
       // skipping signature verification
@@ -149,7 +149,7 @@ export class PaymentService {
       return payment;
     } catch (error) {
       throw new BadRequestException(
-        'Payment verification failed: ' + error.message,
+        "Payment verification failed: " + error.message,
       );
     }
   }
@@ -160,7 +160,7 @@ export class PaymentService {
         where: { payment_id: paymentId },
       });
       if (!payment) {
-        throw new BadRequestException('Payment not found');
+        throw new BadRequestException("Payment not found");
       }
 
       const refund = await this.razorpay.payments.refund(paymentId, {
@@ -175,7 +175,7 @@ export class PaymentService {
       return refund;
     } catch (error) {
       throw new InternalServerErrorException(
-        'Failed to process refund: ' + error.message,
+        "Failed to process refund: " + error.message,
       );
     }
   }
@@ -188,7 +188,7 @@ export class PaymentService {
         where: { payment_id: paymentId },
       });
       if (!payment) {
-        throw new BadRequestException('Payment not found');
+        throw new BadRequestException("Payment not found");
       }
       let refund_data: any;
       try {
@@ -202,13 +202,13 @@ export class PaymentService {
           payment_id: refund.payment_id,
         };
       } catch (error) {
-        console.error('Failed to check refund status:', error);
+        console.error("Failed to check refund status:", error);
         throw error;
       }
 
       payment.refund_id = refundId;
       payment.refund_status =
-        refund_data?.status === 'processed'
+        refund_data?.status === "processed"
           ? RefundStatus.PROCESSED
           : RefundStatus.FAILED;
       payment.refunded_at = new Date();
@@ -218,7 +218,7 @@ export class PaymentService {
       return payment;
     } catch (error) {
       throw new BadRequestException(
-        'Refund verification failed: ' + error.message,
+        "Refund verification failed: " + error.message,
       );
     }
   }
@@ -230,7 +230,7 @@ export class PaymentService {
         signature,
       );
       if (!isValidSignature) {
-        throw new BadRequestException('Invalid webhook signature');
+        throw new BadRequestException("Invalid webhook signature");
       }
 
       const event = webhookData.event;
@@ -241,25 +241,25 @@ export class PaymentService {
         where: { payment_id: paymentId, order_id: orderId },
       });
       if (!payment) {
-        throw new BadRequestException('Payment not found');
+        throw new BadRequestException("Payment not found");
       }
 
       switch (event) {
-        case 'payment.authorized':
+        case "payment.authorized":
           payment.status = PaymentStatus.AUTHORIZED;
           break;
-        case 'payment.captured':
+        case "payment.captured":
           payment.status = PaymentStatus.CAPTURED;
           payment.captured_at = new Date();
           break;
-        case 'payment.failed':
+        case "payment.failed":
           payment.status = PaymentStatus.FAILED;
           break;
-        case 'refund.created':
+        case "refund.created":
           payment.refund_id = webhookData.payload.refund.entity.id;
           payment.refund_status = RefundStatus.PENDING;
           break;
-        case 'refund.processed':
+        case "refund.processed":
           payment.refund_status = RefundStatus.PROCESSED;
           payment.refunded_at = new Date();
           payment.status = PaymentStatus.REFUNDED;
@@ -270,19 +270,19 @@ export class PaymentService {
       payment.metadata = { ...payment.metadata, webhook: webhookData };
       await this.paymentRepository.save(payment);
 
-      return { status: 'Webhook processed successfully' };
+      return { status: "Webhook processed successfully" };
     } catch (error) {
       throw new BadRequestException(
-        'Webhook processing failed: ' + error.message,
+        "Webhook processing failed: " + error.message,
       );
     }
   }
 
   private verifyWebhookSignature(body: string, signature: string): boolean {
     const generatedSignature = crypto
-      .createHmac('sha256', process.env.RAZORPAY_WEBHOOK_SECRET)
+      .createHmac("sha256", process.env.RAZORPAY_WEBHOOK_SECRET)
       .update(body)
-      .digest('hex');
+      .digest("hex");
     return generatedSignature === signature;
   }
 }

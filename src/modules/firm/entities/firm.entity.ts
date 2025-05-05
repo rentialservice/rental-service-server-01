@@ -1,44 +1,44 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
-import { BaseEntity } from '../../../base/base.entity';
-import { Subscription } from '../../subscription/entities/subscription.entity';
+import { Entity, Column, ManyToOne, OneToMany } from "typeorm";
+import { BaseEntity } from "../../../base/base.entity";
+import { Subscription } from "../../subscription/entities/subscription.entity";
 // import { Category } from '../../category/entities/category.entity';
-import { Product } from '../../product/entities/product.entity';
-import { CustomFields } from '../../custom-fields/entities/custom-fields.entity';
-import { Prefix } from '../../prefix/entities/prefix.entity';
-import { PaymentMode } from '../../payment-mode/entities/payment-mode.entity';
-import { TermsAndConditions } from '../../terms-and-conditions/entities/terms-and-conditions.entity';
-import { Rental } from '../../rental/entities/rental.entity';
-import { PaymentCollection } from '../../payment-collection/entities/payment-collection.entity';
-@Entity('firm')
+import { Product } from "../../product/entities/product.entity";
+import { CustomFields } from "../../custom-fields/entities/custom-fields.entity";
+import { Prefix } from "../../prefix/entities/prefix.entity";
+import { PaymentMode } from "../../payment-mode/entities/payment-mode.entity";
+import { TermsAndConditions } from "../../terms-and-conditions/entities/terms-and-conditions.entity";
+import { Rental } from "../../rental/entities/rental.entity";
+import { PaymentCollection } from "../../payment-collection/entities/payment-collection.entity";
+@Entity("firm")
 export class Firm extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   address: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   city: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   media: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   gstn: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   state: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   phone: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   email: string;
 
   @Column({ default: null })
   signature: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   description: string;
 
   @ManyToOne(() => Subscription)

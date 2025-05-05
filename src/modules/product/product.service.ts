@@ -1,12 +1,12 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
-import { Product } from './entities/product.entity';
-import { CustomFieldsData } from '../custom-fields/entities/custom-fields-data.entity';
-import { CustomFields } from '../custom-fields/entities/custom-fields.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
-import { CommonService } from '../common/common.service';
-import { S3Service } from '../supporting-modules/s3/s3.service';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Like, Repository } from "typeorm";
+import { Product } from "./entities/product.entity";
+import { CustomFieldsData } from "../custom-fields/entities/custom-fields-data.entity";
+import { CustomFields } from "../custom-fields/entities/custom-fields.entity";
+import { buildFilterCriteriaQuery } from "../../common/utils";
+import { CommonService } from "../common/common.service";
+import { S3Service } from "../supporting-modules/s3/s3.service";
 
 @Injectable()
 export class ProductService {
@@ -60,7 +60,7 @@ export class ProductService {
     //   throw new Error('Category is required');
     // }
     if (!queryData?.firm) {
-      throw new Error('Firm is required');
+      throw new Error("Firm is required");
     }
     // let [category] = await this.commonService.categoryFilter({
     //   id: queryData.category,
@@ -90,11 +90,11 @@ export class ProductService {
           // category: { id: queryData.category },
           firm: { id: queryData.firm },
         },
-        order: { code: 'DESC' },
+        order: { code: "DESC" },
       });
 
-      const lastCode = lastProduct?.code || 'PROD-0';
-      const lastNumber = parseInt(lastCode.split('-')[1], 10) || 0;
+      const lastCode = lastProduct?.code || "PROD-0";
+      const lastNumber = parseInt(lastCode.split("-")[1], 10) || 0;
       const newCode = `PROD-${lastNumber + 1}`;
       createObject.code = newCode;
     }
@@ -131,11 +131,11 @@ export class ProductService {
     filterCriteria?: any,
   ): Promise<any> {
     if (!filterCriteria?.firm) {
-      throw new Error('Firm is required');
+      throw new Error("Firm is required");
     }
     return await this.productRepository.findAndCount({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: ['customFieldsData.customField'],
+      relations: ["customFieldsData.customField"],
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -144,7 +144,7 @@ export class ProductService {
   async getById(id: string, filterType?: string): Promise<any> {
     const product = await this.productRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['customFieldsData.customField', 'category', 'firm'],
+      relations: ["customFieldsData.customField", "category", "firm"],
     });
     if (!product) {
       throw new NotFoundException(`Product with id ${id} not found`);

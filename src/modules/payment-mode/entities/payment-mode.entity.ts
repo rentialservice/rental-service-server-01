@@ -1,15 +1,15 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
-import { BaseEntity } from '../../../base/base.entity';
-import { Firm } from '../../firm/entities/firm.entity';
-import { Rental } from '../../rental/entities/rental.entity';
-import { PaymentCollection } from '../../payment-collection/entities/payment-collection.entity';
+import { Entity, Column, ManyToOne, OneToMany } from "typeorm";
+import { BaseEntity } from "../../../base/base.entity";
+import { Firm } from "../../firm/entities/firm.entity";
+import { Rental } from "../../rental/entities/rental.entity";
+import { PaymentCollection } from "../../payment-collection/entities/payment-collection.entity";
 
-@Entity('payment_mode')
+@Entity("payment_mode")
 export class PaymentMode extends BaseEntity {
   @Column()
   name: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   description: string;
 
   @ManyToOne(() => Firm, (firm) => firm.paymentMode)

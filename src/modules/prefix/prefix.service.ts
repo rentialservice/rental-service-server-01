@@ -1,10 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Prefix } from './entities/prefix.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
-import { CommonService } from '../common/common.service';
-import { ModuleNameList } from '../../enums/module.enum';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Prefix } from "./entities/prefix.entity";
+import { buildFilterCriteriaQuery } from "../../common/utils";
+import { CommonService } from "../common/common.service";
+import { ModuleNameList } from "../../enums/module.enum";
 
 @Injectable()
 export class PrefixService {
@@ -16,13 +16,13 @@ export class PrefixService {
 
   async create(createObject: Partial<Prefix>, queryData: any): Promise<any> {
     if (!createObject?.module && !queryData?.firm) {
-      throw new Error('Module & Frim is required');
+      throw new Error("Module & Frim is required");
     }
     if (!createObject?.module) {
-      throw new Error('Module is required');
+      throw new Error("Module is required");
     }
     if (!queryData?.firm) {
-      throw new Error('Firm is required');
+      throw new Error("Firm is required");
     }
     // if (
     //   createObject?.module === ModuleNameList.Product &&

@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { TermsAndConditions } from './entities/terms-and-conditions.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
-import { CommonService } from '../common/common.service';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { TermsAndConditions } from "./entities/terms-and-conditions.entity";
+import { buildFilterCriteriaQuery } from "../../common/utils";
+import { CommonService } from "../common/common.service";
 
 @Injectable()
 export class TermsAndConditionsService {
@@ -18,7 +18,7 @@ export class TermsAndConditionsService {
     queryData: any,
   ): Promise<any> {
     if (!queryData?.firm) {
-      throw new Error('Firm is required');
+      throw new Error("Firm is required");
     }
 
     const [firm] = await this.commonService.firmFilter({ id: queryData.firm });
@@ -35,7 +35,7 @@ export class TermsAndConditionsService {
         .createQueryBuilder()
         .update(TermsAndConditions)
         .set({ default: false })
-        .where('firmId = :firmId', { firmId: firm.id })
+        .where("firmId = :firmId", { firmId: firm.id })
         .execute();
     }
 
@@ -51,7 +51,7 @@ export class TermsAndConditionsService {
   ): Promise<any> {
     return await this.termsAndConditionsRepository.findAndCount({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      order: { createdAt: 'DESC' },
+      order: { createdAt: "DESC" },
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -74,7 +74,7 @@ export class TermsAndConditionsService {
   ): Promise<any> {
     const existing = await this.termsAndConditionsRepository.findOne({
       where: { id },
-      relations: ['firm'],
+      relations: ["firm"],
     });
 
     if (!existing) {
@@ -87,8 +87,8 @@ export class TermsAndConditionsService {
         .createQueryBuilder()
         .update(TermsAndConditions)
         .set({ default: false })
-        .where('firmId = :firmId', { firmId: existing.firm.id })
-        .andWhere('id != :id', { id })
+        .where("firmId = :firmId", { firmId: existing.firm.id })
+        .andWhere("id != :id", { id })
         .execute();
     }
 

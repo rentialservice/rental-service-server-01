@@ -10,20 +10,20 @@ import {
   Req,
   Res,
   Query,
-} from '@nestjs/common';
-import { RoleService } from './role.service';
-import { Role } from './entities/role.entity';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { RoleService } from "./role.service";
+import { Role } from "./entities/role.entity";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
+} from "../../base/response";
 
 @UseGuards(JwtAuthGuard)
-@Controller('role')
+@Controller("role")
 export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
@@ -107,7 +107,7 @@ export class RoleController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async filter(
     @Req() request: Request,
     @Res() response: Response,

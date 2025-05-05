@@ -10,21 +10,21 @@ import {
   Req,
   Res,
   Query,
-} from '@nestjs/common';
-import { SubscriptionService } from './subscription.service';
-import { Subscription } from './entities/subscription.entity';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { SubscriptionService } from "./subscription.service";
+import { Subscription } from "./entities/subscription.entity";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
-import { AllowWithoutSubscription } from '../auth/allow-without-subscription.decorator';
+} from "../../base/response";
+import { AllowWithoutSubscription } from "../auth/allow-without-subscription.decorator";
 
 @UseGuards(JwtAuthGuard)
-@Controller('subscription')
+@Controller("subscription")
 export class SubscriptionController {
   constructor(private readonly subscriptionService: SubscriptionService) {}
 
@@ -43,7 +43,7 @@ export class SubscriptionController {
     }
   }
 
-  @Get('/filter')
+  @Get("/filter")
   @AllowWithoutSubscription()
   async getFilter(
     @Req() request: Request,
@@ -136,7 +136,7 @@ export class SubscriptionController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   @AllowWithoutSubscription()
   async filter(
     @Req() request: Request,

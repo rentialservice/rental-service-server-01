@@ -1,20 +1,20 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Prefix } from '../prefix/entities/prefix.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
-import { Firm } from '../firm/entities/firm.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Prefix } from "../prefix/entities/prefix.entity";
+import { buildFilterCriteriaQuery } from "../../common/utils";
+import { Firm } from "../firm/entities/firm.entity";
 // import { Category } from '../category/entities/category.entity';
-import { Permission } from '../permission/entities/permission.entity';
-import { Product } from '../product/entities/product.entity';
-import { Buyer } from '../users/buyer/entities/buyer.entity';
-import { Subscription } from '../subscription/entities/subscription.entity';
-import { Role } from '../role/entities/role.entity';
-import { PaymentMode } from '../payment-mode/entities/payment-mode.entity';
-import { TermsAndConditions } from '../terms-and-conditions/entities/terms-and-conditions.entity';
-import { Rental } from '../rental/entities/rental.entity';
-import { RentalProduct } from '../rental-products/entities/rental-product.entity';
-import { PaymentCollection } from '../payment-collection/entities/payment-collection.entity';
+import { Permission } from "../permission/entities/permission.entity";
+import { Product } from "../product/entities/product.entity";
+import { Buyer } from "../users/buyer/entities/buyer.entity";
+import { Subscription } from "../subscription/entities/subscription.entity";
+import { Role } from "../role/entities/role.entity";
+import { PaymentMode } from "../payment-mode/entities/payment-mode.entity";
+import { TermsAndConditions } from "../terms-and-conditions/entities/terms-and-conditions.entity";
+import { Rental } from "../rental/entities/rental.entity";
+import { RentalProduct } from "../rental-products/entities/rental-product.entity";
+import { PaymentCollection } from "../payment-collection/entities/payment-collection.entity";
 
 @Injectable()
 export class CommonService {
@@ -181,9 +181,9 @@ export class CommonService {
     rentalId: string,
   ): Promise<PaymentCollection[]> {
     return await this.paymentCollectionRepository
-      .createQueryBuilder('paymentCollection')
-      .leftJoinAndSelect('paymentCollection.paymentMode', 'paymentMode')
-      .where('paymentCollection.rental @> :rentalId', {
+      .createQueryBuilder("paymentCollection")
+      .leftJoinAndSelect("paymentCollection.paymentMode", "paymentMode")
+      .where("paymentCollection.rental @> :rentalId", {
         rentalId: JSON.stringify([{ id: rentalId }]),
       })
       .getMany();

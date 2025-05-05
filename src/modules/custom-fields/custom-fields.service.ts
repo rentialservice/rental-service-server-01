@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { CustomFields } from './entities/custom-fields.entity';
-import { FirmService } from '../firm/firm.service';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { CustomFields } from "./entities/custom-fields.entity";
+import { FirmService } from "../firm/firm.service";
 
 @Injectable()
 export class CustomFieldsService {
@@ -14,7 +14,7 @@ export class CustomFieldsService {
 
   async create(createObject: any): Promise<any> {
     if (!createObject?.module && !createObject?.firm) {
-      throw new Error('Firm or Module is required');
+      throw new Error("Firm or Module is required");
     }
     if (createObject?.firm) {
       let [firm] = await this.firmService.filter({ id: createObject.firm });
@@ -37,7 +37,7 @@ export class CustomFieldsService {
   ): Promise<any> {
     return await this.customFieldsRepository.findAndCount({
       where: { deleteFlag: false },
-      relations: ['module', 'firm'],
+      relations: ["module", "firm"],
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -46,7 +46,7 @@ export class CustomFieldsService {
   async getById(id: string, filterType?: string): Promise<any> {
     const result = await this.customFieldsRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['module', 'firm'],
+      relations: ["module", "firm"],
     });
     if (!result) {
       throw new NotFoundException(`Custom Feilds with id ${id} not found`);

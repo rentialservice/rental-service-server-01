@@ -1,11 +1,11 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { RentalProduct } from './entities/rental-product.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
-import { CommonService } from '../common/common.service';
-import { Product } from '../product/entities/product.entity';
-import { Status } from '../../enums/status.enum';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { RentalProduct } from "./entities/rental-product.entity";
+import { buildFilterCriteriaQuery } from "../../common/utils";
+import { CommonService } from "../common/common.service";
+import { Product } from "../product/entities/product.entity";
+import { Status } from "../../enums/status.enum";
 
 @Injectable()
 export class RentalProductService {

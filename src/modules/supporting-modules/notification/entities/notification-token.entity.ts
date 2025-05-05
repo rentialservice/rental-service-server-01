@@ -1,7 +1,7 @@
-import { Entity, Column, ManyToOne, OneToMany } from 'typeorm';
-import { Notification } from './notification.entity';
-import { BaseEntity } from '../../../../base/base.entity';
-import { Buyer } from '../../../users/buyer/entities/buyer.entity';
+import { Entity, Column, ManyToOne, OneToMany } from "typeorm";
+import { Notification } from "./notification.entity";
+import { BaseEntity } from "../../../../base/base.entity";
+import { Buyer } from "../../../users/buyer/entities/buyer.entity";
 
 @Entity()
 export class NotificationToken extends BaseEntity {
@@ -15,7 +15,7 @@ export class NotificationToken extends BaseEntity {
   notification_token: string;
 
   @Column({
-    default: 'ACTIVE',
+    default: "ACTIVE",
   })
   status: string;
 

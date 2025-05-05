@@ -10,18 +10,18 @@ import {
   Req,
   Res,
   UseGuards,
-} from '@nestjs/common';
-import { Request, Response } from 'express';
-import { JwtAuthGuard } from '../../auth/jwt.auth.guard';
-import { RoutesConstants } from '../../../constants/routes.constant';
+} from "@nestjs/common";
+import { Request, Response } from "express";
+import { JwtAuthGuard } from "../../auth/jwt.auth.guard";
+import { RoutesConstants } from "../../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../../base/response';
-import { SellerService } from './seller.service';
+} from "../../../base/response";
+import { SellerService } from "./seller.service";
 
-@Controller('seller')
+@Controller("seller")
 export class SellerController {
   constructor(private readonly service: SellerService) {}
 

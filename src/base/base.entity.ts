@@ -3,16 +3,16 @@ import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
-} from 'typeorm';
+} from "typeorm";
 
 export class BaseEntity {
-  @PrimaryGeneratedColumn('uuid')
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @Column('boolean', { default: true })
+  @Column("boolean", { default: true })
   activeFlag: boolean;
 
-  @Column('boolean', { default: false })
+  @Column("boolean", { default: false })
   deleteFlag: boolean;
 
   @CreateDateColumn()

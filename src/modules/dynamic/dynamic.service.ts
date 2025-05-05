@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { DynamicSchema } from './entities/dynamic-schema.entity';
-import { DynamicData } from './entities/dynamic-data.entity';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { DynamicSchema } from "./entities/dynamic-schema.entity";
+import { DynamicData } from "./entities/dynamic-data.entity";
 
 @Injectable()
 export class DynamicService {
@@ -28,7 +28,7 @@ export class DynamicService {
     const schema = await this.dynamicSchemaRepository.findOne({
       where: { id },
     });
-    if (!schema) throw new Error('Schema not found');
+    if (!schema) throw new Error("Schema not found");
     const dynamicData = this.dynamicDataRepository.create({ schema, data });
     return this.dynamicDataRepository.save(dynamicData);
   }
@@ -46,7 +46,7 @@ export class DynamicService {
     const schema = await this.dynamicSchemaRepository.findOne({
       where: { id: schemaId },
     });
-    if (!schema) throw new NotFoundException('Schema not found');
+    if (!schema) throw new NotFoundException("Schema not found");
     if (updateSchemaDto.entityName) {
       schema.entityName = updateSchemaDto.entityName;
     }
@@ -60,7 +60,7 @@ export class DynamicService {
     const dynamicData = await this.dynamicDataRepository.findOne({
       where: { id: dataId },
     });
-    if (!dynamicData) throw new NotFoundException('Data not found');
+    if (!dynamicData) throw new NotFoundException("Data not found");
     dynamicData.data = data;
     return this.dynamicDataRepository.save(dynamicData);
   }
@@ -68,14 +68,14 @@ export class DynamicService {
   async deleteSchema(schemaId: string): Promise<void> {
     const result = await this.dynamicSchemaRepository.delete({ id: schemaId });
     if (result.affected === 0) {
-      throw new NotFoundException('Schema not found');
+      throw new NotFoundException("Schema not found");
     }
   }
 
   async deleteData(dataId: string): Promise<void> {
     const result = await this.dynamicDataRepository.delete({ id: dataId });
     if (result.affected === 0) {
-      throw new NotFoundException('Data not found');
+      throw new NotFoundException("Data not found");
     }
   }
 }

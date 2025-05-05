@@ -1,6 +1,6 @@
-import { Entity, Column, ManyToOne } from 'typeorm';
-import { NotificationToken } from './notification-token.entity';
-import { BaseEntity } from '../../../../base/base.entity';
+import { Entity, Column, ManyToOne } from "typeorm";
+import { NotificationToken } from "./notification-token.entity";
+import { BaseEntity } from "../../../../base/base.entity";
 
 @Entity()
 export class Notification extends BaseEntity {
@@ -11,21 +11,21 @@ export class Notification extends BaseEntity {
   notification_token: NotificationToken;
 
   @Column({
-    default: '',
+    default: "",
   })
   notificationType: string;
 
   @Column()
   title: string;
 
-  @Column({ type: 'jsonb', default: '{}' })
+  @Column({ type: "jsonb", default: "{}" })
   body: any;
 
   @Column()
   created_by: string;
 
   @Column({
-    default: 'ACTIVE',
+    default: "ACTIVE",
   })
   status: string;
 

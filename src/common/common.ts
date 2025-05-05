@@ -1,12 +1,12 @@
-import handlebars from 'handlebars';
-import * as path from 'path';
-import * as fs from 'fs';
-import { Readable } from 'stream';
-import puppeteer from 'puppeteer-core';
-const chromium = require('@sparticuz/chromium');
+import handlebars from "handlebars";
+import * as path from "path";
+import * as fs from "fs";
+import { Readable } from "stream";
+import puppeteer from "puppeteer-core";
+const chromium = require("@sparticuz/chromium");
 
 export function extractUsername(email: string) {
-  const parts = email.split('@');
+  const parts = email.split("@");
   return parts[0];
 }
 
@@ -31,11 +31,11 @@ export async function generateHTMLFromTemplate(
   type?: any,
 ) {
   try {
-    const filePath = 'src/hbs-templates';
+    const filePath = "src/hbs-templates";
     let htmlTemplate: any;
     htmlTemplate = fs.readFileSync(
       path.resolve(filePath, `${template}.hbs`),
-      'utf8',
+      "utf8",
     );
     const compiledTemplate = handlebars.compile(htmlTemplate);
     return compiledTemplate(data);
@@ -51,12 +51,12 @@ export async function generatePdfFromTemplate(
 ): Promise<Readable> {
   let browser: any = null;
   try {
-    const filePath = 'src/hbs-templates';
+    const filePath = "src/hbs-templates";
     const templatePath = path.resolve(filePath, `${template}.hbs`);
     if (!fs.existsSync(templatePath)) {
       throw new Error(`Template not found: ${templatePath}`);
     }
-    const htmlTemplate = fs.readFileSync(templatePath, 'utf8');
+    const htmlTemplate = fs.readFileSync(templatePath, "utf8");
     const compiledTemplate = handlebars.compile(htmlTemplate);
     const html = compiledTemplate(data);
     browser = await puppeteer.launch({
@@ -64,7 +64,7 @@ export async function generatePdfFromTemplate(
       executablePath:
         process.env.CHROME_PATH ||
         (await chromium.executablePath()) ||
-        '/usr/bin/google-chrome-stable',
+        "/usr/bin/google-chrome-stable",
       headless: true,
     });
 
@@ -81,17 +81,17 @@ export async function generatePdfFromTemplate(
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(60000);
     await page.setContent(html, {
-      waitUntil: 'domcontentloaded',
+      waitUntil: "domcontentloaded",
       timeout: 60000,
     });
     const pdfBuffer: Buffer = await page.pdf({
-      format: 'A4',
+      format: "A4",
       printBackground: true,
       margin: {
-        top: '20mm',
-        bottom: '20mm',
-        left: '20mm',
-        right: '20mm',
+        top: "20mm",
+        bottom: "20mm",
+        left: "20mm",
+        right: "20mm",
       },
       preferCSSPageSize: true,
     });
@@ -100,7 +100,7 @@ export async function generatePdfFromTemplate(
     bufferToStream.push(null);
     return bufferToStream;
   } catch (error) {
-    console.error('PDF Generation Error:', error);
+    console.error("PDF Generation Error:", error);
     throw error;
   } finally {
     if (browser) {

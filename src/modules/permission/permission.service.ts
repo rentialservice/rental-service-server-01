@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Permission } from './entities/permission.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Permission } from "./entities/permission.entity";
+import { buildFilterCriteriaQuery } from "../../common/utils";
 
 @Injectable()
 export class PermissionService {

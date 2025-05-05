@@ -1,8 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
-import { Subscription } from './entities/subscription.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { LessThanOrEqual, MoreThanOrEqual, Repository } from "typeorm";
+import { Subscription } from "./entities/subscription.entity";
+import { buildFilterCriteriaQuery } from "../../common/utils";
 
 @Injectable()
 export class SubscriptionService {

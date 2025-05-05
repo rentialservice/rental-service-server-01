@@ -1,4 +1,4 @@
 export enum TYPES {
-  BUYER = 'buyer',
-  SELLER = 'seller',
+  BUYER = "buyer",
+  SELLER = "seller",
 }

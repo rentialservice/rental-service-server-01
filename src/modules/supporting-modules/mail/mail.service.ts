@@ -1,5 +1,5 @@
-import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
+import { MailerService } from "@nestjs-modules/mailer";
+import { Injectable } from "@nestjs/common";
 
 @Injectable()
 export class MailService {
@@ -9,8 +9,8 @@ export class MailService {
     let { email, otp } = data;
     return await this.mailerService.sendMail({
       to: email,
-      subject: 'OTP for verification',
-      template: 'otp-verification',
+      subject: "OTP for verification",
+      template: "otp-verification",
       context: { otp },
     });
   }

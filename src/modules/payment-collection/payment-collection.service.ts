@@ -1,16 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { MoreThanOrEqual, Repository } from 'typeorm';
-import { PaymentCollection } from './entities/payment-collection.entity';
-import { buildFilterCriteriaQuery, convertDate } from '../../common/utils';
-import { CommonService } from '../common/common.service';
-import { RentalService } from '../rental/rental.service';
-import { PrefixService } from '../prefix/prefix.service';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { MoreThanOrEqual, Repository } from "typeorm";
+import { PaymentCollection } from "./entities/payment-collection.entity";
+import { buildFilterCriteriaQuery, convertDate } from "../../common/utils";
+import { CommonService } from "../common/common.service";
+import { RentalService } from "../rental/rental.service";
+import { PrefixService } from "../prefix/prefix.service";
 import {
   generateHTMLFromTemplate,
   generatePdfFromTemplate,
-} from '../../common/common';
-import { InvoiceStatus } from '../../enums/status.enum';
+} from "../../common/common";
+import { InvoiceStatus } from "../../enums/status.enum";
 
 @Injectable()
 export class PaymentCollectionService {
@@ -27,16 +27,16 @@ export class PaymentCollectionService {
     queryData: any,
   ): Promise<any> {
     if (!createObject?.paymentMode) {
-      throw new Error('Payment Mode is required');
+      throw new Error("Payment Mode is required");
     }
     if (!createObject?.rental?.length) {
-      throw new Error('Rental is required');
+      throw new Error("Rental is required");
     }
     if (!queryData?.firm) {
-      throw new Error('Firm is required');
+      throw new Error("Firm is required");
     }
     if (!createObject?.buyer) {
-      throw new Error('Buyer is required');
+      throw new Error("Buyer is required");
     }
 
     let [prefix] = await this.prefixService.filter({
@@ -44,7 +44,7 @@ export class PaymentCollectionService {
       name: createObject?.receiptPrefix,
     });
 
-    if (!prefix) throw new NotFoundException('Prefix not found');
+    if (!prefix) throw new NotFoundException("Prefix not found");
     await this.prefixService.update(prefix?.id, {
       nextNumber: parseInt(createObject.receiptId) + 1,
     });
@@ -129,7 +129,7 @@ export class PaymentCollectionService {
         },
         skip: (page - 1) * pageSize,
         take: pageSize,
-        relations: ['paymentMode', 'buyer'],
+        relations: ["paymentMode", "buyer"],
       });
     payments = payments.map((payment: any) => {
       let total = 0;
@@ -147,7 +147,7 @@ export class PaymentCollectionService {
   async getById(id: string, filterType?: string): Promise<any> {
     const paymentCollection = await this.paymentCollectionRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['paymentMode', 'buyer'],
+      relations: ["paymentMode", "buyer"],
     });
     if (!paymentCollection) {
       throw new NotFoundException(`PaymentCollection with id ${id} not found`);
@@ -178,7 +178,7 @@ export class PaymentCollectionService {
   ): Promise<any> {
     let payments = await this.paymentCollectionRepository.find({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
-      relations: ['paymentMode', 'buyer'],
+      relations: ["paymentMode", "buyer"],
     });
     return payments.map((payment: any) => {
       let total = 0;
@@ -199,7 +199,7 @@ export class PaymentCollectionService {
   ): Promise<any> {
     delete filterCriteria?.category;
     if (!filterCriteria?.firm) {
-      throw new Error('Firm is required');
+      throw new Error("Firm is required");
     }
     let allRentals = await this.rentalService.filter(filterCriteria);
     filterCriteria = buildFilterCriteriaQuery(filterCriteria);
@@ -253,9 +253,9 @@ export class PaymentCollectionService {
     rentalId: string,
   ): Promise<PaymentCollection[]> {
     return await this.paymentCollectionRepository
-      .createQueryBuilder('paymentCollection')
-      .leftJoinAndSelect('paymentCollection.paymentMode', 'paymentMode')
-      .where('paymentCollection.rental @> :rentalId', {
+      .createQueryBuilder("paymentCollection")
+      .leftJoinAndSelect("paymentCollection.paymentMode", "paymentMode")
+      .where("paymentCollection.rental @> :rentalId", {
         rentalId: JSON.stringify([{ id: rentalId }]),
       })
       .getMany();
@@ -264,7 +264,7 @@ export class PaymentCollectionService {
   async createReceipt(id: string, filterType?: string): Promise<any> {
     const receipt = await this.paymentCollectionRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['buyer', 'firm', 'paymentMode'],
+      relations: ["buyer", "firm", "paymentMode"],
     });
     if (!receipt) {
       throw new NotFoundException(`Receipt with id ${id} not found`);
@@ -288,9 +288,9 @@ export class PaymentCollectionService {
         name: receipt.firm?.name,
         address:
           receipt?.firm?.address +
-          ', ' +
+          ", " +
           receipt?.firm?.city +
-          ', ' +
+          ", " +
           receipt?.firm?.state,
         phone: receipt.firm?.phone,
         email: receipt.firm?.email,
@@ -300,14 +300,14 @@ export class PaymentCollectionService {
         mobile: receipt.buyer?.phone,
         address:
           receipt?.buyer?.address +
-          ', ' +
+          ", " +
           receipt?.buyer?.city +
-          ', ' +
+          ", " +
           receipt?.buyer?.state +
-          ', ' +
+          ", " +
           receipt?.buyer?.pincode,
       },
-      receiptNumber: receipt?.receiptPrefix + ' ' + receipt?.receiptId,
+      receiptNumber: receipt?.receiptPrefix + " " + receipt?.receiptId,
       receiptDate: convertDate(receipt?.receiptDate),
       paymentMode: receipt?.paymentMode?.name,
       items:
@@ -316,7 +316,7 @@ export class PaymentCollectionService {
             index: index + 1,
             invoiceNumber:
               rental?.rental_data?.invoicePrefix +
-              ' ' +
+              " " +
               rental?.rental_data?.invoiceId,
             pending: rental?.rental_data?.pendingAmount,
             received: rental?.amount,
@@ -327,13 +327,13 @@ export class PaymentCollectionService {
       subTotal: total,
       preparedBy: receipt.firm.name,
     };
-    return await generatePdfFromTemplate(data, 'receipt');
+    return await generatePdfFromTemplate(data, "receipt");
   }
 
   async createReceiptPreview(id: string, filterType?: string): Promise<any> {
     const receipt = await this.paymentCollectionRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['buyer', 'firm', 'paymentMode'],
+      relations: ["buyer", "firm", "paymentMode"],
     });
     if (!receipt) {
       throw new NotFoundException(`Receipt with id ${id} not found`);
@@ -357,9 +357,9 @@ export class PaymentCollectionService {
         name: receipt.firm?.name,
         address:
           receipt?.firm?.address +
-          ', ' +
+          ", " +
           receipt?.firm?.city +
-          ', ' +
+          ", " +
           receipt?.firm?.state,
         phone: receipt.firm?.phone,
         email: receipt.firm?.email,
@@ -369,14 +369,14 @@ export class PaymentCollectionService {
         mobile: receipt.buyer?.phone,
         address:
           receipt?.buyer?.address +
-          ', ' +
+          ", " +
           receipt?.buyer?.city +
-          ', ' +
+          ", " +
           receipt?.buyer?.state +
-          ', ' +
+          ", " +
           receipt?.buyer?.pincode,
       },
-      receiptNumber: receipt?.receiptPrefix + ' ' + receipt?.receiptId,
+      receiptNumber: receipt?.receiptPrefix + " " + receipt?.receiptId,
       receiptDate: convertDate(receipt?.receiptDate),
       paymentMode: receipt?.paymentMode?.name,
       items:
@@ -385,7 +385,7 @@ export class PaymentCollectionService {
             index: index + 1,
             invoiceNumber:
               rental?.rental_data?.invoicePrefix +
-              ' ' +
+              " " +
               rental?.rental_data?.invoiceId,
             pending: rental?.rental_data?.pendingAmount,
             received: rental?.amount,
@@ -396,6 +396,6 @@ export class PaymentCollectionService {
       subTotal: total,
       preparedBy: receipt.firm.name,
     };
-    return await generateHTMLFromTemplate(data, 'receipt');
+    return await generateHTMLFromTemplate(data, "receipt");
   }
 }

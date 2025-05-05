@@ -1,14 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Firm } from './entities/firm.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
-import { CommonService } from '../common/common.service';
-import { PaymentModeService } from '../payment-mode/payment-mode.service';
-import { S3Service } from '../supporting-modules/s3/s3.service';
-import { PrefixService } from '../prefix/prefix.service';
-import { ModuleNameList } from '../../enums/module.enum';
-import { TermsAndConditionsService } from '../terms-and-conditions/terms-and-conditions.service';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Firm } from "./entities/firm.entity";
+import { buildFilterCriteriaQuery } from "../../common/utils";
+import { CommonService } from "../common/common.service";
+import { PaymentModeService } from "../payment-mode/payment-mode.service";
+import { S3Service } from "../supporting-modules/s3/s3.service";
+import { PrefixService } from "../prefix/prefix.service";
+import { ModuleNameList } from "../../enums/module.enum";
+import { TermsAndConditionsService } from "../terms-and-conditions/terms-and-conditions.service";
 
 @Injectable()
 export class FirmService {
@@ -29,13 +29,13 @@ export class FirmService {
     if (media) {
       createObject.media = await this.s3Service.uploadImageS3(
         media,
-        (process.env.FIRM_MEDIA_FOLDER_NAME as string) || 'FirmMedia',
+        (process.env.FIRM_MEDIA_FOLDER_NAME as string) || "FirmMedia",
       );
     }
     if (signature) {
       createObject.signature = await this.s3Service.uploadImageS3(
         signature,
-        (process.env.FIRM_SIGNATURE_FOLDER_NAME as string) || 'FirmSignature',
+        (process.env.FIRM_SIGNATURE_FOLDER_NAME as string) || "FirmSignature",
       );
     }
     // if (createObject?.category?.length) {
@@ -68,14 +68,14 @@ export class FirmService {
         },
         { firm: response.id },
       ),
-      this.paymentModeService.create({ firm: response.id, name: 'CASH' }),
-      this.paymentModeService.create({ firm: response.id, name: 'BANK' }),
+      this.paymentModeService.create({ firm: response.id, name: "CASH" }),
+      this.paymentModeService.create({ firm: response.id, name: "BANK" }),
       this.prefixService.create(
-        { module: ModuleNameList.Invoice, name: 'INV' },
+        { module: ModuleNameList.Invoice, name: "INV" },
         { firm: response.id },
       ),
       this.prefixService.create(
-        { module: ModuleNameList.Receipt, name: 'RECEIPT' },
+        { module: ModuleNameList.Receipt, name: "RECEIPT" },
         { firm: response.id },
       ),
     ]);
@@ -89,7 +89,7 @@ export class FirmService {
   ): Promise<any> {
     return await this.firmRepository.findAndCount({
       where: { deleteFlag: false },
-      relations: ['subscription'],
+      relations: ["subscription"],
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -98,7 +98,7 @@ export class FirmService {
   async getById(id: string, filterType?: string): Promise<any> {
     const firm = await this.firmRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ['subscription'],
+      relations: ["subscription"],
     });
     if (!firm) {
       throw new NotFoundException(`Firm with id ${id} not found`);
@@ -138,13 +138,13 @@ export class FirmService {
     if (media) {
       updateObject.media = await this.s3Service.uploadImageS3(
         media,
-        (process.env.FIRM_MEDIA_FOLDER_NAME as string) || 'FirmMedia',
+        (process.env.FIRM_MEDIA_FOLDER_NAME as string) || "FirmMedia",
       );
     }
     if (signature) {
       updateObject.signature = await this.s3Service.uploadImageS3(
         signature,
-        (process.env.FIRM_SIGNATURE_FOLDER_NAME as string) || 'FirmSignature',
+        (process.env.FIRM_SIGNATURE_FOLDER_NAME as string) || "FirmSignature",
       );
     }
     if (updateObject?.subscription) {

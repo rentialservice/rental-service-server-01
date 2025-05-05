@@ -1,6 +1,6 @@
-import { Response } from 'express';
-import { SuccessConstants } from '../constants/success.constant';
-import { ErrorConstants } from '../constants/error.constant';
+import { Response } from "express";
+import { SuccessConstants } from "../constants/success.constant";
+import { ErrorConstants } from "../constants/error.constant";
 
 export const successResponse = (
   response: Response,

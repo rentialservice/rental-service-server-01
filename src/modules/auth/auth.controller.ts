@@ -1,5 +1,5 @@
-import { Body, Controller, Post, Res } from '@nestjs/common';
-import { AuthService } from './auth.service';
+import { Body, Controller, Post, Res } from "@nestjs/common";
+import { AuthService } from "./auth.service";
 import {
   VerifyOtpDto,
   LoginDto,
@@ -7,11 +7,11 @@ import {
   NewAccessTokenDto,
   ForgotPasswordDto,
   ForgotPasswordVerifyEmailDto,
-} from './dto/create.dto';
-import { Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
-import { errorResponse, successResponse } from '../../base/response';
-import { AllowWithoutSubscription } from './allow-without-subscription.decorator';
+} from "./dto/create.dto";
+import { Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
+import { errorResponse, successResponse } from "../../base/response";
+import { AllowWithoutSubscription } from "./allow-without-subscription.decorator";
 
 @Controller(RoutesConstants.AUTH)
 export class AuthController {

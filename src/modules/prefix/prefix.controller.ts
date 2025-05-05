@@ -10,20 +10,20 @@ import {
   Req,
   Res,
   Query,
-} from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
-import { PrefixService } from './prefix.service';
-import { Prefix } from './entities/prefix.entity';
+} from "../../base/response";
+import { PrefixService } from "./prefix.service";
+import { Prefix } from "./entities/prefix.entity";
 
 @UseGuards(JwtAuthGuard)
-@Controller('prefix')
+@Controller("prefix")
 export class PrefixController {
   constructor(private readonly prefixService: PrefixService) {}
 
@@ -112,7 +112,7 @@ export class PrefixController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   async filter(
     @Req() request: Request,
     @Res() response: Response,

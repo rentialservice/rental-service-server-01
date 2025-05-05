@@ -1,9 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { PaymentMode } from './entities/payment-mode.entity';
-import { buildFilterCriteriaQuery } from '../../common/utils';
-import { CommonService } from '../common/common.service';
+import { Injectable, NotFoundException } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { PaymentMode } from "./entities/payment-mode.entity";
+import { buildFilterCriteriaQuery } from "../../common/utils";
+import { CommonService } from "../common/common.service";
 
 @Injectable()
 export class PaymentModeService {
@@ -15,7 +15,7 @@ export class PaymentModeService {
 
   async create(createObject: any): Promise<any> {
     if (!createObject?.firm) {
-      throw new Error('Firm is required');
+      throw new Error("Firm is required");
     }
     if (createObject?.firm) {
       let [firm] = await this.commonService.firmFilter({

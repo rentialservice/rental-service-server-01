@@ -10,21 +10,21 @@ import {
   Req,
   Res,
   Query,
-} from '@nestjs/common';
-import { TermsAndConditionsService } from './terms-and-conditions.service';
-import { TermsAndConditions } from './entities/terms-and-conditions.entity';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { TermsAndConditionsService } from "./terms-and-conditions.service";
+import { TermsAndConditions } from "./entities/terms-and-conditions.entity";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
-import { AllowWithoutSubscription } from '../auth/allow-without-subscription.decorator';
+} from "../../base/response";
+import { AllowWithoutSubscription } from "../auth/allow-without-subscription.decorator";
 
 // @UseGuards(JwtAuthGuard)
-@Controller('terms-and-conditions')
+@Controller("terms-and-conditions")
 export class TermsAndConditionsController {
   constructor(
     private readonly termsAndConditionsService: TermsAndConditionsService,
@@ -47,7 +47,7 @@ export class TermsAndConditionsController {
     }
   }
 
-  @Get('/filter')
+  @Get("/filter")
   async getFilter(
     @Req() request: Request,
     @Res() response: Response,
@@ -136,7 +136,7 @@ export class TermsAndConditionsController {
     }
   }
 
-  @Post('/filter')
+  @Post("/filter")
   @AllowWithoutSubscription()
   async filter(
     @Req() request: Request,

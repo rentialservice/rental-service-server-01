@@ -1,7 +1,7 @@
-import { Module } from '@nestjs/common';
-import { S3Service } from './s3.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Buyer } from '../../users/buyer/entities/buyer.entity';
+import { Module } from "@nestjs/common";
+import { S3Service } from "./s3.service";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { Buyer } from "../../users/buyer/entities/buyer.entity";
 
 @Module({
   imports: [TypeOrmModule.forFeature([Buyer])],

@@ -1,14 +1,14 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { PassportStrategy } from '@nestjs/passport';
-import { ExtractJwt, Strategy } from 'passport-jwt';
-import { Request } from 'express';
-import { JwtService } from '@nestjs/jwt';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Buyer } from '../users/buyer/entities/buyer.entity';
-import { Admin } from '../users/admin/entities/admin.entity';
-import { Seller } from '../users/seller/entities/seller.entity';
+import { Injectable, UnauthorizedException } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
+import { PassportStrategy } from "@nestjs/passport";
+import { ExtractJwt, Strategy } from "passport-jwt";
+import { Request } from "express";
+import { JwtService } from "@nestjs/jwt";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Buyer } from "../users/buyer/entities/buyer.entity";
+import { Admin } from "../users/admin/entities/admin.entity";
+import { Seller } from "../users/seller/entities/seller.entity";
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
-      secretOrKey: configSvc.get<string>('JWT_SECRET'),
+      secretOrKey: configSvc.get<string>("JWT_SECRET"),
       passReqToCallback: true,
     });
   }
@@ -36,14 +36,14 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     let user = await this.jwtSvc.decode(jwt);
     user = user?.user || user?.user?.user;
     if (!user) {
-      throw new UnauthorizedException('JwtStrategy unauthorized');
+      throw new UnauthorizedException("JwtStrategy unauthorized");
     }
     let userData: any;
-    if (user?.type === 'buyer') {
+    if (user?.type === "buyer") {
       userData = await this.buyerRepository.findOne({
         where: { id: user.id, deleteFlag: false },
       });
-    } else if (user?.type === 'seller') {
+    } else if (user?.type === "seller") {
       userData = await this.sellerRepository.findOne({
         where: { id: user.id, deleteFlag: false },
       });
@@ -53,7 +53,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
       });
     }
     if (!userData) {
-      throw new UnauthorizedException('Unauthorized user ...!');
+      throw new UnauthorizedException("Unauthorized user ...!");
     }
 
     return userData;

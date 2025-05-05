@@ -10,20 +10,20 @@ import {
   Req,
   Res,
   Query,
-} from '@nestjs/common';
-import { JwtAuthGuard } from '../auth/jwt.auth.guard';
-import { Request, Response } from 'express';
-import { RoutesConstants } from '../../constants/routes.constant';
+} from "@nestjs/common";
+import { JwtAuthGuard } from "../auth/jwt.auth.guard";
+import { Request, Response } from "express";
+import { RoutesConstants } from "../../constants/routes.constant";
 import {
   errorResponse,
   successPaginatedResponse,
   successResponse,
-} from '../../base/response';
-import { CustomFieldsService } from './custom-fields.service';
-import { CustomFields } from './entities/custom-fields.entity';
+} from "../../base/response";
+import { CustomFieldsService } from "./custom-fields.service";
+import { CustomFields } from "./entities/custom-fields.entity";
 
 @UseGuards(JwtAuthGuard)
-@Controller('custom-fields')
+@Controller("custom-fields")
 export class CustomFieldsController {
   constructor(private readonly customFieldsService: CustomFieldsService) {}
 

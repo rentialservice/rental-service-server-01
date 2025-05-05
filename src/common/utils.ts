@@ -1,21 +1,21 @@
-import dayjs from 'dayjs';
-import { ILike, In } from 'typeorm';
-import { FilterConstants } from '../constants/filter.constants';
-import { Period } from '../enums/period.enum';
+import dayjs from "dayjs";
+import { ILike, In } from "typeorm";
+import { FilterConstants } from "../constants/filter.constants";
+import { Period } from "../enums/period.enum";
 
 export function buildFilterCriteriaQuery(filterCriteria: any) {
   // Create a deep copy of the filterCriteria object
   let criteria: any = JSON.parse(JSON.stringify(filterCriteria));
 
   Object.keys(criteria).forEach((key) => {
-    if (key === 'page') {
+    if (key === "page") {
       delete criteria[key];
     }
-    if (key === 'pageSize') {
+    if (key === "pageSize") {
       delete criteria[key];
     }
 
-    if (key === 'search') {
+    if (key === "search") {
       let search = criteria?.search;
       delete criteria?.search;
       let value = search?.value;
@@ -40,11 +40,11 @@ export function buildFilterCriteriaQuery(filterCriteria: any) {
 }
 
 export const convertDate = (isoDate: string | Date): string => {
-  return dayjs(isoDate).format('DD-MM-YYYY');
+  return dayjs(isoDate).format("DD-MM-YYYY");
 };
 
 export const convertToISO = (simpleDate: string): string => {
-  return dayjs(simpleDate, 'YYYY-MM-DD HH:mm:ss').toISOString();
+  return dayjs(simpleDate, "YYYY-MM-DD HH:mm:ss").toISOString();
 };
 
 export function calculatePendingAmountWithFine(rental: any) {

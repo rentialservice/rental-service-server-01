@@ -1,49 +1,49 @@
-import { BaseEntity } from '../../../../base/base.entity';
-import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
-import { NotificationToken } from '../../../supporting-modules/notification/entities/notification-token.entity';
-import { Firm } from '../../../firm/entities/firm.entity';
-import { Rental } from '../../../rental/entities/rental.entity';
-import { PaymentCollection } from '../../../payment-collection/entities/payment-collection.entity';
+import { BaseEntity } from "../../../../base/base.entity";
+import { Entity, Column, OneToMany, ManyToOne } from "typeorm";
+import { NotificationToken } from "../../../supporting-modules/notification/entities/notification-token.entity";
+import { Firm } from "../../../firm/entities/firm.entity";
+import { Rental } from "../../../rental/entities/rental.entity";
+import { PaymentCollection } from "../../../payment-collection/entities/payment-collection.entity";
 
-@Entity('buyer')
+@Entity("buyer")
 export class Buyer extends BaseEntity {
-  @Column({ default: '' })
+  @Column({ default: "" })
   fullName: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   username: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   phone: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   address: string;
 
-  @Column({ type: 'simple-array', default: '' })
+  @Column({ type: "simple-array", default: "" })
   documents: string[];
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   city: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   state: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   pincode: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   alternatePhone: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   adhaarNo: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   drivingLicense: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   password: string;
 
-  @Column({ default: '' })
+  @Column({ default: "" })
   email: string;
 
   @ManyToOne(() => Firm)
