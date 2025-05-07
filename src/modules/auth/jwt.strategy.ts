@@ -35,6 +35,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     const decoded: any = this.jwtSvc.decode(jwt);
 
     const user = decoded?.user || decoded?.user?.user;
+    console.log({ user });
     if (!user) {
       throw new UnauthorizedException("JwtStrategy unauthorized");
     }
