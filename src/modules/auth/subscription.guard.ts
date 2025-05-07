@@ -11,7 +11,7 @@ import { SubscriptionService } from "../subscription/subscription.service";
 export class SubscriptionGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly subscriptionService: SubscriptionService,
+    private readonly subscriptionService: SubscriptionService
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -26,7 +26,7 @@ export class SubscriptionGuard implements CanActivate {
     // Check if the route is marked with @AllowWithoutSubscription
     const allowWithoutSubscription = this.reflector.get<boolean>(
       "allowWithoutSubscription",
-      context.getHandler(),
+      context.getHandler()
     );
     if (allowWithoutSubscription) {
       return true;
@@ -34,6 +34,7 @@ export class SubscriptionGuard implements CanActivate {
 
     // For other requests, check subscription
     const user = request.user; // Set by AuthGuard('jwt') via JwtStrategy
+    console.log({ hasSubscription_user: user });
     const userId = user.id; // Assuming all user entities have an 'id' field
     const hasSubscription =
       await this.subscriptionService.hasActiveSubscription(userId);

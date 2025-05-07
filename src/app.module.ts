@@ -21,15 +21,15 @@ import { JwtAuthGuard } from "./modules/auth/jwt.auth.guard";
   controllers: [AppController],
   providers: [
     AppService,
-    SubscriptionService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard, // Runs first, sets req.user
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard, // Runs first, sets req.user
+    },
     {
       provide: APP_GUARD,
       useClass: SubscriptionGuard, // Runs second, checks subscription
     },
+    SubscriptionService,
   ],
 })
 export class AppModule {}
