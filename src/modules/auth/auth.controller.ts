@@ -12,6 +12,7 @@ import { Response } from "express";
 import { RoutesConstants } from "../../constants/routes.constant";
 import { errorResponse, successResponse } from "../../base/response";
 import { AllowWithoutSubscription } from "./allow-without-subscription.decorator";
+import { Public } from "./public.decorator";
 
 @Controller(RoutesConstants.AUTH)
 export class AuthController {
@@ -19,6 +20,7 @@ export class AuthController {
 
   @Post(RoutesConstants.SEND_OTP)
   @AllowWithoutSubscription()
+  @Public()
   async sendOtp(
     @Res() response: Response,
     @Body() sendOtpDto: any
@@ -33,6 +35,7 @@ export class AuthController {
 
   @Post(RoutesConstants.VERIFY_OTP)
   @AllowWithoutSubscription()
+  @Public()
   async verifyOtp(
     @Res() response: Response,
     @Body() verifyOtpDto: VerifyOtpDto
@@ -46,6 +49,7 @@ export class AuthController {
 
   @Post(RoutesConstants.SEND_OTP_ADMIN)
   @AllowWithoutSubscription()
+  @Public()
   async sendOtpAdmin(
     @Res() response: Response,
     @Body() sendOtpDto: any
@@ -60,6 +64,7 @@ export class AuthController {
 
   @Post(RoutesConstants.VERIFY_OTP_ADMIN)
   @AllowWithoutSubscription()
+  @Public()
   async verifyOtpAdmin(
     @Res() response: Response,
     @Body() verifyOtpDto: VerifyOtpDto
@@ -76,6 +81,7 @@ export class AuthController {
 
   @Post(RoutesConstants.LOGIN)
   @AllowWithoutSubscription()
+  @Public()
   async login(
     @Res() response: Response,
     @Body() loginDto: LoginDto
@@ -89,6 +95,7 @@ export class AuthController {
 
   @Post(RoutesConstants.LOGIN_ADMIN)
   @AllowWithoutSubscription()
+  @Public()
   async loginAdmin(
     @Res() response: Response,
     @Body() loginDto: LoginDto
@@ -102,6 +109,7 @@ export class AuthController {
 
   @Post(RoutesConstants.SSO_LOGIN)
   @AllowWithoutSubscription()
+  @Public()
   async ssoLogin(
     @Res() response: Response,
     @Body() ssoLoginDto: SSOLoginDto
@@ -115,6 +123,7 @@ export class AuthController {
 
   @Post(RoutesConstants.SSO_LOGIN_ADMIN)
   @AllowWithoutSubscription()
+  @Public()
   async ssoLoginAdmin(
     @Res() response: Response,
     @Body() ssoLoginDto: any
@@ -131,6 +140,7 @@ export class AuthController {
 
   @Post(RoutesConstants.NEW_ACCESS_TOKEN)
   @AllowWithoutSubscription()
+  @Public()
   async newAccessToken(
     @Res() response: Response,
     @Body() newAccessTokenDto: NewAccessTokenDto
@@ -147,6 +157,7 @@ export class AuthController {
 
   @Post(RoutesConstants.FORGOT_PASSWORD_SEND_OTP)
   @AllowWithoutSubscription()
+  @Public()
   async sendOtpForgotPassword(
     @Res() response: Response,
     @Body() forgotPasswordVerifyEmailDto: ForgotPasswordVerifyEmailDto
@@ -165,6 +176,7 @@ export class AuthController {
 
   @Post(RoutesConstants.FORGOT_PASSWORD)
   @AllowWithoutSubscription()
+  @Public()
   async forgotPassword(
     @Res() response: Response,
     @Body() forgotPasswordDto: ForgotPasswordDto
@@ -181,6 +193,7 @@ export class AuthController {
 
   @Post(RoutesConstants.VERIFIED_PHONE_LOGIN)
   @AllowWithoutSubscription()
+  @Public()
   async verifiedPhoneLogin(
     @Res() response: Response,
     @Body() ssoLoginDto: any
@@ -197,6 +210,7 @@ export class AuthController {
 
   @Post(RoutesConstants.VERIFIED_PHONE_LOGIN_ADMIN)
   @AllowWithoutSubscription()
+  @Public()
   async verifiedPhoneLoginAdmin(
     @Res() response: Response,
     @Body() data: any

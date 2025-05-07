@@ -3,35 +3,35 @@ import {
   ExecutionContext,
   Injectable,
   UnauthorizedException,
-} from "@nestjs/common";
-import { JwtService } from "@nestjs/jwt";
-import { ConfigService } from "@nestjs/config";
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { JwtService } from '@nestjs/jwt';
+import { IS_PUBLIC_KEY } from './public.decorator';
 
 @Injectable()
 export class JwtAuthGuard implements CanActivate {
   constructor(
     private jwtService: JwtService,
-    private configService: ConfigService
+    private reflector: Reflector,
   ) {}
 
   canActivate(context: ExecutionContext): boolean {
+    const isPublic = this.reflector.getAllAndOverride<boolean>(
+      IS_PUBLIC_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+    if (isPublic) return true;
+
     const request = context.switchToHttp().getRequest();
-    const authHeader = request.headers.authorization;
+    const token = request.headers.authorization?.split(' ')[1];
+    if (!token) throw new UnauthorizedException('Token missing');
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      throw new UnauthorizedException("Missing or invalid token");
-    }
-
-    const token = authHeader.split(" ")[1];
     try {
-      const payload = this.jwtService.verify(token, {
-        secret: this.configService.get<string>("JWT_SECRET"),
-      });
-
+      const payload = this.jwtService.verify(token);
       request.user = payload.user || payload;
       return true;
-    } catch (err) {
-      throw new UnauthorizedException("Invalid token");
+    } catch {
+      throw new UnauthorizedException('Invalid token');
     }
   }
 }
