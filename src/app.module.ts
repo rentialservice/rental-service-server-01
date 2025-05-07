@@ -22,10 +22,10 @@ import { JwtAuthGuard } from "./modules/auth/jwt.auth.guard";
   providers: [
     AppService,
     SubscriptionService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard, // Runs first, sets req.user
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard, // Runs first, sets req.user
+    // },
     {
       provide: APP_GUARD,
       useClass: SubscriptionGuard, // Runs second, checks subscription
