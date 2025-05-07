@@ -9,7 +9,7 @@ import { Subscription } from "./modules/subscription/entities/subscription.entit
 import { SubscriptionService } from "./modules/subscription/subscription.service";
 import { APP_GUARD } from "@nestjs/core";
 import { SubscriptionGuard } from "./modules/auth/subscription.guard";
-import { AuthGuard } from "@nestjs/passport";
+import { JwtAuthGuard } from "./modules/auth/jwt.auth.guard";
 
 @Module({
   imports: [
@@ -24,7 +24,7 @@ import { AuthGuard } from "@nestjs/passport";
     SubscriptionService,
     {
       provide: APP_GUARD,
-      useClass: AuthGuard("jwt"), // Runs first, sets req.user
+      useClass: JwtAuthGuard, // Runs first, sets req.user
     },
     {
       provide: APP_GUARD,
