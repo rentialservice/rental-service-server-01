@@ -21,7 +21,7 @@ export class AuthController {
   @AllowWithoutSubscription()
   async sendOtp(
     @Res() response: Response,
-    @Body() sendOtpDto: any,
+    @Body() sendOtpDto: any
   ): Promise<void> {
     try {
       let result = await this.authService.sendOtp(sendOtpDto);
@@ -35,7 +35,7 @@ export class AuthController {
   @AllowWithoutSubscription()
   async verifyOtp(
     @Res() response: Response,
-    @Body() verifyOtpDto: VerifyOtpDto,
+    @Body() verifyOtpDto: VerifyOtpDto
   ): Promise<void> {
     try {
       successResponse(response, await this.authService.verifyOtp(verifyOtpDto));
@@ -48,7 +48,7 @@ export class AuthController {
   @AllowWithoutSubscription()
   async sendOtpAdmin(
     @Res() response: Response,
-    @Body() sendOtpDto: any,
+    @Body() sendOtpDto: any
   ): Promise<void> {
     try {
       let result = await this.authService.sendOtpAdmin(sendOtpDto);
@@ -62,12 +62,12 @@ export class AuthController {
   @AllowWithoutSubscription()
   async verifyOtpAdmin(
     @Res() response: Response,
-    @Body() verifyOtpDto: VerifyOtpDto,
+    @Body() verifyOtpDto: VerifyOtpDto
   ): Promise<void> {
     try {
       successResponse(
         response,
-        await this.authService.verifyOtpAdmin(verifyOtpDto),
+        await this.authService.verifyOtpAdmin(verifyOtpDto)
       );
     } catch (error: any) {
       errorResponse(response, error);
@@ -78,7 +78,7 @@ export class AuthController {
   @AllowWithoutSubscription()
   async login(
     @Res() response: Response,
-    @Body() loginDto: LoginDto,
+    @Body() loginDto: LoginDto
   ): Promise<void> {
     try {
       successResponse(response, await this.authService.login(loginDto));
@@ -91,7 +91,7 @@ export class AuthController {
   @AllowWithoutSubscription()
   async loginAdmin(
     @Res() response: Response,
-    @Body() loginDto: LoginDto,
+    @Body() loginDto: LoginDto
   ): Promise<void> {
     try {
       successResponse(response, await this.authService.loginAdmin(loginDto));
@@ -104,7 +104,7 @@ export class AuthController {
   @AllowWithoutSubscription()
   async ssoLogin(
     @Res() response: Response,
-    @Body() ssoLoginDto: SSOLoginDto,
+    @Body() ssoLoginDto: SSOLoginDto
   ): Promise<void> {
     try {
       successResponse(response, await this.authService.ssoLogin(ssoLoginDto));
@@ -117,12 +117,12 @@ export class AuthController {
   @AllowWithoutSubscription()
   async ssoLoginAdmin(
     @Res() response: Response,
-    @Body() ssoLoginDto: any,
+    @Body() ssoLoginDto: any
   ): Promise<void> {
     try {
       successResponse(
         response,
-        await this.authService.ssoLoginAdmin(ssoLoginDto),
+        await this.authService.ssoLoginAdmin(ssoLoginDto)
       );
     } catch (error: any) {
       errorResponse(response, error);
@@ -133,12 +133,12 @@ export class AuthController {
   @AllowWithoutSubscription()
   async newAccessToken(
     @Res() response: Response,
-    @Body() newAccessTokenDto: NewAccessTokenDto,
+    @Body() newAccessTokenDto: NewAccessTokenDto
   ): Promise<void> {
     try {
       successResponse(
         response,
-        await this.authService.newAccessToken(newAccessTokenDto),
+        await this.authService.newAccessToken(newAccessTokenDto)
       );
     } catch (error: any) {
       errorResponse(response, error);
@@ -149,14 +149,14 @@ export class AuthController {
   @AllowWithoutSubscription()
   async sendOtpForgotPassword(
     @Res() response: Response,
-    @Body() forgotPasswordVerifyEmailDto: ForgotPasswordVerifyEmailDto,
+    @Body() forgotPasswordVerifyEmailDto: ForgotPasswordVerifyEmailDto
   ): Promise<void> {
     try {
       successResponse(
         response,
         await this.authService.sendOtpForgotPassword(
-          forgotPasswordVerifyEmailDto,
-        ),
+          forgotPasswordVerifyEmailDto
+        )
       );
     } catch (error: any) {
       errorResponse(response, error);
@@ -167,12 +167,12 @@ export class AuthController {
   @AllowWithoutSubscription()
   async forgotPassword(
     @Res() response: Response,
-    @Body() forgotPasswordDto: ForgotPasswordDto,
+    @Body() forgotPasswordDto: ForgotPasswordDto
   ): Promise<void> {
     try {
       successResponse(
         response,
-        await this.authService.forgotPassword(forgotPasswordDto),
+        await this.authService.forgotPassword(forgotPasswordDto)
       );
     } catch (error: any) {
       errorResponse(response, error);
@@ -183,12 +183,12 @@ export class AuthController {
   @AllowWithoutSubscription()
   async verifiedPhoneLogin(
     @Res() response: Response,
-    @Body() ssoLoginDto: any,
+    @Body() ssoLoginDto: any
   ): Promise<void> {
     try {
       successResponse(
         response,
-        await this.authService.verifiedPhoneLogin(ssoLoginDto),
+        await this.authService.verifiedPhoneLogin(ssoLoginDto)
       );
     } catch (error: any) {
       errorResponse(response, error);
@@ -199,12 +199,13 @@ export class AuthController {
   @AllowWithoutSubscription()
   async verifiedPhoneLoginAdmin(
     @Res() response: Response,
-    @Body() ssoLoginDto: any,
+    @Body() data: any
   ): Promise<void> {
     try {
+      console.log({ data });
       successResponse(
         response,
-        await this.authService.verifiedPhoneLoginAdmin(ssoLoginDto),
+        await this.authService.verifiedPhoneLoginAdmin(data)
       );
     } catch (error: any) {
       errorResponse(response, error);
