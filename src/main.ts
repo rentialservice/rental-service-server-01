@@ -13,7 +13,7 @@ async function bootstrap() {
   app.use(
     express.urlencoded({
       extended: true,
-    }),
+    })
   );
   app.use(express.json({ limit: "100mb" }));
   await app.listen(port);

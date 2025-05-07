@@ -10,6 +10,7 @@ import { SubscriptionService } from "./modules/subscription/subscription.service
 import { APP_GUARD } from "@nestjs/core";
 import { SubscriptionGuard } from "./modules/auth/subscription.guard";
 import { JwtAuthGuard } from "./modules/auth/jwt.auth.guard";
+import { JwtService } from "@nestjs/jwt";
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { JwtAuthGuard } from "./modules/auth/jwt.auth.guard";
   ],
   controllers: [AppController],
   providers: [
+    JwtService,
     AppService,
     {
       provide: APP_GUARD,
