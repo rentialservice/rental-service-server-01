@@ -15,8 +15,8 @@ import { AuthGuard } from "@nestjs/passport";
   imports: [
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     ConfigModule.forRoot({ isGlobal: true }),
-    ...modules,
     TypeOrmModule.forFeature([Subscription]),
+    ...modules,
   ],
   controllers: [AppController],
   providers: [

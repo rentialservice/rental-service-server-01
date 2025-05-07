@@ -20,7 +20,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     @InjectRepository(Admin)
     private readonly adminRepository: Repository<Admin>,
     @InjectRepository(Seller)
-    private readonly sellerRepository: Repository<Seller>,
+    private readonly sellerRepository: Repository<Seller>
   ) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -30,14 +30,15 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     });
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  async validate(req: Request) {
-    let jwt = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
-    let user = await this.jwtSvc.decode(jwt);
-    user = user?.user || user?.user?.user;
+  async validate(req: Request, payload: any) {
+    const jwt = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+    const decoded: any = this.jwtSvc.decode(jwt);
+
+    const user = decoded?.user || decoded?.user?.user;
     if (!user) {
       throw new UnauthorizedException("JwtStrategy unauthorized");
     }
+
     let userData: any;
     if (user?.type === "buyer") {
       userData = await this.buyerRepository.findOne({
@@ -52,6 +53,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
         where: { id: user.id, deleteFlag: false },
       });
     }
+
     if (!userData) {
       throw new UnauthorizedException("Unauthorized user ...!");
     }
