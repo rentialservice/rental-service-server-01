@@ -29,7 +29,8 @@ export class JwtAuthGuard implements CanActivate {
     if (!token) throw new UnauthorizedException("Token missing");
 
     try {
-      const payload = this.jwtService.verify(token);
+      const payload = this.jwtService.decode(token);
+      console.log({ payload });
       request.user = payload.user || payload;
       return true;
     } catch (error) {
