@@ -23,14 +23,14 @@ import { JwtService } from "@nestjs/jwt";
   providers: [
     JwtService,
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: JwtAuthGuard, // Runs first, sets req.user
-    },
-    {
-      provide: APP_GUARD,
-      useClass: SubscriptionGuard, // Runs second, checks subscription
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: JwtAuthGuard, // Runs first, sets req.user
+    // },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: SubscriptionGuard, // Runs second, checks subscription
+    // },
     SubscriptionService,
   ],
 })
