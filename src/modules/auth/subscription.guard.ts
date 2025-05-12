@@ -20,31 +20,31 @@ export class SubscriptionGuard implements CanActivate {
     // removed all the checks for subscription
     return true;
 
-    // Allow all GET requests without subscription check
-    if (method === "GET") {
-      return true;
-    }
+    // // Allow all GET requests without subscription check
+    // if (method === "GET") {
+    //   return true;
+    // }
 
-    // Check if the route is marked with @AllowWithoutSubscription
-    const allowWithoutSubscription = this.reflector.get<boolean>(
-      "allowWithoutSubscription",
-      context.getHandler()
-    );
-    if (allowWithoutSubscription) {
-      return true;
-    }
+    // // Check if the route is marked with @AllowWithoutSubscription
+    // const allowWithoutSubscription = this.reflector.get<boolean>(
+    //   "allowWithoutSubscription",
+    //   context.getHandler()
+    // );
+    // if (allowWithoutSubscription) {
+    //   return true;
+    // }
 
-    // For other requests, check subscription
-    const user = request.user; // Set by AuthGuard('jwt') via JwtStrategy
-    console.log({ hasSubscription_user: user });
-    const userId = user.id; // Assuming all user entities have an 'id' field
-    const hasSubscription =
-      await this.subscriptionService.hasActiveSubscription(userId);
+    // // For other requests, check subscription
+    // const user = request.user; // Set by AuthGuard('jwt') via JwtStrategy
+    // console.log({ hasSubscription_user: user });
+    // const userId = user.id; // Assuming all user entities have an 'id' field
+    // const hasSubscription =
+    //   await this.subscriptionService.hasActiveSubscription(userId);
 
-    if (!hasSubscription) {
-      throw new ForbiddenException("No active subscription");
-    }
+    // if (!hasSubscription) {
+    //   throw new ForbiddenException("No active subscription");
+    // }
 
-    return true;
+    // return true;
   }
 }
