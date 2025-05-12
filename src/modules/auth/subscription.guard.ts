@@ -17,6 +17,8 @@ export class SubscriptionGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const method = request.method;
+    // removed all the checks for subscription
+    return true;
 
     // Allow all GET requests without subscription check
     if (method === "GET") {
