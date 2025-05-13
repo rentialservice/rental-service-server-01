@@ -1,5 +1,6 @@
 import { BaseEntity } from "../../../base/base.entity";
-import { Entity, Column } from "typeorm";
+import { Entity, Column, OneToMany } from "typeorm";
+import { SubscriptionDetails } from "./subscription-details.entity";
 
 @Entity("subscription")
 export class Subscription extends BaseEntity {
@@ -9,15 +10,12 @@ export class Subscription extends BaseEntity {
   @Column({ default: "" })
   description: string;
 
-  @Column({ default: "" })
-  userId: string;
+  @Column({ type: "decimal", precision: 10, scale: 2, default: 0 })
+  basePrice: number;
 
-  @Column({ default: new Date() })
-  startDate: Date;
+  @Column({ type: "jsonb", nullable: true })
+  features: Record<string, any>;
 
-  @Column({ default: new Date() })
-  endDate: Date;
-
-  @Column({ type: "decimal", precision: 10, scale: 2 })
-  price: number;
+  @OneToMany(() => SubscriptionDetails, (details) => details.subscription)
+  subscriptionDetails: SubscriptionDetails[];
 }

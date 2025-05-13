@@ -21,6 +21,7 @@ import { TermsAndConditions } from "../../modules/terms-and-conditions/entities/
 import { RentalProduct } from "../../modules/rental-products/entities/rental-product.entity";
 import { Payment } from "../../modules/payment/entities/payment.entity";
 import { CustomFields } from "../../modules/custom-fields/entities/custom-fields.entity";
+import { SubscriptionDetails } from "../../modules/subscription/entities/subscription-details.entity";
 
 export const entities = [
   Admin,
@@ -46,4 +47,5 @@ export const entities = [
   TermsAndConditions,
   RentalProduct,
   Payment,
+  SubscriptionDetails,
 ];

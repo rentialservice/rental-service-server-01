@@ -1,0 +1,99 @@
+import { Controller, Get, Post, Body, Param, Res, Req, Put } from "@nestjs/common";
+import { SubscriptionService } from "../services/subscription.service";
+import { Request, Response } from "express";
+import { errorResponse, successResponse } from "../../../base/response";
+
+@Controller("subscription")
+export class SubscriptionController {
+  constructor(private readonly subscriptionService: SubscriptionService) {}
+
+  @Post()
+  async createSubscription(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Body() data: any
+  ) {
+    try {
+      const result = await this.subscriptionService.createSubscription(data);
+      successResponse(response, result);
+    } catch (error) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Post(":subscriptionId/firm/:firmId")
+  async assignSubscriptionToFirm(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Param("subscriptionId") subscriptionId: string,
+    @Param("firmId") firmId: string,
+    @Body() data: any
+  ) {
+    try {
+      const result = await this.subscriptionService.assignSubscriptionToFirm(
+        subscriptionId,
+        firmId,
+        data
+      );
+      successResponse(response, result);
+    } catch (error) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Get("firm/:firmId")
+  async getSubscriptionsByFirm(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Param("firmId") firmId: string
+  ) {
+    try {
+      const result = await this.subscriptionService.getSubscriptionsByFirm(firmId);
+      successResponse(response, result);
+    } catch (error) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Get()
+  async getAllSubscriptions(
+    @Req() request: Request,
+    @Res() response: Response
+  ) {
+    try {
+      const result = await this.subscriptionService.getAllSubscriptions();
+      successResponse(response, result);
+    } catch (error) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Post('details')
+  async createSubscriptionDetails(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Body() data: any
+  ) {
+    try {
+      const result = await this.subscriptionService.createSubscriptionDetails(data);
+      successResponse(response, result);
+    } catch (error) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Put('details/:id')
+  async updateSubscriptionDetails(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Param('id') id: string,
+    @Body() data: any
+  ) {
+    try {
+      const result = await this.subscriptionService.updateSubscriptionDetails(id, data);
+      successResponse(response, result);
+    } catch (error) {
+      errorResponse(response, error);
+    }
+  }
+}

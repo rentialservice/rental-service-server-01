@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { LessThanOrEqual, MoreThanOrEqual, Repository } from "typeorm";
 import { Subscription } from "./entities/subscription.entity";
+import { SubscriptionDetails } from "./entities/subscription-details.entity";
 import { buildFilterCriteriaQuery } from "../../common/utils";
 
 @Injectable()
@@ -9,15 +10,18 @@ export class SubscriptionService {
   constructor(
     @InjectRepository(Subscription)
     private readonly subscriptionRepository: Repository<Subscription>,
+    @InjectRepository(SubscriptionDetails)
+    private readonly subscriptionDetailsRepository: Repository<SubscriptionDetails>
   ) {}
 
-  async hasActiveSubscription(userId: string): Promise<boolean> {
+  async hasActiveSubscription(firmId: string): Promise<boolean> {
     const currentDate = new Date();
-    const activeSubscription = await this.subscriptionRepository.findOne({
+    const activeSubscription = await this.subscriptionDetailsRepository.findOne({
       where: {
-        userId,
+        firm: { id: firmId },
         startDate: LessThanOrEqual(currentDate),
         endDate: MoreThanOrEqual(currentDate),
+        isActive: true
       },
     });
     return !!activeSubscription;
@@ -31,7 +35,7 @@ export class SubscriptionService {
   async getAll(
     page: number = 1,
     pageSize: number = 10,
-    filterType?: string,
+    filterType?: string
   ): Promise<any> {
     return await this.subscriptionRepository.findAndCount({
       where: { deleteFlag: false },
@@ -53,7 +57,7 @@ export class SubscriptionService {
   async update(
     id: string,
     updateObject: Partial<Subscription>,
-    filterType?: string,
+    filterType?: string
   ): Promise<any> {
     return await this.subscriptionRepository.update(id, updateObject);
   }
@@ -69,7 +73,7 @@ export class SubscriptionService {
   async filter(
     filterCriteria: any,
     fields: string[] = [],
-    filterType?: string,
+    filterType?: string
   ): Promise<any> {
     return await this.subscriptionRepository.find({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },

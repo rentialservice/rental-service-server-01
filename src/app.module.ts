@@ -11,12 +11,13 @@ import { APP_GUARD } from "@nestjs/core";
 import { SubscriptionGuard } from "./modules/auth/subscription.guard";
 import { JwtAuthGuard } from "./modules/auth/jwt.auth.guard";
 import { JwtService } from "@nestjs/jwt";
+import { SubscriptionDetails } from "./modules/subscription/entities/subscription-details.entity";
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync(typeOrmAsyncConfig),
     ConfigModule.forRoot({ isGlobal: true }),
-    TypeOrmModule.forFeature([Subscription]),
+    TypeOrmModule.forFeature([Subscription, SubscriptionDetails]),
     ...modules,
   ],
   controllers: [AppController],
