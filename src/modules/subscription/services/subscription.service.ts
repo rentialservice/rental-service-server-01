@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Subscription } from '../entities/subscription.entity';
-import { SubscriptionDetails } from '../entities/subscription-details.entity';
+import { Injectable } from "@nestjs/common";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { Subscription } from "../entities/subscription.entity";
+import { SubscriptionDetails } from "../entities/subscription-details.entity";
 
 @Injectable()
 export class SubscriptionService {
@@ -18,11 +18,15 @@ export class SubscriptionService {
     return await this.subscriptionRepository.save(subscription);
   }
 
-  async assignSubscriptionToFirm(subscriptionId: string, firmId: string, data: Partial<SubscriptionDetails>) {
+  async assignSubscriptionToFirm(
+    subscriptionId: string,
+    firmId: string,
+    data: Partial<SubscriptionDetails>
+  ) {
     const subscriptionDetails = this.subscriptionDetailsRepository.create({
       ...data,
       subscription: { id: subscriptionId },
-      firm: { id: firmId }
+      firm: { id: firmId },
     });
     return await this.subscriptionDetailsRepository.save(subscriptionDetails);
   }
@@ -30,7 +34,7 @@ export class SubscriptionService {
   async getSubscriptionsByFirm(firmId: string) {
     return await this.subscriptionDetailsRepository.find({
       where: { firm: { id: firmId }, isActive: true },
-      relations: ['subscription']
+      relations: ["subscription"],
     });
   }
 
@@ -38,24 +42,50 @@ export class SubscriptionService {
     return await this.subscriptionRepository.find();
   }
 
-  async createSubscriptionDetails(data: Partial<SubscriptionDetails>) {
+  async createSubscriptionDetails(data: Partial<any>) {
     try {
-      const subscriptionDetails = this.subscriptionDetailsRepository.create(data);
+      const subscription = await this.subscriptionRepository.findOne({
+        where: { id: data.subscriptionId },
+      });
+      if (!subscription) {
+        throw new Error("Subscription not found");
+      }
+      const startDate = new Date();
+      const endDate = new Date(startDate);
+      endDate.setDate(startDate.getDate() + Number(subscription.duration));
+      const subscriptionDetails = this.subscriptionDetailsRepository.create({
+        ...data,
+        subscription,
+        startDate,
+        endDate,
+        price: subscription.basePrice,
+      });
       return await this.subscriptionDetailsRepository.save(subscriptionDetails);
     } catch (error) {
       throw error;
     }
   }
 
-  async updateSubscriptionDetails(id: string, data: Partial<SubscriptionDetails>) {
+  async updateSubscriptionDetails(
+    id: string,
+    data: Partial<SubscriptionDetails>
+  ) {
     try {
       await this.subscriptionDetailsRepository.update(id, data);
       return await this.subscriptionDetailsRepository.findOne({
         where: { id },
-        relations: ['subscription', 'firm']
+        relations: ["subscription", "firm"],
       });
     } catch (error) {
       throw error;
     }
+  }
+
+  async update(
+    id: string,
+    updateObject: Partial<Subscription>,
+    filterType?: string
+  ): Promise<any> {
+    return await this.subscriptionRepository.update(id, updateObject);
   }
 }

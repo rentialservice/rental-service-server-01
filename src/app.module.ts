@@ -24,14 +24,14 @@ import { SubscriptionDetails } from "./modules/subscription/entities/subscriptio
   providers: [
     JwtService,
     AppService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: JwtAuthGuard, // Runs first, sets req.user
-    // },
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: SubscriptionGuard, // Runs second, checks subscription
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard, // Runs first, sets req.user
+    },
+    {
+      provide: APP_GUARD,
+      useClass: SubscriptionGuard, // Runs second, checks subscription
+    },
     SubscriptionService,
   ],
 })

@@ -1,7 +1,20 @@
-import { Controller, Get, Post, Body, Param, Res, Req, Put } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  Res,
+  Req,
+  Put,
+  Query,
+} from "@nestjs/common";
 import { SubscriptionService } from "../services/subscription.service";
 import { Request, Response } from "express";
 import { errorResponse, successResponse } from "../../../base/response";
+import { RoutesConstants } from "../../../constants/routes.constant";
+import { AllowWithoutSubscription } from "../../auth/allow-without-subscription.decorator";
+import { Subscription } from "../entities/subscription.entity";
 
 @Controller("subscription")
 export class SubscriptionController {
@@ -48,7 +61,8 @@ export class SubscriptionController {
     @Param("firmId") firmId: string
   ) {
     try {
-      const result = await this.subscriptionService.getSubscriptionsByFirm(firmId);
+      const result =
+        await this.subscriptionService.getSubscriptionsByFirm(firmId);
       successResponse(response, result);
     } catch (error) {
       errorResponse(response, error);
@@ -68,31 +82,56 @@ export class SubscriptionController {
     }
   }
 
-  @Post('details')
+  @Post("details")
   async createSubscriptionDetails(
     @Req() request: Request,
     @Res() response: Response,
     @Body() data: any
   ) {
     try {
-      const result = await this.subscriptionService.createSubscriptionDetails(data);
+      const result =
+        await this.subscriptionService.createSubscriptionDetails(data);
       successResponse(response, result);
     } catch (error) {
       errorResponse(response, error);
     }
   }
 
-  @Put('details/:id')
+  @Put("details/:id")
   async updateSubscriptionDetails(
     @Req() request: Request,
     @Res() response: Response,
-    @Param('id') id: string,
+    @Param("id") id: string,
     @Body() data: any
   ) {
     try {
-      const result = await this.subscriptionService.updateSubscriptionDetails(id, data);
+      const result = await this.subscriptionService.updateSubscriptionDetails(
+        id,
+        data
+      );
       successResponse(response, result);
     } catch (error) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Put(RoutesConstants.PARAM_ID)
+  @AllowWithoutSubscription()
+  async update(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Param(RoutesConstants.ID) id: string,
+    @Body() updateObject: Partial<Subscription>,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
+  ): Promise<void> {
+    try {
+      let result = await this.subscriptionService.update(
+        id,
+        updateObject,
+        filterType
+      );
+      successResponse(response, result);
+    } catch (error: any) {
       errorResponse(response, error);
     }
   }

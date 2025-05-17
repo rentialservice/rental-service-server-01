@@ -13,6 +13,9 @@ export class Subscription extends BaseEntity {
   @Column({ type: "decimal", precision: 10, scale: 2, default: 0 })
   basePrice: number;
 
+  @Column({ type: "decimal", precision: 10, scale: 2, default: 0 })
+  duration: number;
+
   @Column({ type: "jsonb", nullable: true })
   features: Record<string, any>;
 
