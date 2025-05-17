@@ -9,33 +9,39 @@ import { S3Service } from "../supporting-modules/s3/s3.service";
 import { PrefixService } from "../prefix/prefix.service";
 import { ModuleNameList } from "../../enums/module.enum";
 import { TermsAndConditionsService } from "../terms-and-conditions/terms-and-conditions.service";
+import { SubscriptionDetails } from "../subscription/entities/subscription-details.entity";
+import { Subscription } from "../subscription/entities/subscription.entity";
 
 @Injectable()
 export class FirmService {
   constructor(
     @InjectRepository(Firm) private readonly firmRepository: Repository<Firm>,
+    @InjectRepository(Subscription)
+    private subscriptionRepository: Repository<Subscription>,
+    @InjectRepository(SubscriptionDetails)
+    private subscriptionDetailsRepository: Repository<SubscriptionDetails>,
     private readonly commonService: CommonService,
     private readonly paymentModeService: PaymentModeService,
     private readonly prefixService: PrefixService,
     private readonly termsAndConditionsService: TermsAndConditionsService,
-    private readonly s3Service: S3Service,
+    private readonly s3Service: S3Service
   ) {}
 
   async create(
     createObject: Partial<Firm>,
     media?: any,
-    signature?: any,
+    signature?: any
   ): Promise<any> {
     if (media) {
       createObject.media = await this.s3Service.uploadImageS3(
         media,
-        (process.env.FIRM_MEDIA_FOLDER_NAME as string) || "FirmMedia",
+        (process.env.FIRM_MEDIA_FOLDER_NAME as string) || "FirmMedia"
       );
     }
     if (signature) {
       createObject.signature = await this.s3Service.uploadImageS3(
         signature,
-        (process.env.FIRM_SIGNATURE_FOLDER_NAME as string) || "FirmSignature",
+        (process.env.FIRM_SIGNATURE_FOLDER_NAME as string) || "FirmSignature"
       );
     }
     // if (createObject?.category?.length) {
@@ -66,26 +72,43 @@ export class FirmService {
         </body>
         </html>`,
         },
-        { firm: response.id },
+        { firm: response.id }
       ),
       this.paymentModeService.create({ firm: response.id, name: "CASH" }),
       this.paymentModeService.create({ firm: response.id, name: "BANK" }),
       this.prefixService.create(
         { module: ModuleNameList.Invoice, name: "INV" },
-        { firm: response.id },
+        { firm: response.id }
       ),
       this.prefixService.create(
         { module: ModuleNameList.Receipt, name: "RECEIPT" },
-        { firm: response.id },
+        { firm: response.id }
       ),
     ]);
+    const subscription = await this.subscriptionRepository.findOne({
+      where: { name: "Free Tier" },
+    });
+    if (!subscription) {
+      throw new Error("'Free Tier' Subscription not found");
+    }
+    const startDate = new Date();
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + Number(subscription.duration));
+    const subscriptionDetails = this.subscriptionDetailsRepository.create({
+      firm: response,
+      subscription,
+      startDate,
+      endDate,
+      price: subscription.basePrice,
+    });
+    await this.subscriptionDetailsRepository.save(subscriptionDetails);
     return response;
   }
 
   async getAll(
     page: number = 1,
     pageSize: number = 10,
-    filterType?: string,
+    filterType?: string
   ): Promise<any> {
     return await this.firmRepository.findAndCount({
       where: { deleteFlag: false },
@@ -109,7 +132,7 @@ export class FirmService {
   async updateSubscription(
     id: string,
     updateObject: Partial<Firm>,
-    filterType?: string,
+    filterType?: string
   ): Promise<any> {
     if (!updateObject?.subscription) {
       throw new NotFoundException(`Subscription Id not found`);
@@ -120,7 +143,7 @@ export class FirmService {
       });
       if (!subscription) {
         throw new NotFoundException(
-          `Subscription with name ${updateObject.subscription} not found`,
+          `Subscription with name ${updateObject.subscription} not found`
         );
       }
       updateObject.subscription = subscription;
@@ -133,23 +156,23 @@ export class FirmService {
     updateObject: Partial<Firm>,
     filterType?: string,
     media?: any,
-    signature?: any,
+    signature?: any
   ): Promise<any> {
     if (media) {
       updateObject.media = await this.s3Service.uploadImageS3(
         media,
-        (process.env.FIRM_MEDIA_FOLDER_NAME as string) || "FirmMedia",
+        (process.env.FIRM_MEDIA_FOLDER_NAME as string) || "FirmMedia"
       );
     }
     if (signature) {
       updateObject.signature = await this.s3Service.uploadImageS3(
         signature,
-        (process.env.FIRM_SIGNATURE_FOLDER_NAME as string) || "FirmSignature",
+        (process.env.FIRM_SIGNATURE_FOLDER_NAME as string) || "FirmSignature"
       );
     }
     if (updateObject?.subscription) {
       throw new Error(
-        `You are not allowed to modify subscription details, contact your administrator`,
+        `You are not allowed to modify subscription details, contact your administrator`
       );
     }
     // if (updateObject?.category?.length) {
@@ -186,7 +209,7 @@ export class FirmService {
   async filter(
     filterCriteria: any,
     fields: string[] = [],
-    filterType?: string,
+    filterType?: string
   ): Promise<any> {
     return await this.firmRepository.find({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
