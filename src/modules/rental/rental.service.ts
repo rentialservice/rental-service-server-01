@@ -26,7 +26,7 @@ export class RentalService {
     private readonly rentalProductRepository: Repository<RentalProduct>,
     private readonly commonService: CommonService,
     private readonly prefixService: PrefixService,
-    private readonly rentalProductService: RentalProductService,
+    private readonly rentalProductService: RentalProductService
   ) {}
 
   async create(createObject: Partial<Rental>, queryData: any): Promise<any> {
@@ -62,7 +62,7 @@ export class RentalService {
       createObject.firm = firm;
     }
     let rentalProduct = await this.rentalProductService.create(
-      createObject.rentalProduct,
+      createObject.rentalProduct
     );
     createObject.rentalProduct = rentalProduct;
 
@@ -71,7 +71,7 @@ export class RentalService {
     });
     if (!buyer) {
       throw new NotFoundException(
-        `Buyer with id ${createObject.buyer} not found`,
+        `Buyer with id ${createObject.buyer} not found`
       );
     } else {
       createObject.buyer = buyer;
@@ -81,7 +81,7 @@ export class RentalService {
     });
     if (!paymentMode) {
       throw new NotFoundException(
-        `Payment Mode with id ${createObject.paymentMode} not found`,
+        `Payment Mode with id ${createObject.paymentMode} not found`
       );
     } else {
       createObject.paymentMode = paymentMode;
@@ -99,7 +99,7 @@ export class RentalService {
     page: number = 1,
     pageSize: number = 10,
     filterType?: string,
-    filterCriteria?: any,
+    filterCriteria?: any
   ): Promise<any> {
     delete filterCriteria?.category;
     return await this.rentalRepository.findAndCount({
@@ -148,6 +148,7 @@ export class RentalService {
         "paymentMode",
       ],
     });
+    console.log({ rental });
     let transactions =
       await this.commonService.getPaymentCollectionsByRentalId(id);
     if (!rental) {
@@ -231,6 +232,7 @@ export class RentalService {
         "paymentMode",
       ],
     });
+    console.log({ rental });
     let transactions =
       await this.commonService.getPaymentCollectionsByRentalId(id);
     if (!rental) {
@@ -309,7 +311,7 @@ export class RentalService {
   async update(
     id: string,
     updateObject: Partial<Rental>,
-    filterType?: string,
+    filterType?: string
   ): Promise<any> {
     if (updateObject?.firm) {
       let [firm] = await this.commonService.firmFilter({
@@ -317,7 +319,7 @@ export class RentalService {
       });
       if (!firm) {
         throw new NotFoundException(
-          `Firm with id ${updateObject.firm} not found`,
+          `Firm with id ${updateObject.firm} not found`
         );
       } else {
         updateObject.firm = firm;
@@ -326,7 +328,7 @@ export class RentalService {
     if (updateObject?.rentalProduct?.length) {
       updateObject.rentalProduct = await this.rentalProductService.update(
         id,
-        updateObject.rentalProduct,
+        updateObject.rentalProduct
       );
     }
     if (updateObject?.buyer) {
@@ -335,7 +337,7 @@ export class RentalService {
       });
       if (!buyer) {
         throw new NotFoundException(
-          `Buyer with id ${updateObject.buyer} not found`,
+          `Buyer with id ${updateObject.buyer} not found`
         );
       } else {
         updateObject.buyer = buyer;
@@ -347,7 +349,7 @@ export class RentalService {
       });
       if (!paymentMode) {
         throw new NotFoundException(
-          `Payment Mode with id ${updateObject.paymentMode} not found`,
+          `Payment Mode with id ${updateObject.paymentMode} not found`
         );
       } else {
         updateObject.paymentMode = paymentMode;
@@ -359,7 +361,7 @@ export class RentalService {
     if (updateObject?.rentalProduct?.length) {
       if (updateObject.invoiceStatus === InvoiceStatus.Paid) {
         await this.rentalProductService.updateStatusAndRentedStock(
-          updateObject?.rentalProduct,
+          updateObject?.rentalProduct
         );
       }
     }
@@ -382,7 +384,7 @@ export class RentalService {
   async filter(
     filterCriteria: any,
     fields: string[] = [],
-    filterType?: string,
+    filterType?: string
   ): Promise<any> {
     delete filterCriteria?.category;
     return await this.rentalRepository.find({

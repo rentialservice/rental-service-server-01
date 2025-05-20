@@ -19,23 +19,24 @@ import {
 } from "../../base/response";
 import { PaymentCollectionService } from "./payment-collection.service";
 import { PaymentCollection } from "./entities/payment-collection.entity";
+import { Public } from "../auth/public.decorator";
 
 @Controller("payment-collection")
 export class PaymentCollectionController {
   constructor(
-    private readonly paymentCollectionService: PaymentCollectionService,
+    private readonly paymentCollectionService: PaymentCollectionService
   ) {}
 
   @Post()
   async create(
     @Req() request: Request,
     @Res() response: Response,
-    @Body() createObject: Partial<PaymentCollection>,
+    @Body() createObject: Partial<PaymentCollection>
   ): Promise<void> {
     try {
       let result = await this.paymentCollectionService.create(
         createObject,
-        request.query,
+        request.query
       );
       successResponse(response, result);
     } catch (error: any) {
@@ -44,21 +45,22 @@ export class PaymentCollectionController {
   }
 
   @Get("/receipt/download")
+  @Public()
   async createReceiptDownload(
     @Req() request: Request,
     @Res() response: Response,
     @Query(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const pdfStream = await this.paymentCollectionService.createReceipt(
         id,
-        filterType,
+        filterType
       );
       response.setHeader("Content-Type", "application/pdf");
       response.setHeader(
         "Content-Disposition",
-        `attachment; filename="Receipt-${id}.pdf"`,
+        `attachment; filename="Receipt-${id}.pdf"`
       );
       pdfStream.pipe(response);
       pdfStream.on("end", () => {
@@ -74,16 +76,17 @@ export class PaymentCollectionController {
   }
 
   @Get("/receipt/preview")
+  @Public()
   async createReceiptPreview(
     @Req() request: Request,
     @Res() response: Response,
     @Query(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const result = await this.paymentCollectionService.createReceiptPreview(
         id,
-        filterType,
+        filterType
       );
       response.send(result);
     } catch (error: any) {
@@ -95,7 +98,7 @@ export class PaymentCollectionController {
   async getPaymentCollectionsByRentalId(
     @Req() request: Request,
     @Res() response: Response,
-    @Param("rental") id: string,
+    @Param("rental") id: string
   ): Promise<void> {
     try {
       let result =
@@ -110,13 +113,13 @@ export class PaymentCollectionController {
   async getFilter(
     @Req() request: Request,
     @Res() response: Response,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const result: any = await this.paymentCollectionService.filter(
         request.query,
         [],
-        filterType,
+        filterType
       );
       successResponse(response, result);
     } catch (error: any) {
@@ -128,14 +131,14 @@ export class PaymentCollectionController {
   async getAmountStatistics(
     @Req() request: Request,
     @Res() response: Response,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const result: any =
         await this.paymentCollectionService.getAmountStatistics(
           request.query,
           [],
-          filterType,
+          filterType
         );
       successResponse(response, result);
     } catch (error: any) {
@@ -149,13 +152,13 @@ export class PaymentCollectionController {
     @Res() response: Response,
     @Query(RoutesConstants.PAGE) page: number = 1,
     @Query(RoutesConstants.PAGESIZE) pageSize: number = 10,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const [result, count]: any = await this.paymentCollectionService.getAll(
         page,
         pageSize,
-        request.query as any,
+        request.query as any
       );
       successPaginatedResponse(response, result, count, page, pageSize);
     } catch (error: any) {
@@ -168,7 +171,7 @@ export class PaymentCollectionController {
     @Req() request: Request,
     @Res() response: Response,
     @Param(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       let result = await this.paymentCollectionService.getById(id, filterType);
@@ -184,13 +187,13 @@ export class PaymentCollectionController {
     @Res() response: Response,
     @Param(RoutesConstants.ID) id: string,
     @Body() updateObject: Partial<PaymentCollection>,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       let result = await this.paymentCollectionService.update(
         id,
         updateObject,
-        filterType,
+        filterType
       );
       successResponse(response, result);
     } catch (error: any) {
@@ -203,7 +206,7 @@ export class PaymentCollectionController {
     @Req() request: Request,
     @Res() response: Response,
     @Param(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       let result = await this.paymentCollectionService.delete(id, filterType);
@@ -218,13 +221,13 @@ export class PaymentCollectionController {
     @Req() request: Request,
     @Res() response: Response,
     @Body() filterCriteria: any,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const result: any = await this.paymentCollectionService.filter(
         filterCriteria,
         [],
-        filterType,
+        filterType
       );
       successResponse(response, result);
     } catch (error: any) {
@@ -237,17 +240,17 @@ export class PaymentCollectionController {
     @Req() request: Request,
     @Res() response: Response,
     @Query(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const pdfStream = await this.paymentCollectionService.createReceipt(
         id,
-        filterType,
+        filterType
       );
       response.setHeader("Content-Type", "application/pdf");
       response.setHeader(
         "Content-Disposition",
-        `attachment; filename="invoice-${id}.pdf"`,
+        `attachment; filename="invoice-${id}.pdf"`
       );
       pdfStream.pipe(response);
       pdfStream.on("end", () => {
@@ -267,12 +270,12 @@ export class PaymentCollectionController {
     @Req() request: Request,
     @Res() response: Response,
     @Query(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const result = await this.paymentCollectionService.createReceiptPreview(
         id,
-        filterType,
+        filterType
       );
       response.send(result);
     } catch (error: any) {

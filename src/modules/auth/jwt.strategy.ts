@@ -35,11 +35,9 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(req: Request, payload: any) {
-    console.log({ payload });
     const jwt = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
     const decoded: any = this.jwtSvc.decode(jwt);
     const user = payload?.user || payload?.user?.user;
-    console.log({ validate_user: user });
     if (!user) {
       throw new NotFoundException("User not found ...!");
     }

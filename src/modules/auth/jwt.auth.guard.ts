@@ -23,14 +23,11 @@ export class JwtAuthGuard implements CanActivate {
     if (isPublic) return true;
 
     const request = context.switchToHttp().getRequest();
-    console.log({ request });
     const token = request.headers.authorization?.split(" ")[1];
-    console.log({ token });
     if (!token) throw new UnauthorizedException("Token missing");
 
     try {
       const payload = this.jwtService.decode(token);
-      console.log({ payload });
       request.user = payload.user || payload;
       return true;
     } catch (error) {

@@ -28,14 +28,14 @@ export function validatePhoneNumber(phoneNumber: string) {
 export async function generateHTMLFromTemplate(
   data: any,
   template: any,
-  type?: any,
+  type?: any
 ) {
   try {
     const filePath = "src/hbs-templates";
     let htmlTemplate: any;
     htmlTemplate = fs.readFileSync(
       path.resolve(filePath, `${template}.hbs`),
-      "utf8",
+      "utf8"
     );
     const compiledTemplate = handlebars.compile(htmlTemplate);
     return compiledTemplate(data);
@@ -47,7 +47,7 @@ export async function generateHTMLFromTemplate(
 export async function generatePdfFromTemplate(
   data: any,
   template: string,
-  type?: string,
+  type?: string
 ): Promise<Readable> {
   let browser: any = null;
   try {
@@ -57,10 +57,11 @@ export async function generatePdfFromTemplate(
       throw new Error(`Template not found: ${templatePath}`);
     }
     const htmlTemplate = fs.readFileSync(templatePath, "utf8");
-    const compiledTemplate = handlebars.compile(htmlTemplate);
-    const html = compiledTemplate(data);
+    const compiledTemplate = await handlebars.compile(htmlTemplate);
+    const html = await compiledTemplate(data);
+
     browser = await puppeteer.launch({
-      args: chromium.args,
+      args: [...chromium.args, "--no-sandbox", "--disable-setuid-sandbox"],
       executablePath:
         process.env.CHROME_PATH ||
         (await chromium.executablePath()) ||
@@ -68,22 +69,35 @@ export async function generatePdfFromTemplate(
       headless: true,
     });
 
-    // browser = await puppeteer.launch({
-    //   headless: true,
-    //   args: [
-    //     `--no-sandbox`,
-    //     `--headless`,
-    //     `--disable-gpu`,
-    //     `--disable-dev-shm-usage`,
-    //   ],
-    // });
-
     const page = await browser.newPage();
     await page.setDefaultNavigationTimeout(60000);
+
+    // Enable request interception to handle local resources
+    await page.setRequestInterception(true);
+    page.on("request", (request) => {
+      // Allow all requests
+      request.continue();
+    });
+
     await page.setContent(html, {
-      waitUntil: "domcontentloaded",
+      waitUntil: "networkidle0", // Wait for all network requests to finish
       timeout: 60000,
     });
+
+    // Optional: Wait for any lazy-loaded images
+    await page.evaluate(async () => {
+      const selectors = Array.from(document.querySelectorAll("img"));
+      await Promise.all(
+        selectors.map((img) => {
+          if (img.complete) return;
+          return new Promise((resolve, reject) => {
+            img.addEventListener("load", resolve);
+            img.addEventListener("error", reject);
+          });
+        })
+      );
+    });
+
     const pdfBuffer: Buffer = await page.pdf({
       format: "A4",
       printBackground: true,
@@ -95,6 +109,7 @@ export async function generatePdfFromTemplate(
       },
       preferCSSPageSize: true,
     });
+
     const bufferToStream = new Readable();
     bufferToStream.push(pdfBuffer);
     bufferToStream.push(null);

@@ -20,6 +20,7 @@ import {
   successPaginatedResponse,
   successResponse,
 } from "../../base/response";
+import { Public } from "../auth/public.decorator";
 
 @Controller("rental")
 export class RentalController {
@@ -29,7 +30,7 @@ export class RentalController {
   async create(
     @Req() request: Request,
     @Res() response: Response,
-    @Body() createObject: Partial<Rental>,
+    @Body() createObject: Partial<Rental>
   ): Promise<void> {
     try {
       let result = await this.rentalService.create(createObject, request.query);
@@ -44,13 +45,13 @@ export class RentalController {
     @Req() request: Request,
     @Res() response: Response,
     @Body() filterCriteria: any,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const result: any = await this.rentalService.filter(
         filterCriteria,
         [],
-        filterType,
+        filterType
       );
       successResponse(response, result);
     } catch (error: any) {
@@ -59,18 +60,19 @@ export class RentalController {
   }
 
   @Get("/invoice/download")
+  @Public()
   async createInvoiceDownload(
     @Req() request: Request,
     @Res() response: Response,
     @Query(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const pdfStream = await this.rentalService.createInvoice(id, filterType);
       response.setHeader("Content-Type", "application/pdf");
       response.setHeader(
         "Content-Disposition",
-        `attachment; filename="invoice-${id}.pdf"`,
+        `attachment; filename="invoice-${id}.pdf"`
       );
       pdfStream.pipe(response);
       pdfStream.on("end", () => {
@@ -86,16 +88,17 @@ export class RentalController {
   }
 
   @Get("/invoice/preview")
+  @Public()
   async createInvoicePreview(
     @Req() request: Request,
     @Res() response: Response,
     @Query(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const result = await this.rentalService.createInvoicePreview(
         id,
-        filterType,
+        filterType
       );
       response.send(result);
     } catch (error: any) {
@@ -109,14 +112,14 @@ export class RentalController {
     @Res() response: Response,
     @Query(RoutesConstants.PAGE) page: number = 1,
     @Query(RoutesConstants.PAGESIZE) pageSize: number = 10,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const [result, count]: any = await this.rentalService.getAll(
         page,
         pageSize,
         filterType,
-        request.query,
+        request.query
       );
       successPaginatedResponse(response, result, count, page, pageSize);
     } catch (error: any) {
@@ -129,7 +132,7 @@ export class RentalController {
     @Req() request: Request,
     @Res() response: Response,
     @Param(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       let result = await this.rentalService.getById(id, filterType);
@@ -145,13 +148,13 @@ export class RentalController {
     @Res() response: Response,
     @Param(RoutesConstants.ID) id: string,
     @Body() updateObject: Partial<Rental>,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       let result = await this.rentalService.update(
         id,
         updateObject,
-        filterType,
+        filterType
       );
       successResponse(response, result);
     } catch (error: any) {
@@ -164,7 +167,7 @@ export class RentalController {
     @Req() request: Request,
     @Res() response: Response,
     @Param(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       let result = await this.rentalService.delete(id, filterType);
@@ -179,13 +182,13 @@ export class RentalController {
     @Req() request: Request,
     @Res() response: Response,
     @Body() filterCriteria: any,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const result: any = await this.rentalService.filter(
         filterCriteria,
         [],
-        filterType,
+        filterType
       );
       successResponse(response, result);
     } catch (error: any) {
