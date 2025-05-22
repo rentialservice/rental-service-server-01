@@ -21,6 +21,7 @@ export class SubscriptionController {
   constructor(private readonly subscriptionService: SubscriptionService) {}
 
   @Post()
+  @AllowWithoutSubscription()
   async createSubscription(
     @Req() request: Request,
     @Res() response: Response,
@@ -35,6 +36,7 @@ export class SubscriptionController {
   }
 
   @Post(":subscriptionId/firm/:firmId")
+  @AllowWithoutSubscription()
   async assignSubscriptionToFirm(
     @Req() request: Request,
     @Res() response: Response,
@@ -55,6 +57,7 @@ export class SubscriptionController {
   }
 
   @Get("firm/:firmId")
+  @AllowWithoutSubscription()
   async getSubscriptionsByFirm(
     @Req() request: Request,
     @Res() response: Response,
@@ -70,6 +73,7 @@ export class SubscriptionController {
   }
 
   @Get()
+  @AllowWithoutSubscription()
   async getAllSubscriptions(
     @Req() request: Request,
     @Res() response: Response
@@ -83,6 +87,7 @@ export class SubscriptionController {
   }
 
   @Post("details")
+  @AllowWithoutSubscription()
   async createSubscriptionDetails(
     @Req() request: Request,
     @Res() response: Response,
@@ -98,6 +103,7 @@ export class SubscriptionController {
   }
 
   @Put("details/:id")
+  @AllowWithoutSubscription()
   async updateSubscriptionDetails(
     @Req() request: Request,
     @Res() response: Response,
