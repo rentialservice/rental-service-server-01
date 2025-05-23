@@ -120,7 +120,7 @@ export class FirmService {
   async getById(id: string, filterType?: string): Promise<any> {
     const firm = await this.firmRepository.findOne({
       where: { id, deleteFlag: false },
-      relations: ["subscription"],
+      relations: ["subscription.subscription"],
     });
     if (!firm) {
       throw new NotFoundException(`Firm with id ${id} not found`);
