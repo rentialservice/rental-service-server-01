@@ -11,7 +11,7 @@ export class SubscriptionDetails extends BaseEntity {
   )
   subscription: Subscription;
 
-  @ManyToOne(() => Firm, (firm) => firm.subscriptionDetails)
+  @ManyToOne(() => Firm, (firm) => firm.subscription)
   firm: Firm;
 
   @Column({ default: new Date() })

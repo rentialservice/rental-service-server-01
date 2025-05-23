@@ -70,5 +70,5 @@ export class Firm extends BaseEntity {
   paymentCollection: PaymentCollection[];
 
   @OneToMany(() => SubscriptionDetails, (rental) => rental.firm)
-  subscriptionDetails: SubscriptionDetails[];
+  subscription: SubscriptionDetails[];
 }
