@@ -138,7 +138,7 @@ export class PaymentCollectionService {
       });
       return {
         ...payment,
-        total: String(total),
+        total,
       };
     });
     return [payments, count];
