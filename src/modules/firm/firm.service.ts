@@ -112,7 +112,6 @@ export class FirmService {
   ): Promise<any> {
     return await this.firmRepository.findAndCount({
       where: { deleteFlag: false },
-      relations: ["subscription"],
       skip: (page - 1) * pageSize,
       take: pageSize,
     });
@@ -126,7 +125,7 @@ export class FirmService {
     if (!firm) {
       throw new NotFoundException(`Firm with id ${id} not found`);
     }
-    return firm;
+    return { ...firm, subscription: getActiveSubscription(firm) };
   }
 
   async updateSubscription(
@@ -197,4 +196,26 @@ export class FirmService {
       relations: [...fields],
     });
   }
+}
+
+function getActiveSubscription(firm: any) {
+  const now = new Date();
+
+  const activeSubscription = firm.subscription.find((sub: any) => {
+    const startDate = new Date(sub.startDate);
+    const endDate = new Date(sub.endDate);
+    return sub.isActive && startDate <= now && endDate >= now;
+  });
+
+  if (!activeSubscription) return null;
+
+  const endDate = new Date(activeSubscription.endDate);
+  const remainingDays = Math.ceil(
+    (endDate.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+  );
+
+  return {
+    ...activeSubscription,
+    remainingDays,
+  };
 }
