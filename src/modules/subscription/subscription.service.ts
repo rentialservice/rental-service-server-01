@@ -16,14 +16,16 @@ export class SubscriptionService {
 
   async hasActiveSubscription(firmId: string): Promise<boolean> {
     const currentDate = new Date();
-    const activeSubscription = await this.subscriptionDetailsRepository.findOne({
-      where: {
-        firm: { id: firmId },
-        startDate: LessThanOrEqual(currentDate),
-        endDate: MoreThanOrEqual(currentDate),
-        isActive: true
-      },
-    });
+    const activeSubscription = await this.subscriptionDetailsRepository.findOne(
+      {
+        where: {
+          firm: { id: firmId },
+          startDate: LessThanOrEqual(currentDate),
+          endDate: MoreThanOrEqual(currentDate),
+          isActive: true,
+        },
+      }
+    );
     return !!activeSubscription;
   }
 

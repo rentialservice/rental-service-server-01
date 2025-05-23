@@ -72,7 +72,7 @@ export class SubscriptionController {
     }
   }
 
-  @Get()
+  @Get("details/users")
   @AllowWithoutSubscription()
   async getAllSubscriptions(
     @Req() request: Request,
@@ -115,6 +115,21 @@ export class SubscriptionController {
         id,
         data
       );
+      successResponse(response, result);
+    } catch (error) {
+      errorResponse(response, error);
+    }
+  }
+
+  @Get("details/:id")
+  @AllowWithoutSubscription()
+  async getSubscriptionDetails(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Param("id") id: string
+  ) {
+    try {
+      const result = await this.subscriptionService.getSubscriptionDetails(id);
       successResponse(response, result);
     } catch (error) {
       errorResponse(response, error);

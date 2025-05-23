@@ -39,7 +39,7 @@ export class FirmController {
     FileFieldsInterceptor([
       { name: "media", maxCount: 1 },
       { name: "signature", maxCount: 1 },
-    ]),
+    ])
   )
   async create(
     @Req() request: Request,
@@ -49,16 +49,16 @@ export class FirmController {
     files: {
       media?: Express.Multer.File[];
       signature?: Express.Multer.File[];
-    },
+    }
   ): Promise<void> {
     try {
-      const media = files.media?.[0];
-      const signature = files.signature?.[0];
+      const media = files?.media?.[0];
+      const signature = files?.signature?.[0];
 
       const result = await this.firmService.create(
         createObject,
         media,
-        signature,
+        signature
       );
       successResponse(response, result);
     } catch (error: any) {
@@ -72,13 +72,13 @@ export class FirmController {
     @Res() response: Response,
     @Query(RoutesConstants.PAGE) page: number = 1,
     @Query(RoutesConstants.PAGESIZE) pageSize: number = 10,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const [result, count]: any = await this.firmService.getAll(
         page,
         pageSize,
-        filterType,
+        filterType
       );
       successPaginatedResponse(response, result, count, page, pageSize);
     } catch (error: any) {
@@ -91,7 +91,7 @@ export class FirmController {
     @Req() request: Request,
     @Res() response: Response,
     @Param(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       let result = await this.firmService.getById(id, filterType);
@@ -106,7 +106,7 @@ export class FirmController {
     FileFieldsInterceptor([
       { name: "media", maxCount: 1 },
       { name: "signature", maxCount: 1 },
-    ]),
+    ])
   )
   async update(
     @Req() request: Request,
@@ -118,7 +118,7 @@ export class FirmController {
     files: {
       media?: Express.Multer.File[];
       signature?: Express.Multer.File[];
-    },
+    }
   ): Promise<void> {
     try {
       const media = files?.media?.[0];
@@ -129,7 +129,7 @@ export class FirmController {
         updateObject,
         filterType,
         media,
-        signature,
+        signature
       );
       successResponse(response, result);
     } catch (error: any) {
@@ -143,13 +143,13 @@ export class FirmController {
     @Res() response: Response,
     @Param(RoutesConstants.ID) id: string,
     @Body() updateObject: Partial<Firm>,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       let result = await this.firmService.updateSubscription(
         id,
         updateObject,
-        filterType,
+        filterType
       );
       successResponse(response, result);
     } catch (error: any) {
@@ -162,7 +162,7 @@ export class FirmController {
     @Req() request: Request,
     @Res() response: Response,
     @Param(RoutesConstants.ID) id: string,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       let result = await this.firmService.delete(id, filterType);
@@ -177,13 +177,13 @@ export class FirmController {
     @Req() request: Request,
     @Res() response: Response,
     @Body() filterCriteria: any,
-    @Query(RoutesConstants.FILTERTYPE) filterType: string,
+    @Query(RoutesConstants.FILTERTYPE) filterType: string
   ): Promise<void> {
     try {
       const result: any = await this.firmService.filter(
         filterCriteria,
         [],
-        filterType,
+        filterType
       );
       successResponse(response, result);
     } catch (error: any) {

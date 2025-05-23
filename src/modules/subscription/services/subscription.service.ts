@@ -1,4 +1,4 @@
-import { Injectable } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Subscription } from "../entities/subscription.entity";
@@ -39,7 +39,9 @@ export class SubscriptionService {
   }
 
   async getAllSubscriptions() {
-    return await this.subscriptionRepository.find();
+    return await this.subscriptionDetailsRepository.find({
+      relations: ["firm"],
+    });
   }
 
   async createSubscriptionDetails(data: Partial<any>) {
@@ -79,6 +81,19 @@ export class SubscriptionService {
     } catch (error) {
       throw error;
     }
+  }
+
+  async getSubscriptionDetails(id: string) {
+    const subscription = await this.subscriptionDetailsRepository.findOne({
+      where: { id },
+      relations: ["firm"],
+    });
+    if (!subscription) {
+      throw new NotFoundException(
+        `Subscription Details with id ${id} not found`
+      );
+    }
+    return subscription;
   }
 
   async update(

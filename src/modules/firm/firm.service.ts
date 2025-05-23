@@ -134,20 +134,6 @@ export class FirmService {
     updateObject: Partial<Firm>,
     filterType?: string
   ): Promise<any> {
-    if (!updateObject?.subscription) {
-      throw new NotFoundException(`Subscription Id not found`);
-    }
-    if (updateObject?.subscription) {
-      let [subscription] = await this.commonService.subscriptionFilter({
-        name: updateObject.subscription,
-      });
-      if (!subscription) {
-        throw new NotFoundException(
-          `Subscription with name ${updateObject.subscription} not found`
-        );
-      }
-      updateObject.subscription = subscription;
-    }
     return await this.firmRepository.update(id, updateObject);
   }
 
@@ -168,11 +154,6 @@ export class FirmService {
       updateObject.signature = await this.s3Service.uploadImageS3(
         signature,
         (process.env.FIRM_SIGNATURE_FOLDER_NAME as string) || "FirmSignature"
-      );
-    }
-    if (updateObject?.subscription) {
-      throw new Error(
-        `You are not allowed to modify subscription details, contact your administrator`
       );
     }
     // if (updateObject?.category?.length) {

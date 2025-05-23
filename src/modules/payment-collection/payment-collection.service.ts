@@ -19,12 +19,12 @@ export class PaymentCollectionService {
     private readonly paymentCollectionRepository: Repository<PaymentCollection>,
     private readonly commonService: CommonService,
     private readonly rentalService: RentalService,
-    private readonly prefixService: PrefixService,
+    private readonly prefixService: PrefixService
   ) {}
 
   async create(
     createObject: Partial<PaymentCollection>,
-    queryData: any,
+    queryData: any
   ): Promise<any> {
     if (!createObject?.paymentMode) {
       throw new Error("Payment Mode is required");
@@ -54,7 +54,7 @@ export class PaymentCollectionService {
     });
     if (!buyer) {
       throw new NotFoundException(
-        `Buyer with id ${createObject.buyer} not found`,
+        `Buyer with id ${createObject.buyer} not found`
       );
     } else {
       createObject.buyer = buyer;
@@ -73,7 +73,7 @@ export class PaymentCollectionService {
     });
     if (!paymentMode) {
       throw new NotFoundException(
-        `Payment Mode with id ${createObject.paymentMode} not found`,
+        `Payment Mode with id ${createObject.paymentMode} not found`
       );
     } else {
       createObject.paymentMode = paymentMode;
@@ -90,7 +90,7 @@ export class PaymentCollectionService {
           parseFloat(rentalResponse?.pendingAmount) < parseFloat(rental?.amount)
         ) {
           throw new NotFoundException(
-            `Receipt Amount ${rental?.amount} cannot be greater than Rental pending amount`,
+            `Receipt Amount ${rental?.amount} cannot be greater than Rental pending amount`
           );
         }
 
@@ -119,7 +119,7 @@ export class PaymentCollectionService {
   async getAll(
     page: number = 1,
     pageSize: number = 10,
-    filterCriteria?: any,
+    filterCriteria?: any
   ): Promise<any> {
     let [payments, count]: any =
       await this.paymentCollectionRepository.findAndCount({
@@ -134,7 +134,7 @@ export class PaymentCollectionService {
     payments = payments.map((payment: any) => {
       let total = 0;
       payment?.rental?.map((rental: any) => {
-        total = total + rental?.amount;
+        total = total + parseFloat(rental?.amount);
       });
       return {
         ...payment,
@@ -158,7 +158,7 @@ export class PaymentCollectionService {
   async update(
     id: string,
     updateObject: Partial<PaymentCollection>,
-    filterType?: string,
+    filterType?: string
   ): Promise<any> {
     return await this.paymentCollectionRepository.update(id, updateObject);
   }
@@ -174,7 +174,7 @@ export class PaymentCollectionService {
   async filter(
     filterCriteria: any,
     fields: string[] = [],
-    filterType?: string,
+    filterType?: string
   ): Promise<any> {
     let payments = await this.paymentCollectionRepository.find({
       where: { ...buildFilterCriteriaQuery(filterCriteria), deleteFlag: false },
@@ -195,7 +195,7 @@ export class PaymentCollectionService {
   async getAmountStatistics(
     filterCriteria: any,
     fields: string[] = [],
-    filterType?: any,
+    filterType?: any
   ): Promise<any> {
     delete filterCriteria?.category;
     if (!filterCriteria?.firm) {
@@ -205,10 +205,10 @@ export class PaymentCollectionService {
     filterCriteria = buildFilterCriteriaQuery(filterCriteria);
     let today = new Date();
     const startOfDay = new Date(
-      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()),
+      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())
     );
     const startOfMonth = new Date(
-      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1),
+      Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), 1)
     );
     let dailyPayments = await this.paymentCollectionRepository.find({
       where: {
@@ -231,26 +231,26 @@ export class PaymentCollectionService {
     dailyPayments.map((item: any) => {
       dailyTotal += item?.rental?.reduce(
         (sum: any, payment: any) => sum + parseFloat(payment.amount),
-        0,
+        0
       );
     });
     monthlyPayments.map((item: any) => {
       monthlyTotal += item?.rental?.reduce(
         (sum: any, payment: any) => sum + parseFloat(payment.amount),
-        0,
+        0
       );
     });
 
     let dueTotal = allRentals?.reduce(
       (sum: any, rental: any) => sum + parseFloat(rental?.pendingAmount),
-      0,
+      0
     );
 
     return { dailyTotal, monthlyTotal, dueTotal };
   }
 
   async getPaymentCollectionsByRentalId(
-    rentalId: string,
+    rentalId: string
   ): Promise<PaymentCollection[]> {
     return await this.paymentCollectionRepository
       .createQueryBuilder("paymentCollection")
@@ -279,7 +279,7 @@ export class PaymentCollectionService {
           ...rent,
           rental_data: await this.rentalService.getByIdDirect(rent?.id),
         };
-      }),
+      })
     );
     const data = {
       company: {
@@ -348,7 +348,7 @@ export class PaymentCollectionService {
           ...rent,
           rental_data: await this.rentalService.getByIdDirect(rent?.id),
         };
-      }),
+      })
     );
     const data = {
       company: {
