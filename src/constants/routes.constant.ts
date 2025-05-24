@@ -8,6 +8,7 @@ export const RoutesConstants = {
   ACTION: "/action",
   UPDATE_ACTION: "/:id/action/:action",
   FILTERTYPE: "filterType",
+  SEARCH: "search_key",
 
   // Auth Module
   AUTH: "auth",

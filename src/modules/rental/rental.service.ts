@@ -144,7 +144,7 @@ export class RentalService {
         "buyer",
         "rentalProduct",
         "rentalProduct.product",
-        "firm",
+        "firm.termsAndConditions",
         "paymentMode",
       ],
     });
@@ -216,6 +216,7 @@ export class RentalService {
         amount: transaction.rental[0].amount,
       })),
       preparedBy: rental.firm.name,
+      terms: rental?.firm?.termsAndConditions[0]?.value,
     };
     console.log({ data });
     return await generatePdfFromTemplate(data, "invoice");
@@ -228,7 +229,7 @@ export class RentalService {
         "buyer",
         "rentalProduct",
         "rentalProduct.product",
-        "firm",
+        "firm.termsAndConditions",
         "paymentMode",
       ],
     });
@@ -303,6 +304,7 @@ export class RentalService {
       })),
       preparedBy: rental.firm.name,
       isUnitAvailable,
+      terms: rental?.firm?.termsAndConditions[0]?.value,
     };
     console.log({ data });
     return await generateHTMLFromTemplate(data, "invoice");
@@ -395,5 +397,23 @@ export class RentalService {
       order: { createdAt: "DESC" },
       relations: ["buyer", "rentalProduct"],
     });
+  }
+
+  async searchRentals(
+    searchTerm: string,
+    page = 1,
+    limit = 10
+  ): Promise<Rental[]> {
+    const query = this.rentalRepository
+      .createQueryBuilder("rental")
+      .leftJoinAndSelect("rental.buyer", "buyer");
+    if (searchTerm) {
+      query.andWhere(
+        `(rental.invoicePrefix ILIKE :search OR rental.invoiceId ILIKE :search OR buyer.fullName ILIKE :search)`,
+        { search: `%${searchTerm}%` }
+      );
+    }
+    query.skip((page - 1) * limit).take(limit);
+    return query.getMany();
   }
 }

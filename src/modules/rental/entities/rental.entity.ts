@@ -70,10 +70,4 @@ export class Rental extends BaseEntity {
 
   @Column({ type: "decimal", precision: 10, scale: 2, default: 0 })
   deductedAmount: number;
-
-  // @OneToMany(
-  //   () => PaymentCollection,
-  //   (paymentCollection) => paymentCollection.rental,
-  // )
-  // paymentCollection: PaymentCollection[];
 }

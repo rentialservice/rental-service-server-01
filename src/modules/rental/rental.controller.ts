@@ -59,6 +59,26 @@ export class RentalController {
     }
   }
 
+  @Get("search")
+  async searchRentals(
+    @Req() request: Request,
+    @Res() response: Response,
+    @Query(RoutesConstants.PAGE) page: number = 1,
+    @Query(RoutesConstants.PAGESIZE) pageSize: number = 10,
+    @Query(RoutesConstants.SEARCH) search_key: string
+  ): Promise<void> {
+    try {
+      const [result, count]: any = await this.rentalService.searchRentals(
+        search_key,
+        page,
+        pageSize
+      );
+      successPaginatedResponse(response, result, count, page, pageSize);
+    } catch (error: any) {
+      errorResponse(response, error);
+    }
+  }
+
   @Get("/invoice/download")
   @Public()
   async createInvoiceDownload(
