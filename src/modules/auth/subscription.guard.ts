@@ -17,43 +17,46 @@ export class SubscriptionGuard implements CanActivate {
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const method = request.method;
-    
+
     // Allow all GET requests without subscription check
     if (method === "GET") {
-        return true;
+      return true;
     }
 
     // Check if the route is marked with @AllowWithoutSubscription
     const allowWithoutSubscription = this.reflector.get<boolean>(
-        "allowWithoutSubscription",
-        context.getHandler()
+      "allowWithoutSubscription",
+      context.getHandler()
     );
     if (allowWithoutSubscription) {
-        return true;
+      return true;
     }
 
     // For other requests, check subscription
     const user = request.user;
     console.log({ hasSubscription_user: user });
-    
+
     // Get firm ID from user data based on user type
     let firmId: string;
-    if (user.type === 'seller') {
-        firmId = user.firm?.id;
-    } else if (user.type === 'buyer') {
-        firmId = user.buyerProfile?.firmId;
+    if (user.type === "seller") {
+      firmId = user.firm?.id;
+    } else if (user.type === "buyer") {
+      firmId = user.buyerProfile?.firmId;
+    } else if (user.type === "admin") {
+      return true;
     }
 
     if (!firmId) {
-        throw new ForbiddenException("No valid firm association found");
+      throw new ForbiddenException("No valid firm association found");
     }
 
-    const hasSubscription = await this.subscriptionService.hasActiveSubscription(firmId);
+    const hasSubscription =
+      await this.subscriptionService.hasActiveSubscription(firmId);
 
     if (!hasSubscription) {
-        throw new ForbiddenException("No active subscription");
+      throw new ForbiddenException("No active subscription");
     }
 
     return true;
-}
+  }
 }
